@@ -1,14 +1,17 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# CMP Prototyp
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+## Überblick
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+Dieser Prototyp wurde im Rahmen einer Bachelor Thesis entwickelt, die sich mit der 
+Evaluation moderner Cross-Platform-Frameworks für mobile App-Entwicklung beschäftigt. Die Arbeit 
+vergleicht Compose Multiplatform, Flutter und React Native hinsichtlich ihrer Eignung für 
+geschäftliche Anwendungen. Ziel des Prototyps ist es, die Fähigkeiten von Compose Multiplatform in 
+Bezug auf technische Anforderungen wie Dateiverwaltung, Authentifizierung und Offline-Funktionalität 
+zu demonstrieren und praktische Einblicke in das Framework zu gewinnen.
 
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+## Ziele der Thesis
+
+Der CMP-Prototyp dient als praktische Grundlage für die Vergleichsanalyse der Thesis. Die Evaluation 
+umfasst neben der technischen Umsetzung auch eine Analyse der Usability und der Entwicklungsumgebung 
+von Compose Multiplatform im Vergleich zu Flutter und React Native.
