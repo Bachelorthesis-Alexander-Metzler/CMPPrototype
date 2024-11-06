@@ -1,5 +1,13 @@
 package de.doubleslash.cmpprototype.data.datasource.remote.rest
 
+import de.doubleslash.cmpprototype.common.Constants.HEADERS_APPLICATION_TYPE
+import de.doubleslash.cmpprototype.common.Constants.HTTPS_PROTOCOL
+import de.doubleslash.cmpprototype.common.Constants.AUTH_API_ENDPOINT
+import de.doubleslash.cmpprototype.common.Constants.ACCEPT
+import de.doubleslash.cmpprototype.common.Constants.CONTENT_TYPE
+import de.doubleslash.cmpprototype.common.Constants.USERNAME
+import de.doubleslash.cmpprototype.common.Constants.PASSWORD
+import de.doubleslash.cmpprototype.common.Constants.HTTP_ERROR_MSG
 import de.doubleslash.cmpprototype.data.datasource.remote.rest.dto.LoginDTO
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import io.ktor.client.HttpClient
@@ -31,8 +39,8 @@ class AuthApiImpl: AuthApi {
         }
         install(DefaultRequest){
             headers {
-                append("accept", "application/json")
-                append("Content-Type", "application/json")
+                append(ACCEPT, HEADERS_APPLICATION_TYPE)
+                append(CONTENT_TYPE, HEADERS_APPLICATION_TYPE)
             }
         }
     }
@@ -42,18 +50,18 @@ class AuthApiImpl: AuthApi {
         username: String,
         password: String): RequestCondition<LoginDTO> {
         return try {
-            val endpoint = "https://$serverAddress/rest/v2.0/usersessions"
-            val responseFromAPI = httpClient.post(endpoint) {
-                setBody(mapOf("username" to username, "password" to password))
+            val baseUrl = HTTPS_PROTOCOL + serverAddress + AUTH_API_ENDPOINT
+            val responseFromAPI = httpClient.post(baseUrl) {
+                setBody(mapOf(USERNAME to username, PASSWORD to password))
             }
 
             if (responseFromAPI.status.value == 200) {
-                println("Response from API=" + responseFromAPI.body<String>())
-
                 val responseData = Json.decodeFromString<LoginDTO>(responseFromAPI.body())
                 RequestCondition.SuccessCondition(data = responseData)
             } else {
-                RequestCondition.ErrorCondition(errorMsg = "HTTP Error: ${responseFromAPI.status}")
+                RequestCondition.ErrorCondition(
+                    errorMsg = HTTP_ERROR_MSG + responseFromAPI.status
+                )
             }
 
         } catch (error: Exception){
