@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <!-- top bar title -->
+    <string name="login_top_bar_title">Login</string>
+
+    <string name="server_address_label">Server Adresse</string>
+    <string name="server_address_placeholder">mein.business-filemanager.de</string>
+    <string name="username_label">Benutzername</string>
+    <string name="username_placeholder">Hier Benutzername eingeben</string>
+    <string name="password_label">Passwort</string>
+    <string name="password_placeholder">Hier Passwort eingeben</string>
+
+    <!-- button texts -->
+    <string name="login_button_text">Einloggen</string>
+
+    <!-- texts -->
+    <string name="loading_text">Lädt...</string>
+    <string name="login_failed_text">Login fehlgeschlagen</string>
+    <string name="login_success_text">Login erfolgreich</string>
+
+    <!-- content descriptions -->
+    <string name="content_description_visibility_on">Passwort versteckt</string>
+    <string name="content_description_visibility_off">Passwort sichtbar</string>
+</resources>

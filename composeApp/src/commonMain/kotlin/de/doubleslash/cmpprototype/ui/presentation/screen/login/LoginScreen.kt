@@ -34,9 +34,23 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cmpprototype.composeapp.generated.resources.Res
+import cmpprototype.composeapp.generated.resources.content_description_visibility_off
+import cmpprototype.composeapp.generated.resources.content_description_visibility_on
 import cmpprototype.composeapp.generated.resources.ic_visibility_off
 import cmpprototype.composeapp.generated.resources.ic_visibility_on
+import cmpprototype.composeapp.generated.resources.loading_text
+import cmpprototype.composeapp.generated.resources.login_button_text
+import cmpprototype.composeapp.generated.resources.login_failed_text
+import cmpprototype.composeapp.generated.resources.login_success_text
+import cmpprototype.composeapp.generated.resources.login_top_bar_title
+import cmpprototype.composeapp.generated.resources.password_label
+import cmpprototype.composeapp.generated.resources.password_placeholder
+import cmpprototype.composeapp.generated.resources.server_address_label
+import cmpprototype.composeapp.generated.resources.server_address_placeholder
+import cmpprototype.composeapp.generated.resources.username_label
+import cmpprototype.composeapp.generated.resources.username_placeholder
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
 
@@ -54,7 +68,7 @@ class LoginScreen : Screen{
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
-                    title = { Text("Login") },
+                    title = { Text(text = stringResource(Res.string.login_top_bar_title))},
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         titleContentColor = MaterialTheme.colorScheme.primary
@@ -76,8 +90,8 @@ class LoginScreen : Screen{
                         .padding(bottom = 15.dp),
                     value = viewModel.serverAddress,
                     onValueChange = { viewModel.serverAddress = it },
-                    label = { Text("Server Address") },
-                    placeholder = { Text("my.business-filemanager.de") },
+                    label = { Text(stringResource(Res.string.server_address_label)) },
+                    placeholder = { Text(stringResource(Res.string.server_address_placeholder)) },
                     shape = RoundedCornerShape(percent = 20)
                 )
 
@@ -88,8 +102,8 @@ class LoginScreen : Screen{
                         .padding(bottom = 15.dp),
                     value = viewModel.username,
                     onValueChange = { viewModel.username = it },
-                    label = { Text("Username") },
-                    placeholder = { Text("Type username here") },
+                    label = { Text(stringResource(Res.string.username_label)) },
+                    placeholder = { Text(stringResource(Res.string.username_placeholder)) },
                     shape = RoundedCornerShape(percent = 20)
                 )
 
@@ -102,10 +116,8 @@ class LoginScreen : Screen{
                     onValueChange = { newText ->
                         viewModel.password = newText
                     },
-                    label = {
-                        Text(text = "Password")
-                    },
-                    placeholder = { Text(text = "Type password here") },
+                    label = {Text(stringResource(Res.string.password_label))},
+                    placeholder = { Text(stringResource(Res.string.password_placeholder)) },
                     shape = RoundedCornerShape(percent = 20),
                     visualTransformation = if (passwordVisible) {
                         VisualTransformation.None
@@ -118,14 +130,14 @@ class LoginScreen : Screen{
                             IconButton(onClick = { passwordVisible = !passwordVisible }){
                                 Icon(
                                     imageVector = vectorResource(Res.drawable.ic_visibility_on),
-                                    contentDescription = "hide password"
+                                    contentDescription = stringResource(Res.string.content_description_visibility_on)
                                 )
                             }
                         } else {
                             IconButton(onClick = { passwordVisible = !passwordVisible }){
                                 Icon(
                                     imageVector = vectorResource(Res.drawable.ic_visibility_off),
-                                    contentDescription = "show password"
+                                    contentDescription = stringResource(Res.string.content_description_visibility_off)
                                 )
                             }
                         }
@@ -138,13 +150,13 @@ class LoginScreen : Screen{
                         // do nothing
                     }
                     is RequestCondition.LoadingCondition -> {
-                        Text("Loading...")
+                        Text(stringResource(Res.string.loading_text))
                     }
                     is RequestCondition.ErrorCondition -> {
-                        Text("Error: ${authState.getErrorMessage()}")
+                        Text(stringResource(Res.string.login_failed_text) + ": " + authState.getErrorMessage())
                     }
                     is RequestCondition.SuccessCondition -> {
-                        Text("Login successful")
+                        Text(stringResource(Res.string.login_success_text))
                     }
                 }
 
@@ -164,7 +176,7 @@ class LoginScreen : Screen{
                         disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                     )
                 ) {
-                    Text("Login")
+                    Text(stringResource(Res.string.login_button_text))
                 }
             }
         }
