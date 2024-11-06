@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedButton
@@ -79,7 +80,7 @@ class LoginScreen : Screen{
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = innerPadding.calculateTopPadding(), start = 15.dp, end = 15.dp),
+                    .padding(top = innerPadding.calculateTopPadding() + 15.dp, start = 15.dp, end = 15.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -144,23 +145,6 @@ class LoginScreen : Screen{
                     }
                 )
 
-                // show authentication state
-                when (authState) {
-                    is RequestCondition.IdleCondition -> {
-                        // do nothing
-                    }
-                    is RequestCondition.LoadingCondition -> {
-                        Text(stringResource(Res.string.loading_text))
-                    }
-                    is RequestCondition.ErrorCondition -> {
-                        Text(stringResource(Res.string.login_failed_text) + ": " + authState.getErrorMessage())
-                    }
-                    is RequestCondition.SuccessCondition -> {
-                        Text(stringResource(Res.string.login_success_text))
-                    }
-                }
-
-
                 // login button
                 ElevatedButton(
                     modifier = Modifier
@@ -169,6 +153,9 @@ class LoginScreen : Screen{
                     onClick = {
                         viewModel.authenticateUser()
                     },
+                    enabled = viewModel.serverAddress.isNotBlank()
+                            && viewModel.username.isNotBlank()
+                            && viewModel.password.isNotBlank(),
                     colors = ButtonColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         contentColor = MaterialTheme.colorScheme.primary,
@@ -178,7 +165,31 @@ class LoginScreen : Screen{
                 ) {
                     Text(stringResource(Res.string.login_button_text))
                 }
+
+                // show authentication state
+                when (authState) {
+                    is RequestCondition.IdleCondition -> {
+                        // do nothing
+                    }
+                    is RequestCondition.LoadingCondition -> {
+                        Text(
+                            modifier = Modifier.padding(top = 15.dp),
+                            text = stringResource(Res.string.loading_text))
+                    }
+                    is RequestCondition.ErrorCondition -> {
+                        Text(
+                            modifier = Modifier.padding(top = 15.dp),
+                            text = stringResource(Res.string.login_failed_text) + ": " + authState.getErrorMessage())
+                    }
+                    is RequestCondition.SuccessCondition -> {
+                        Text(
+                            modifier = Modifier.padding(top = 15.dp),
+                            text = stringResource(Res.string.login_success_text))
+                    }
+                }
             }
         }
     }
+
 }
+
