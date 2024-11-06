@@ -1,16 +1,20 @@
 package de.doubleslash.cmpprototype
 
 
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import cafe.adriel.voyager.navigator.Navigator
+import de.doubleslash.cmpprototype.di.initKoin
+import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginScreen
+import de.doubleslash.cmpprototype.ui.theme.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
-        Text("Hello, World!")
+    initKoin()
+
+    AppTheme {
+        Navigator(LoginScreen())
     }
 }
