@@ -20,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.login_top_bar_title
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.AuthenticationState
@@ -36,6 +38,8 @@ class LoginScreen : Screen{
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
+        // linear navigator to navigate to MainTabScreen after successful login
+        val navigator = LocalNavigator.currentOrThrow
         val viewModel = getScreenModel<LoginViewModel>()
         var passwordVisible by remember { mutableStateOf(false) }
 
@@ -74,12 +78,17 @@ class LoginScreen : Screen{
                 )
 
                 // Login Button
-                LoginButton(onClick = { viewModel.authenticateUser() }, enabled = viewModel.serverAddress.isNotBlank() && viewModel.username.isNotBlank() && viewModel.password.isNotBlank())
+                LoginButton(
+                    onClick = { viewModel.authenticateUser() },
+                    enabled = viewModel.serverAddress.isNotBlank()
+                            && viewModel.username.isNotBlank()
+                            && viewModel.password.isNotBlank())
 
                 // Authentication State
-                AuthenticationState(authState = authState)
+                AuthenticationState(authState = authState, navigator = navigator)
             }
         }
     }
+
 }
 

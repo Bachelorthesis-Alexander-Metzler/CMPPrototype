@@ -14,8 +14,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.Navigator
 import cmpprototype.composeapp.generated.resources.*
 import de.doubleslash.cmpprototype.domain.model.auth.LoginModel
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.MainTabScreen
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
@@ -95,7 +97,7 @@ fun LoginButton(onClick: () -> Unit, enabled: Boolean) {
 }
 
 @Composable
-fun AuthenticationState(authState: RequestCondition<LoginModel>) {
+fun AuthenticationState(authState: RequestCondition<LoginModel>, navigator: Navigator) {
     when (authState) {
         is RequestCondition.IdleCondition -> {}
         is RequestCondition.LoadingCondition -> {
@@ -107,6 +109,9 @@ fun AuthenticationState(authState: RequestCondition<LoginModel>) {
         }
         is RequestCondition.SuccessCondition -> {
             Text(modifier = Modifier.padding(top = 15.dp), text = stringResource(Res.string.login_success_text))
+
+            // on success navigate to file screen
+            navigator.push(MainTabScreen())
         }
     }
 }
