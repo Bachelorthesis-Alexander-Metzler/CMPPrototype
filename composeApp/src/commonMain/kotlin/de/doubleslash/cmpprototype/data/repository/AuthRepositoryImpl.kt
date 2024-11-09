@@ -1,7 +1,7 @@
 package de.doubleslash.cmpprototype.data.repository
 
-import de.doubleslash.cmpprototype.data.datasource.remote.rest.AuthApi
-import de.doubleslash.cmpprototype.data.datasource.remote.rest.dto.LoginDTO
+import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApi
+import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.dto.LoginDTO
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.domain.repository.AuthRepository
 

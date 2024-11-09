@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.data.datasource.remote.rest
+package de.doubleslash.cmpprototype.data.datasource.remote.rest.auth
 
 import de.doubleslash.cmpprototype.common.Constants.HEADERS_APPLICATION_TYPE
 import de.doubleslash.cmpprototype.common.Constants.HTTPS_PROTOCOL
@@ -8,7 +8,7 @@ import de.doubleslash.cmpprototype.common.Constants.CONTENT_TYPE
 import de.doubleslash.cmpprototype.common.Constants.USERNAME
 import de.doubleslash.cmpprototype.common.Constants.PASSWORD
 import de.doubleslash.cmpprototype.common.Constants.HTTP_ERROR_MSG
-import de.doubleslash.cmpprototype.data.datasource.remote.rest.dto.LoginDTO
+import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.dto.LoginDTO
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

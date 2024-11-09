@@ -1,7 +1,7 @@
 package de.doubleslash.cmpprototype.di
 
-import de.doubleslash.cmpprototype.data.datasource.remote.rest.AuthApi
-import de.doubleslash.cmpprototype.data.datasource.remote.rest.AuthApiImpl
+import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApi
+import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApiImpl
 import de.doubleslash.cmpprototype.data.repository.AuthRepositoryImpl
 import de.doubleslash.cmpprototype.domain.repository.AuthRepository
 import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.AuthenticateUserUseCase
