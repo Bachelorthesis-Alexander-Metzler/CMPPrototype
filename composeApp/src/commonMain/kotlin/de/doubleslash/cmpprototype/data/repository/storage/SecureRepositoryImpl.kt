@@ -11,14 +11,16 @@ class SecureRepositoryImpl(
     }
 
     override fun getSessionId(): String {
+        // TODO: get session id from SecureStorage
+        return "sessionId"
+    }
+
+    override fun saveUserId(userId: Int) {
         TODO("Not yet implemented")
     }
 
-    override fun saveUserId(userId: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getUserId(): String {
-        TODO("Not yet implemented")
+    override fun getUserId(): Int {
+        // TODO: get user id from SecureStorage
+        return 0
     }
 }

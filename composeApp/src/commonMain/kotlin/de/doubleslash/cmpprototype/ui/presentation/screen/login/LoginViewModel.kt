@@ -41,7 +41,7 @@ class LoginViewModel(
     fun onLoginClick() {
         screenModelScope.launch(Dispatchers.Main) {
             val isPreviouslyAuthenticated = true
-            val isLocalAuthActive = false
+            val isLocalAuthActive = true
 
             if (!isConnected.value) {
                 println("Not connected to the internet")

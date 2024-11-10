@@ -79,14 +79,21 @@ class LoginScreen : Screen{
                 }
 
                 // Server Address Field
-                ServerAddressField(serverAddress = viewModel.serverAddress, onValueChange = { viewModel.serverAddress = it })
+                ServerAddressField(
+                    serverAddress = viewModel.serverAddress,
+                    enabled = isConnected,
+                    onValueChange = { viewModel.serverAddress = it })
 
                 // Username Field
-                UsernameField(username = viewModel.username, onValueChange = { viewModel.username = it })
+                UsernameField(
+                    username = viewModel.username,
+                    enabled = isConnected,
+                    onValueChange = { viewModel.username = it })
 
                 // Password Field
                 PasswordField(
                     password = viewModel.password,
+                    enabled = isConnected,
                     onValueChange = { viewModel.password = it },
                     passwordVisible = passwordVisible,
                     onPasswordVisibilityChange = { passwordVisible = !passwordVisible }
@@ -95,9 +102,15 @@ class LoginScreen : Screen{
                 // Login Button
                 LoginButton(
                     onClick = { viewModel.onLoginClick() },
-                    enabled = viewModel.serverAddress.isNotBlank()
-                            && viewModel.username.isNotBlank()
-                            && viewModel.password.isNotBlank())
+                    enabled = if (isConnected) {
+                        viewModel.serverAddress.isNotBlank()
+                                && viewModel.username.isNotBlank()
+                                && viewModel.password.isNotBlank()
+                    } else {
+                        // login button enabled if no internet connection to allow login with local auth
+                        true
+                    }
+                )
 
                 // Authentication State
                 HandleAuthenticationState(authState = authState, navigator = navigator, isConnected = isConnected)
