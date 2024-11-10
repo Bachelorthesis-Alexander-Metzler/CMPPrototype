@@ -13,9 +13,7 @@ import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnect
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -64,11 +62,11 @@ class LoginViewModel(
                 println("Connected to the internet")
 
                 if (!isPreviouslyAuthenticated) {
-                    loginViaTextInput()
+                    loginViaREST()
                 } else {
                     if (!isLocalAuthActive) {
                         // login via local auth
-                        loginViaTextInput()
+                        loginViaREST()
                     } else {
                         loginViaLocalAuthOnline()
                     }
@@ -79,8 +77,14 @@ class LoginViewModel(
     }
 
     /** Login via local authentication with REST authentication */
-    private fun loginViaLocalAuthOnline() {
-        TODO("Not yet implemented")
+    private suspend fun loginViaLocalAuthOnline() {
+        val isLocalAuthSuccessful = true
+
+        if (isLocalAuthSuccessful) {
+            loginViaREST()
+        } else {
+            authState = RequestCondition.ErrorCondition("Local authentication failed")
+        }
     }
 
     /** Login via local authentication without REST authentication */
@@ -102,7 +106,7 @@ class LoginViewModel(
         return getSessionDataUseCase.invoke()
     }
 
-    private suspend fun loginViaTextInput() {
+    private suspend fun loginViaREST() {
         // set state to loading
         authState = RequestCondition.LoadingCondition
 
