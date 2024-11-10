@@ -17,11 +17,11 @@ fun App() {
     initKoin()
 
     AppTheme {
-//        Navigator(LoginScreen()) { navigator ->
-//            SlideTransition(navigator = navigator)
-//        }
-        Navigator(BottomTabManager()) { navigator ->
+        Navigator(LoginScreen()) { navigator ->
             SlideTransition(navigator = navigator)
         }
+//        Navigator(BottomTabManager()) { navigator ->
+//            SlideTransition(navigator = navigator)
+//        }
     }
 }
