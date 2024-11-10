@@ -17,6 +17,7 @@
     <string name="loading_text">Lädt...</string>
     <string name="login_failed_text">Login fehlgeschlagen</string>
     <string name="login_success_text">Login erfolgreich</string>
+    <string name="no_internet_connection">Keine Internetverbindung</string>
 
     <!-- content descriptions -->
     <string name="content_description_visibility_on">Passwort versteckt</string>

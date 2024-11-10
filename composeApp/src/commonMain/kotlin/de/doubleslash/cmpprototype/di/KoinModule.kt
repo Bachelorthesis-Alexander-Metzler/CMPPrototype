@@ -3,7 +3,9 @@ package de.doubleslash.cmpprototype.di
 import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApi
 import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApiImpl
 import de.doubleslash.cmpprototype.data.repository.AuthRepositoryImpl
+import de.doubleslash.cmpprototype.data.repository.NetworkStatusRepositoryImpl
 import de.doubleslash.cmpprototype.domain.repository.AuthRepository
+import de.doubleslash.cmpprototype.domain.repository.NetworkStatusRepository
 import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.AuthenticateUserUseCase
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
 import org.koin.core.context.startKoin
@@ -14,11 +16,14 @@ val moduleApplication = module {
     single<AuthApi> { AuthApiImpl() }
     single<AuthRepository> { AuthRepositoryImpl(get()) }
 
+    // injection for network status repository
+    single<NetworkStatusRepository> { NetworkStatusRepositoryImpl() }
+
     // inject AuthenticateUserUseCase which needs AuthRepository
     single { AuthenticateUserUseCase(get()) }
 
     // inject LoginViewModel which needs AuthenticateUserUseCase
-    factory { LoginViewModel(get()) }
+    factory { LoginViewModel(get(), get()) }
 }
 
 fun initKoin() {

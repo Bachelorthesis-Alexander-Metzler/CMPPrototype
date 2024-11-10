@@ -8,9 +8,11 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,6 +26,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.login_top_bar_title
+import cmpprototype.composeapp.generated.resources.no_internet_connection
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.AuthenticationState
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.LoginButton
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.PasswordField
@@ -44,6 +47,7 @@ class LoginScreen : Screen{
         var passwordVisible by remember { mutableStateOf(false) }
 
         val authState = viewModel.authState
+        val isConnected = viewModel.isConnected.collectAsState()
 
         Scaffold(
             topBar = {
@@ -63,6 +67,17 @@ class LoginScreen : Screen{
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
+                // Show message when no internet connection is available
+                if (!isConnected.value) {
+                    Snackbar(
+                        modifier = Modifier.padding(bottom = 15.dp, top = 15.dp),
+                        containerColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.onError,
+                    ) {
+                        Text(stringResource(Res.string.no_internet_connection))
+                    }
+                }
+
                 // Server Address Field
                 ServerAddressField(serverAddress = viewModel.serverAddress, onValueChange = { viewModel.serverAddress = it })
 
@@ -79,7 +94,7 @@ class LoginScreen : Screen{
 
                 // Login Button
                 LoginButton(
-                    onClick = { viewModel.authenticateUser() },
+                    onClick = { viewModel.onLoginClick() },
                     enabled = viewModel.serverAddress.isNotBlank()
                             && viewModel.username.isNotBlank()
                             && viewModel.password.isNotBlank())

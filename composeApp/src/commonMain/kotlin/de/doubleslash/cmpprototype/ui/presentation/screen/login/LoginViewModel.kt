@@ -5,15 +5,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.plusmobileapps.konnectivity.NetworkConnection
 import de.doubleslash.cmpprototype.domain.model.auth.LoginModel
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
+import de.doubleslash.cmpprototype.domain.repository.NetworkStatusRepository
 import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.AuthenticateUserUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val authUserUseCase: AuthenticateUserUseCase // dependency injection
+    private val authUserUseCase: AuthenticateUserUseCase, // dependency injection
+    networkStatusRepository: NetworkStatusRepository
 ) : ScreenModel {
+    // input fields
     var serverAddress by mutableStateOf("")
     var username by mutableStateOf("")
     var password by mutableStateOf("")
@@ -21,21 +26,30 @@ class LoginViewModel(
     // current state of authentication process
     var authState by mutableStateOf<RequestCondition<LoginModel>>(RequestCondition.IdleCondition)
 
+    // network status
+    // val networkStatus: StateFlow<NetworkConnection> = networkStatusRepository.currentNetworkConnectionState
+    val isConnected: StateFlow<Boolean> = networkStatusRepository.isConnectedState
 
-    fun authenticateUser() {
+
+    fun onLoginClick() {
         screenModelScope.launch(Dispatchers.Main) {
-            // set state to loading
-            authState = RequestCondition.LoadingCondition
+            if (!isConnected.value) {
+                // TODO: isPreviouslyAuthenticated
+                println("Not connected to the internet")
+            } else {
+                // set state to loading
+                authState = RequestCondition.LoadingCondition
 
-            // try authentication
-            try {
-                val result = authUserUseCase.invoke(serverAddress, username, password)
+                // try authentication
+                try {
+                    val result = authUserUseCase.invoke(serverAddress, username, password)
 
-                // if successful, set state to success
-                authState = result
-            } catch (e: Exception) {
-                // if error, set state to error
-                authState = RequestCondition.ErrorCondition("Unexpected error: ${e.message}")
+                    // if successful, set state to success
+                    authState = result
+                } catch (e: Exception) {
+                    // if error, set state to error
+                    authState = RequestCondition.ErrorCondition("Unexpected error: ${e.message}")
+                }
             }
         }
     }
