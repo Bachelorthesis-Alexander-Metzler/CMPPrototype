@@ -11,8 +11,10 @@ import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.AuthenticateUserUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
+import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -20,7 +22,8 @@ class LoginViewModel(
     // dependency injection
     private val authUserUseCase: AuthenticateUserUseCase,
     private val getConnectionStatusUseCase: GetConnectionStatusUseCase,
-    private val getNetworkConnectionUseCase: GetNetworkStatusUseCase
+    private val getNetworkConnectionUseCase: GetNetworkStatusUseCase,
+    private val getSessionDataUseCase: GetSessionDataUseCase
 ) : ScreenModel {
     // input fields
     var serverAddress by mutableStateOf("")
@@ -31,46 +34,87 @@ class LoginViewModel(
     var authState by mutableStateOf<RequestCondition<LoginModel>>(RequestCondition.IdleCondition)
 
     // network status
-    var networkStatus by mutableStateOf(NetworkConnection.NONE)
-    var isConnected by mutableStateOf(false)
-
-    init {
-        // Collect the connection status changes from CheckConnectionUseCase
-        screenModelScope.launch(Dispatchers.IO) {
-            getConnectionStatusUseCase.invoke().collectLatest { status ->
-                isConnected = status
-            }
-        }
-        // Collect the network status changes from GetNetworkStatusUseCase
-        screenModelScope.launch(Dispatchers.IO) {
-            getNetworkConnectionUseCase.invoke().collectLatest { status ->
-                networkStatus = status
-            }
-        }
-    }
+    var networkStatus: StateFlow<NetworkConnection> = getNetworkConnectionUseCase.invoke()
+    var isConnected: StateFlow<Boolean> = getConnectionStatusUseCase.invoke()
 
 
     fun onLoginClick() {
         screenModelScope.launch(Dispatchers.Main) {
-            if (!isConnected) {
-                // TODO: isPreviouslyAuthenticated
+            val isPreviouslyAuthenticated = true
+            val isLocalAuthActive = false
+
+            if (!isConnected.value) {
                 println("Not connected to the internet")
-            } else {
-                println("Connected to the internet")
-                // set state to loading
                 authState = RequestCondition.LoadingCondition
 
-                // try authentication
-                try {
-                    val result = authUserUseCase.invoke(serverAddress, username, password)
-
-                    // if successful, set state to success
-                    authState = result
-                } catch (e: Exception) {
-                    // if error, set state to error
-                    authState = RequestCondition.ErrorCondition("Unexpected error: ${e.message}")
+                if (!isPreviouslyAuthenticated) {
+                    // user cannot login
+                    authState = RequestCondition.ErrorCondition("Internet connection required")
+                } else {
+                    if (!isLocalAuthActive) {
+                        // TODO: get sessionId und userId from local storage
+                        val loginModel: LoginModel = getSessionData()
+                        authState = RequestCondition.SuccessCondition(loginModel)
+                    } else {
+                        // login via local auth
+                        loginViaLocalAuthOffline()
+                    }
                 }
+            } else {
+                println("Connected to the internet")
+
+                if (!isPreviouslyAuthenticated) {
+                    loginViaTextInput()
+                } else {
+                    if (!isLocalAuthActive) {
+                        // login via local auth
+                        loginViaTextInput()
+                    } else {
+                        loginViaLocalAuthOnline()
+                    }
+                }
+
             }
+        }
+    }
+
+    /** Login via local authentication with REST authentication */
+    private fun loginViaLocalAuthOnline() {
+        TODO("Not yet implemented")
+    }
+
+    /** Login via local authentication without REST authentication */
+    private fun loginViaLocalAuthOffline() {
+        // TODO: get local auth status
+        val isLocalAuthSuccessful = true
+
+        if (isLocalAuthSuccessful) {
+            // TODO: get sessionId und userId from local storage
+            val loginModel: LoginModel = getSessionData()
+            authState = RequestCondition.SuccessCondition(loginModel)
+        } else {
+            authState = RequestCondition.ErrorCondition("Local authentication failed")
+        }
+    }
+
+    private fun getSessionData(): LoginModel {
+        // get sessionId und userId from local storage
+        return getSessionDataUseCase.invoke()
+    }
+
+    private suspend fun loginViaTextInput() {
+        // set state to loading
+        authState = RequestCondition.LoadingCondition
+
+        // try authentication
+        try {
+            val result = authUserUseCase.invoke(serverAddress, username, password)
+
+            // if successful, set state to success
+            authState = result
+        } catch (e: Exception) {
+            // if error, set state to error
+            authState = RequestCondition.ErrorCondition("Unexpected error: ${e.message}")
         }
     }
 }

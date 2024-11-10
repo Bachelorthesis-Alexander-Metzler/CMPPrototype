@@ -12,6 +12,7 @@ import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +27,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.login_top_bar_title
 import cmpprototype.composeapp.generated.resources.no_internet_connection
-import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.AuthenticationState
+import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.HandleAuthenticationState
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.LoginButton
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.PasswordField
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.ServerAddressField
@@ -46,7 +47,7 @@ class LoginScreen : Screen{
         var passwordVisible by remember { mutableStateOf(false) }
 
         val authState = viewModel.authState
-        val isConnected = viewModel.isConnected
+        val isConnected by viewModel.isConnected.collectAsState()
 
         Scaffold(
             topBar = {
@@ -99,7 +100,7 @@ class LoginScreen : Screen{
                             && viewModel.password.isNotBlank())
 
                 // Authentication State
-                AuthenticationState(authState = authState, navigator = navigator)
+                HandleAuthenticationState(authState = authState, navigator = navigator, isConnected = isConnected)
             }
         }
     }
