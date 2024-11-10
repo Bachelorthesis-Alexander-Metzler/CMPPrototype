@@ -1,9 +1,9 @@
-package de.doubleslash.cmpprototype.data.repository
+package de.doubleslash.cmpprototype.data.repository.auth
 
 import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApi
 import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.dto.LoginDTO
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
-import de.doubleslash.cmpprototype.domain.repository.AuthRepository
+import de.doubleslash.cmpprototype.domain.repository.auth.AuthRepository
 
 class AuthRepositoryImpl(
     private val api: AuthApi // dependency injection

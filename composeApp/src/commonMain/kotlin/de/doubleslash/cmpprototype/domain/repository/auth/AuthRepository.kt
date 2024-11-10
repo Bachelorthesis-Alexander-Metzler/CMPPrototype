@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.domain.repository
+package de.doubleslash.cmpprototype.domain.repository.auth
 
 import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.dto.LoginDTO
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition

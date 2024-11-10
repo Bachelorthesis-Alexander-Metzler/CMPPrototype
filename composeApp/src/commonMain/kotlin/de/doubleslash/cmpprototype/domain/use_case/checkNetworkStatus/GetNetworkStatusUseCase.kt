@@ -1,7 +1,7 @@
 package de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus
 
 import com.plusmobileapps.konnectivity.NetworkConnection
-import de.doubleslash.cmpprototype.domain.repository.NetworkStatusRepository
+import de.doubleslash.cmpprototype.domain.repository.deviceApi.NetworkStatusRepository
 import kotlinx.coroutines.flow.StateFlow
 
 class GetNetworkStatusUseCase(

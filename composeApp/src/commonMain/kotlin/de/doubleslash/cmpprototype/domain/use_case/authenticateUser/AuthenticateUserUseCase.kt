@@ -3,7 +3,7 @@ package de.doubleslash.cmpprototype.domain.use_case.authenticateUser
 import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.dto.toLoginModel
 import de.doubleslash.cmpprototype.domain.model.auth.LoginModel
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
-import de.doubleslash.cmpprototype.domain.repository.AuthRepository
+import de.doubleslash.cmpprototype.domain.repository.auth.AuthRepository
 
 /** business logic for authentication of a user
  * */

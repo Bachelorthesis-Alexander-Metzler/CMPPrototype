@@ -17,7 +17,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val authUserUseCase: AuthenticateUserUseCase, // dependency injection
+    // dependency injection
+    private val authUserUseCase: AuthenticateUserUseCase,
     private val getConnectionStatusUseCase: GetConnectionStatusUseCase,
     private val getNetworkConnectionUseCase: GetNetworkStatusUseCase
 ) : ScreenModel {

@@ -2,10 +2,10 @@ package de.doubleslash.cmpprototype.di
 
 import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApi
 import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApiImpl
-import de.doubleslash.cmpprototype.data.repository.AuthRepositoryImpl
-import de.doubleslash.cmpprototype.data.repository.NetworkStatusRepositoryImpl
-import de.doubleslash.cmpprototype.domain.repository.AuthRepository
-import de.doubleslash.cmpprototype.domain.repository.NetworkStatusRepository
+import de.doubleslash.cmpprototype.data.repository.auth.AuthRepositoryImpl
+import de.doubleslash.cmpprototype.data.repository.deviceApi.NetworkStatusRepositoryImpl
+import de.doubleslash.cmpprototype.domain.repository.auth.AuthRepository
+import de.doubleslash.cmpprototype.domain.repository.deviceApi.NetworkStatusRepository
 import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.AuthenticateUserUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase

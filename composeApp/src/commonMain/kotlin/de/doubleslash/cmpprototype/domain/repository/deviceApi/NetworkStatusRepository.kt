@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.domain.repository
+package de.doubleslash.cmpprototype.domain.repository.deviceApi
 
 import com.plusmobileapps.konnectivity.NetworkConnection
 import kotlinx.coroutines.flow.StateFlow

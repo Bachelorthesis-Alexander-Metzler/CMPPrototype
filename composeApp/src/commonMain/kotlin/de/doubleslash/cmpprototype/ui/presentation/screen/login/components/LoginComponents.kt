@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -110,8 +111,10 @@ fun AuthenticationState(authState: RequestCondition<LoginModel>, navigator: Navi
         is RequestCondition.SuccessCondition -> {
             Text(modifier = Modifier.padding(top = 15.dp), text = stringResource(Res.string.login_success_text))
 
-            // on success navigate to file screen
-            navigator.push(BottomTabManager())
+            // Navigate on success using LaunchedEffect to ensure it only happens once
+            LaunchedEffect(Unit) {
+                navigator.push(BottomTabManager())
+            }
         }
     }
 }
