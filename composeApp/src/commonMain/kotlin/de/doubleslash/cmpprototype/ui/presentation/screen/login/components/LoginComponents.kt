@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import cmpprototype.composeapp.generated.resources.*
 import de.doubleslash.cmpprototype.domain.model.auth.LoginModel
-import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.MainTabScreen
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.BottomTabManager
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
@@ -111,7 +111,7 @@ fun AuthenticationState(authState: RequestCondition<LoginModel>, navigator: Navi
             Text(modifier = Modifier.padding(top = 15.dp), text = stringResource(Res.string.login_success_text))
 
             // on success navigate to file screen
-            navigator.push(MainTabScreen())
+            navigator.push(BottomTabManager())
         }
     }
 }
