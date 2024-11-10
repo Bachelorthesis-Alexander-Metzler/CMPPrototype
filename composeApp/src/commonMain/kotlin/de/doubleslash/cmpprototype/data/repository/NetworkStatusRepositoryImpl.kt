@@ -12,5 +12,4 @@ class NetworkStatusRepositoryImpl : NetworkStatusRepository {
         get() = konnectivity.currentNetworkConnectionState
     override val isConnectedState: StateFlow<Boolean>
         get() = konnectivity.isConnectedState
-
 }

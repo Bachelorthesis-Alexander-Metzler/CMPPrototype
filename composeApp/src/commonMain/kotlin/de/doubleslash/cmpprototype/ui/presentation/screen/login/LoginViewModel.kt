@@ -8,15 +8,18 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import com.plusmobileapps.konnectivity.NetworkConnection
 import de.doubleslash.cmpprototype.domain.model.auth.LoginModel
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
-import de.doubleslash.cmpprototype.domain.repository.NetworkStatusRepository
 import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.AuthenticateUserUseCase
+import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
+import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val authUserUseCase: AuthenticateUserUseCase, // dependency injection
-    networkStatusRepository: NetworkStatusRepository
+    private val getConnectionStatusUseCase: GetConnectionStatusUseCase,
+    private val getNetworkConnectionUseCase: GetNetworkStatusUseCase
 ) : ScreenModel {
     // input fields
     var serverAddress by mutableStateOf("")
@@ -27,16 +30,32 @@ class LoginViewModel(
     var authState by mutableStateOf<RequestCondition<LoginModel>>(RequestCondition.IdleCondition)
 
     // network status
-    // val networkStatus: StateFlow<NetworkConnection> = networkStatusRepository.currentNetworkConnectionState
-    val isConnected: StateFlow<Boolean> = networkStatusRepository.isConnectedState
+    var networkStatus by mutableStateOf(NetworkConnection.NONE)
+    var isConnected by mutableStateOf(false)
+
+    init {
+        // Collect the connection status changes from CheckConnectionUseCase
+        screenModelScope.launch(Dispatchers.IO) {
+            getConnectionStatusUseCase.invoke().collectLatest { status ->
+                isConnected = status
+            }
+        }
+        // Collect the network status changes from GetNetworkStatusUseCase
+        screenModelScope.launch(Dispatchers.IO) {
+            getNetworkConnectionUseCase.invoke().collectLatest { status ->
+                networkStatus = status
+            }
+        }
+    }
 
 
     fun onLoginClick() {
         screenModelScope.launch(Dispatchers.Main) {
-            if (!isConnected.value) {
+            if (!isConnected) {
                 // TODO: isPreviouslyAuthenticated
                 println("Not connected to the internet")
             } else {
+                println("Connected to the internet")
                 // set state to loading
                 authState = RequestCondition.LoadingCondition
 

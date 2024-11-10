@@ -12,7 +12,6 @@ import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +46,7 @@ class LoginScreen : Screen{
         var passwordVisible by remember { mutableStateOf(false) }
 
         val authState = viewModel.authState
-        val isConnected = viewModel.isConnected.collectAsState()
+        val isConnected = viewModel.isConnected
 
         Scaffold(
             topBar = {
@@ -68,7 +67,7 @@ class LoginScreen : Screen{
                 verticalArrangement = Arrangement.Top
             ) {
                 // Show message when no internet connection is available
-                if (!isConnected.value) {
+                if (!isConnected) {
                     Snackbar(
                         modifier = Modifier.padding(bottom = 15.dp, top = 15.dp),
                         containerColor = MaterialTheme.colorScheme.error,
