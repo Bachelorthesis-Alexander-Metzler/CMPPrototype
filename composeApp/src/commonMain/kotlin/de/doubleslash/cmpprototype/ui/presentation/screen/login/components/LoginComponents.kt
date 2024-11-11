@@ -17,12 +17,13 @@ import cmpprototype.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
-fun ServerAddressField(serverAddress: String, onValueChange: (String) -> Unit) {
+fun ServerAddressField(serverAddress: String, enabled: Boolean, onValueChange: (String) -> Unit) {
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 15.dp),
         value = serverAddress,
+        enabled = enabled,
         onValueChange = onValueChange,
         label = { Text(stringResource(Res.string.server_address_label)) },
         placeholder = { Text(stringResource(Res.string.server_address_placeholder)) },
@@ -31,12 +32,13 @@ fun ServerAddressField(serverAddress: String, onValueChange: (String) -> Unit) {
 }
 
 @Composable
-fun UsernameField(username: String, onValueChange: (String) -> Unit) {
+fun UsernameField(username: String, enabled: Boolean, onValueChange: (String) -> Unit) {
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 15.dp),
         value = username,
+        enabled = enabled,
         onValueChange = onValueChange,
         label = { Text(stringResource(Res.string.username_label)) },
         placeholder = { Text(stringResource(Res.string.username_placeholder)) },
@@ -45,12 +47,13 @@ fun UsernameField(username: String, onValueChange: (String) -> Unit) {
 }
 
 @Composable
-fun PasswordField(password: String, onValueChange: (String) -> Unit, passwordVisible: Boolean, onPasswordVisibilityChange: () -> Unit) {
+fun PasswordField(password: String, enabled: Boolean, onValueChange: (String) -> Unit, passwordVisible: Boolean, onPasswordVisibilityChange: () -> Unit) {
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 15.dp),
         value = password,
+        enabled = enabled,
         onValueChange = onValueChange,
         label = { Text(stringResource(Res.string.password_label)) },
         placeholder = { Text(stringResource(Res.string.password_placeholder)) },
