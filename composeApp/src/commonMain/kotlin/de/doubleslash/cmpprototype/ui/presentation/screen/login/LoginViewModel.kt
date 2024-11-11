@@ -28,6 +28,9 @@ class LoginViewModel(
     var username by mutableStateOf("")
     var password by mutableStateOf("")
 
+    // placeholder checkbox value for isPreviouslyAuthenticated (no requirement)
+    var isPreviouslyAuthenticated by mutableStateOf(false)
+
     // current state of authentication process
     var authState by mutableStateOf<RequestCondition<LoginModel>>(RequestCondition.IdleCondition)
 
@@ -38,7 +41,6 @@ class LoginViewModel(
 
     fun onLoginClick() {
         screenModelScope.launch(Dispatchers.Main) {
-            val isPreviouslyAuthenticated = true
             val isLocalAuthActive = true
 
             if (!isConnected.value) {
@@ -61,17 +63,12 @@ class LoginViewModel(
             } else {
                 println("Connected to the internet")
 
-                if (!isPreviouslyAuthenticated) {
+                if (!isPreviouslyAuthenticated || !isLocalAuthActive) {
                     loginViaREST()
                 } else {
-                    if (!isLocalAuthActive) {
-                        // login via local auth
-                        loginViaREST()
-                    } else {
-                        loginViaLocalAuthOnline()
-                    }
+                    // local auth is active or user is previously authenticated
+                    loginViaLocalAuthOnline()
                 }
-
             }
         }
     }

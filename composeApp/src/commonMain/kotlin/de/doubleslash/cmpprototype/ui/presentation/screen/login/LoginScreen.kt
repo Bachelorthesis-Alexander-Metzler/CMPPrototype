@@ -3,7 +3,11 @@ package de.doubleslash.cmpprototype.ui.presentation.screen.login
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -19,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
@@ -30,6 +35,7 @@ import cmpprototype.composeapp.generated.resources.no_internet_connection
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.HandleAuthenticationState
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.LoginButton
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.PasswordField
+import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.PreviouslyAuthenticatedCheckbox
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.ServerAddressField
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.UsernameField
 import org.jetbrains.compose.resources.stringResource
@@ -80,18 +86,27 @@ class LoginScreen : Screen{
 
                 // Server Address Field
                 ServerAddressField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 15.dp),
                     serverAddress = viewModel.serverAddress,
                     enabled = isConnected,
                     onValueChange = { viewModel.serverAddress = it })
 
                 // Username Field
                 UsernameField(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 15.dp),
                     username = viewModel.username,
                     enabled = isConnected,
                     onValueChange = { viewModel.username = it })
 
                 // Password Field
                 PasswordField(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 15.dp),
                     password = viewModel.password,
                     enabled = isConnected,
                     onValueChange = { viewModel.password = it },
@@ -99,8 +114,24 @@ class LoginScreen : Screen{
                     onPasswordVisibilityChange = { passwordVisible = !passwordVisible }
                 )
 
+                // Checkbox for isPreviouslyAuthenticated (no requirement)
+                PreviouslyAuthenticatedCheckbox(
+                    Modifier.fillMaxWidth()
+                        .height(56.dp)
+                        .toggleable(
+                            value = viewModel.isPreviouslyAuthenticated,
+                            onValueChange = { viewModel.isPreviouslyAuthenticated = it },
+                            role = Role.Checkbox
+                        )
+                        .padding(horizontal = 16.dp),
+                    viewModel = viewModel)
+
                 // Login Button
                 LoginButton(
+                    Modifier
+                        .width(200.dp)
+                        .height(50.dp)
+                        .padding(top = 15.dp),
                     onClick = { viewModel.onLoginClick() },
                     enabled = if (isConnected) {
                         viewModel.serverAddress.isNotBlank()
@@ -117,6 +148,5 @@ class LoginScreen : Screen{
             }
         }
     }
-
 }
 

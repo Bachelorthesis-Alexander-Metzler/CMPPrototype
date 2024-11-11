@@ -19,6 +19,9 @@
     <string name="login_success_text">Login erfolgreich</string>
     <string name="no_internet_connection">Keine Internetverbindung</string>
 
+    <!-- checkbox labels -->
+    <string name="previously_authenticated">Kürzlich authentifiziert</string>
+
     <!-- content descriptions -->
     <string name="content_description_visibility_on">Passwort versteckt</string>
     <string name="content_description_visibility_off">Passwort sichtbar</string>

@@ -4,24 +4,26 @@ import org.jetbrains.compose.resources.stringResource
 
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import cmpprototype.composeapp.generated.resources.*
+import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
-fun ServerAddressField(serverAddress: String, enabled: Boolean, onValueChange: (String) -> Unit) {
+fun ServerAddressField(modifier: Modifier, serverAddress: String, enabled: Boolean, onValueChange: (String) -> Unit) {
     OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 15.dp),
+        modifier = modifier,
         value = serverAddress,
         enabled = enabled,
         onValueChange = onValueChange,
@@ -32,11 +34,9 @@ fun ServerAddressField(serverAddress: String, enabled: Boolean, onValueChange: (
 }
 
 @Composable
-fun UsernameField(username: String, enabled: Boolean, onValueChange: (String) -> Unit) {
+fun UsernameField(modifier: Modifier,username: String, enabled: Boolean, onValueChange: (String) -> Unit) {
     OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 15.dp),
+        modifier = modifier,
         value = username,
         enabled = enabled,
         onValueChange = onValueChange,
@@ -47,11 +47,9 @@ fun UsernameField(username: String, enabled: Boolean, onValueChange: (String) ->
 }
 
 @Composable
-fun PasswordField(password: String, enabled: Boolean, onValueChange: (String) -> Unit, passwordVisible: Boolean, onPasswordVisibilityChange: () -> Unit) {
+fun PasswordField(modifier: Modifier, password: String, enabled: Boolean, onValueChange: (String) -> Unit, passwordVisible: Boolean, onPasswordVisibilityChange: () -> Unit) {
     OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 15.dp),
+        modifier = modifier,
         value = password,
         enabled = enabled,
         onValueChange = onValueChange,
@@ -77,11 +75,27 @@ fun PasswordField(password: String, enabled: Boolean, onValueChange: (String) ->
 }
 
 @Composable
-fun LoginButton(onClick: () -> Unit, enabled: Boolean) {
+fun PreviouslyAuthenticatedCheckbox(modifier: Modifier, viewModel: LoginViewModel) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = viewModel.isPreviouslyAuthenticated,
+            onCheckedChange = null,
+        )
+        Text(
+            text = stringResource(Res.string.previously_authenticated),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(start = 16.dp)
+        )
+    }
+}
+
+@Composable
+fun LoginButton(modifier: Modifier, onClick: () -> Unit, enabled: Boolean) {
     ElevatedButton(
-        modifier = Modifier
-            .width(200.dp)
-            .height(50.dp),
+        modifier = modifier,
         onClick = onClick,
         enabled = enabled,
         colors = ButtonColors(
