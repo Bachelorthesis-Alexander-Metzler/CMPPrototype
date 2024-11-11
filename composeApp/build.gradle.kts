@@ -61,6 +61,8 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
 
             implementation(libs.coroutines.core)
+
+            implementation(libs.stately.common)
         }
     }
 }

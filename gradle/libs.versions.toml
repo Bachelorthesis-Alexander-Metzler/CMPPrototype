@@ -19,6 +19,7 @@ ktor = "2.3.12"
 koinCore = "4.0.0"
 uiTextGoogleFonts = "1.7.5"
 kotlinx-coroutines = "1.9.0"
+stately = "2.1.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -50,6 +51,8 @@ ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "k
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+
+stately-common = { module = "co.touchlab:stately-common", version.ref = "stately" }
 
 
 [plugins]

@@ -16,14 +16,14 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 @Preview
 fun App() {
-    initKoin()
+    remember { initKoin() }
 
     AppTheme {
-//        Navigator(LoginScreen()) { navigator ->
-//            SlideTransition(navigator = navigator)
-//        }
-        Navigator(MainTabScreen()) { navigator ->
+        Navigator(LoginScreen()) { navigator ->
             SlideTransition(navigator = navigator)
         }
+//        Navigator(MainTabScreen()) { navigator ->
+//            SlideTransition(navigator = navigator)
+//        }
     }
 }
