@@ -16,14 +16,18 @@ import de.doubleslash.cmpprototype.domain.model.auth.LoginModel
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.BottomTabManager
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.download.DownloadScreen
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveCircularProgressIndicator
+import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalAdaptiveApi::class)
 @Composable
 fun HandleAuthenticationState(authState: RequestCondition<LoginModel>, navigator: Navigator, isConnected: Boolean) {
     when (authState) {
         is RequestCondition.IdleCondition -> {}
         is RequestCondition.LoadingCondition -> {
-            CircularProgressIndicator()
+            AdaptiveCircularProgressIndicator(modifier = Modifier.padding(top = 15.dp))
             Text(modifier = Modifier.padding(top = 15.dp), text = stringResource(Res.string.loading_text))
         }
         is RequestCondition.ErrorCondition -> {
