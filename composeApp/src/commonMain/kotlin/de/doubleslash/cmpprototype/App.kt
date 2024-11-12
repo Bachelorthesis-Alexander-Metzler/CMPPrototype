@@ -19,10 +19,10 @@ fun App() {
 
     AppTheme(
         content = {
-//            Navigator(LoginScreen()) { navigator ->
-//                    ScaleTransition(navigator = navigator)
-            Navigator(BottomTabManager()) { navigator ->
-                SlideTransition(navigator = navigator)
+            Navigator(LoginScreen()) { navigator ->
+                    ScaleTransition(navigator = navigator)
+//            Navigator(BottomTabManager()) { navigator ->
+//                SlideTransition(navigator = navigator)
             }
         }
     )

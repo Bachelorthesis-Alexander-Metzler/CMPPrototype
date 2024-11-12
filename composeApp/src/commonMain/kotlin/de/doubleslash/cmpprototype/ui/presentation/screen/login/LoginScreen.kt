@@ -62,21 +62,7 @@ class LoginScreen : Screen{
         Scaffold(
             topBar = {
                 AdaptiveTopAppBar(
-                    title = { Text(text = stringResource(Res.string.login_top_bar_title))},
-                    adaptation = {
-                        cupertino {
-                            colors = CupertinoTopAppBarDefaults.topAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                titleContentColor = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                        material {
-                            colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                titleContentColor = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
+                    title = { Text(text = stringResource(Res.string.login_top_bar_title))}
                 )
             }
         ) { innerPadding ->
