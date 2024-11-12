@@ -2,6 +2,9 @@
 <resources>
     <!-- top bar title -->
     <string name="login_top_bar_title">Login</string>
+    <string name="file_tab_title">Zuhause</string>
+    <string name="downloads_tab_title">Heruntergeladen</string>
+    <string name="settings_tab_title">Einstellungen</string>
 
     <string name="server_address_label">Server Adresse</string>
     <string name="server_address_placeholder">mein.business-filemanager.de</string>
