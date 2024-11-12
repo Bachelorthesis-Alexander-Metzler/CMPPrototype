@@ -7,6 +7,10 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveTheme
+import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
+import io.github.alexzhirkevich.cupertino.adaptive.Theme
+import io.github.alexzhirkevich.cupertino.theme.CupertinoTheme
 
 
 private val lightScheme = lightColorScheme(
@@ -249,16 +253,34 @@ val unspecified_scheme = ColorFamily(
     Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
 )
 
+
+/** Determines the theme based on the platform */
+expect fun determineTheme(): Theme
+
+@OptIn(ExperimentalAdaptiveApi::class)
 @Composable
 fun AppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    theme: Theme = determineTheme(),
     content: @Composable() () -> Unit
 ) {
-    val colorScheme = if (darkTheme) darkColorScheme() else lightColorScheme()
-
-  MaterialTheme(
-    colorScheme = colorScheme,
-    content = content
-  )
+    AdaptiveTheme(
+        material = {
+            MaterialTheme(
+                colorScheme = if (useDarkTheme) darkColorScheme() else lightColorScheme(),
+                content = it
+            )
+        },
+        cupertino = {
+            CupertinoTheme(
+                colorScheme = if (useDarkTheme) io.github.alexzhirkevich.cupertino.theme.darkColorScheme()
+                else io.github.alexzhirkevich.cupertino.theme.lightColorScheme(),
+                content = it
+            )
+        },
+        target = theme,
+        content = content
+    )
 }
+
 

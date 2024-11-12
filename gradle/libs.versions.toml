@@ -21,6 +21,7 @@ uiTextGoogleFonts = "1.7.5"
 kotlinx-coroutines = "1.9.0"
 konnectivity-version = "0.1-alpha01"
 stately = "2.1.0"
+compose-cupertino = "0.1.0-alpha04"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -56,6 +57,11 @@ coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", ve
 stately-common = { module = "co.touchlab:stately-common", version.ref = "stately" }
 
 konnectivity = { module = "com.plusmobileapps:konnectivity", version.ref = "konnectivity-version" }
+
+cupertino = { module = "io.github.alexzhirkevich:cupertino", version.ref = "compose-cupertino" }
+cupertino-native = { module = "io.github.alexzhirkevich:cupertino-native", version.ref = "compose-cupertino" }
+cupertino-adaptive = { module = "io.github.alexzhirkevich:cupertino-adaptive", version.ref = "compose-cupertino" }
+cupertino-icons-extended = { module = "io.github.alexzhirkevich:cupertino-icons-extended", version.ref = "compose-cupertino" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

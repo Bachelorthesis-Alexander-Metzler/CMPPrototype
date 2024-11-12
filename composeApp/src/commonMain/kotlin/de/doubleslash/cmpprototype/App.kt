@@ -15,12 +15,14 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun App() {
     remember { initKoin() }
 
-    AppTheme {
-        Navigator(LoginScreen()) { navigator ->
-            ScaleTransition(navigator = navigator)
-        }
+    AppTheme(
+        content = {
+            Navigator(LoginScreen()) { navigator ->
+                    ScaleTransition(navigator = navigator)
 //        Navigator(BottomTabManager()) { navigator ->
 //            SlideTransition(navigator = navigator)
 //        }
-    }
+            }
+        }
+    )
 }
