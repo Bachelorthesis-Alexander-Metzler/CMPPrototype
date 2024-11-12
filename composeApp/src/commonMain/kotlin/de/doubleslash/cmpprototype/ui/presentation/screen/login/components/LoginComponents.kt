@@ -18,6 +18,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import cmpprototype.composeapp.generated.resources.*
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveButton
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveCheckbox
+import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
@@ -74,15 +77,16 @@ fun PasswordField(modifier: Modifier, password: String, enabled: Boolean, onValu
     )
 }
 
+@OptIn(ExperimentalAdaptiveApi::class)
 @Composable
 fun PreviouslyAuthenticatedCheckbox(modifier: Modifier, viewModel: LoginViewModel) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Checkbox(
+        AdaptiveCheckbox(
             checked = viewModel.isPreviouslyAuthenticated,
-            onCheckedChange = null,
+            onCheckedChange = null
         )
         Text(
             text = stringResource(Res.string.previously_authenticated),
@@ -92,19 +96,24 @@ fun PreviouslyAuthenticatedCheckbox(modifier: Modifier, viewModel: LoginViewMode
     }
 }
 
+@OptIn(ExperimentalAdaptiveApi::class)
 @Composable
 fun LoginButton(modifier: Modifier, onClick: () -> Unit, enabled: Boolean) {
-    ElevatedButton(
+    AdaptiveButton(
         modifier = modifier,
         onClick = onClick,
         enabled = enabled,
-        colors = ButtonColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.primary,
-            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
-            disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-        )
-    ) {
+        adaptation = {
+            material {
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                    disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+                    disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                )
+            }
+        }
+    ){
         Text(stringResource(Res.string.login_button_text))
     }
 }
