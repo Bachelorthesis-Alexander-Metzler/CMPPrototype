@@ -20,16 +20,20 @@ import cafe.adriel.voyager.navigator.tab.TabNavigator
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.download.DownloadScreen
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management.FileScreen
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.SettingsScreen
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveNavigationBar
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveNavigationBarItem
+import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 
 /** Main Tab Screen only for Tab navigation
  * manages bottom tabs */
 class BottomTabManager : Screen {
+    @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
     override fun Content() {
         TabNavigator(FileScreen()) {
             Scaffold(
                 bottomBar = {
-                    BottomAppBar {
+                    AdaptiveNavigationBar {
                         TabItem(FileScreen())
                         TabItem(DownloadScreen())
                         TabItem(SettingsScreen())
@@ -41,11 +45,12 @@ class BottomTabManager : Screen {
         }
     }
 
+    @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
     private fun RowScope.TabItem(tab: Tab) {
         val tabNavigator = LocalTabNavigator.current
 
-        NavigationBarItem(
+        AdaptiveNavigationBarItem(
             selected = tabNavigator.current == tab,
             onClick = {
                 tabNavigator.current = tab

@@ -4,8 +4,10 @@ package de.doubleslash.cmpprototype
 import androidx.compose.runtime.*
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.ScaleTransition
+import cafe.adriel.voyager.transitions.SlideTransition
 import de.doubleslash.cmpprototype.di.initKoin
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginScreen
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.BottomTabManager
 import de.doubleslash.cmpprototype.ui.theme.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -17,11 +19,10 @@ fun App() {
 
     AppTheme(
         content = {
-            Navigator(LoginScreen()) { navigator ->
-                    ScaleTransition(navigator = navigator)
-//        Navigator(BottomTabManager()) { navigator ->
-//            SlideTransition(navigator = navigator)
-//        }
+//            Navigator(LoginScreen()) { navigator ->
+//                    ScaleTransition(navigator = navigator)
+            Navigator(BottomTabManager()) { navigator ->
+                SlideTransition(navigator = navigator)
             }
         }
     )
