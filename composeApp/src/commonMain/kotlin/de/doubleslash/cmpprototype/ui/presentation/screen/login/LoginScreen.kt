@@ -38,13 +38,17 @@ import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.Passw
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.PreviouslyAuthenticatedCheckbox
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.ServerAddressField
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.UsernameField
+import io.github.alexzhirkevich.cupertino.CupertinoTopAppBarDefaults
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveTopAppBar
+import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
+import io.github.alexzhirkevich.cupertino.theme.CupertinoTheme
 import org.jetbrains.compose.resources.stringResource
 
 
 
 class LoginScreen : Screen{
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalAdaptiveApi::class, ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         // linear navigator to navigate to MainTabScreen after successful login
@@ -57,12 +61,22 @@ class LoginScreen : Screen{
 
         Scaffold(
             topBar = {
-                CenterAlignedTopAppBar(
+                AdaptiveTopAppBar(
                     title = { Text(text = stringResource(Res.string.login_top_bar_title))},
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        titleContentColor = MaterialTheme.colorScheme.primary
-                    ),
+                    adaptation = {
+                        cupertino {
+                            colors = CupertinoTopAppBarDefaults.topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                titleContentColor = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                        material {
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                titleContentColor = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
                 )
             }
         ) { innerPadding ->
