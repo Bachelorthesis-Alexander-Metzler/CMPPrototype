@@ -18,7 +18,7 @@ class SettingsScreen : Tab {
     @Composable
     override fun Content() {
         Scaffold(
-            topBar = CustomTopAppBar()
+            topBar = CustomTopAppBar(text = stringResource(Res.string.settings_tab_title))
         ) {
 
         }

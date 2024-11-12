@@ -17,7 +17,7 @@ class DownloadScreen : Tab {
     @Composable
     override fun Content() {
         Scaffold(
-            topBar = CustomTopAppBar()
+            topBar = CustomTopAppBar(text = stringResource(Res.string.downloads_tab_title))
         ) {
 
         }
