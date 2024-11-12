@@ -8,7 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveTheme
+import io.github.alexzhirkevich.cupertino.adaptive.CupertinoThemeSpec
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
+import io.github.alexzhirkevich.cupertino.adaptive.MaterialThemeSpec
 import io.github.alexzhirkevich.cupertino.adaptive.Theme
 import io.github.alexzhirkevich.cupertino.theme.CupertinoTheme
 
@@ -265,21 +267,14 @@ fun AppTheme(
     content: @Composable() () -> Unit
 ) {
     AdaptiveTheme(
-        material = {
-            MaterialTheme(
-                colorScheme = if (useDarkTheme) darkColorScheme() else lightColorScheme(),
-                content = it
-            )
-        },
-        cupertino = {
-            CupertinoTheme(
-                colorScheme = if (useDarkTheme) io.github.alexzhirkevich.cupertino.theme.darkColorScheme()
-                else io.github.alexzhirkevich.cupertino.theme.lightColorScheme(),
-                content = it
-            )
-        },
         target = theme,
-        content = content
+        material = MaterialThemeSpec.Default().copy(
+            colorScheme = if (useDarkTheme) darkColorScheme() else lightColorScheme(),
+        ),
+        cupertino = CupertinoThemeSpec.Default().copy(
+            if (useDarkTheme) io.github.alexzhirkevich.cupertino.theme.darkColorScheme()
+            else io.github.alexzhirkevich.cupertino.theme.lightColorScheme(),
+        ), content = content
     )
 }
 
