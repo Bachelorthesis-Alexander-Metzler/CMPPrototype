@@ -96,6 +96,7 @@ fun PreviouslyAuthenticatedCheckbox(modifier: Modifier, viewModel: LoginViewMode
     }
 }
 
+@OptIn(ExperimentalAdaptiveApi::class)
 @Composable
 fun LoginButton(modifier: Modifier, onClick: () -> Unit, enabled: Boolean) {
     AdaptiveButton(

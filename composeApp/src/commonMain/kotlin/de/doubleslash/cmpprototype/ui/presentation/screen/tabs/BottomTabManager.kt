@@ -51,11 +51,12 @@ class BottomTabManager : Screen {
         }
     }
 
+    @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
     private fun RowScope.TabItem(tab: Tab) {
         val tabNavigator = LocalTabNavigator.current
 
-        NavigationBarItem(
+        AdaptiveNavigationBarItem(
             selected = tabNavigator.current == tab,
             onClick = {
                 tabNavigator.current = tab
@@ -69,7 +70,7 @@ class BottomTabManager : Screen {
                             modifier = Modifier.size(24.dp))
                     }
 
-                    if (getPlatform() == "android") Text(text = tab.options.title)
+                    Text(text = tab.options.title)
                 }
             },
         )
