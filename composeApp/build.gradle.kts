@@ -66,10 +66,7 @@ kotlin {
 
             implementation(libs.konnectivity)
 
-            implementation(libs.cupertino)
-            implementation(libs.cupertino.native)
             implementation(libs.cupertino.adaptive)
-            implementation(libs.cupertino.icons.extended)
         }
     }
 }

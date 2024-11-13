@@ -128,10 +128,7 @@ class LoginScreen : Screen{
 
                 // Login Button
                 LoginButton(
-                    Modifier
-                        .width(200.dp)
-                        .height(50.dp)
-                        .padding(top = 15.dp),
+                    Modifier.padding(top = 15.dp),
                     onClick = { viewModel.onLoginClick() },
                     enabled = if (isConnected) {
                         viewModel.serverAddress.isNotBlank()
