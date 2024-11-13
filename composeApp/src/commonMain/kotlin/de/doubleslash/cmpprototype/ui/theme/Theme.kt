@@ -262,10 +262,17 @@ expect fun determineTheme(): Theme
 @OptIn(ExperimentalAdaptiveApi::class)
 @Composable
 fun AppTheme(
-    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    darkModeSettings: DarkModeSettings = LocalDarkModeSettings.current.value,
     theme: Theme = determineTheme(),
     content: @Composable () -> Unit
 ) {
+    val useDarkTheme = if (darkModeSettings.useSystemSettings) {
+        isSystemInDarkTheme()
+    } else {
+        darkModeSettings.isDarkModeEnabled
+    }
+
+
     AdaptiveTheme(
         target = theme,
         material = MaterialThemeSpec.Default().copy(

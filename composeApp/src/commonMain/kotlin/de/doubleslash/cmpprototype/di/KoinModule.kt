@@ -13,6 +13,7 @@ import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnect
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.SettingsViewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
@@ -39,6 +40,7 @@ val moduleApplication = module {
 
     // inject LoginViewModel which needs AuthenticateUserUseCase
     factory { LoginViewModel(get(), get(), get(), get()) }
+    factory { SettingsViewModel() }
 }
 
 fun initKoin() {

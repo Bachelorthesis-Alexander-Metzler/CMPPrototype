@@ -28,4 +28,14 @@
     <!-- content descriptions -->
     <string name="content_description_visibility_on">Passwort versteckt</string>
     <string name="content_description_visibility_off">Passwort sichtbar</string>
+    <string name="content_description_back">Zurück</string>
+
+    <!-- settings screen -->
+    <string name="setting_app_theme">Ansicht</string>
+    <string name="setting_placeholder">Einstellung</string>
+
+    <!-- theme details screen -->
+    <string name="theme_details_title">Ansicht Konfiguration</string>
+    <string name="setting_use_system_theme">Nutze Systemeinstellungen für dunklen Modus</string>
+    <string name="setting_enable_dark_mode">Aktiviere dunklen Modus</string>
 </resources>
