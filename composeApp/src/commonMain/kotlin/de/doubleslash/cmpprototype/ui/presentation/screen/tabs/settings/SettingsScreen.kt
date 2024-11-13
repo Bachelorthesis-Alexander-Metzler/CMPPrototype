@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,6 +26,8 @@ import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.components.Custom
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.details.ThemeDetailsScreen
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveHorizontalDivider
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
+import io.github.alexzhirkevich.cupertino.adaptive.icons.AdaptiveIcons
+import io.github.alexzhirkevich.cupertino.adaptive.icons.KeyboardArrowRight
 import org.jetbrains.compose.resources.stringResource
 
 class SettingsScreen : Screen {
@@ -166,7 +169,14 @@ class SettingsScreen : Screen {
                 .padding(15.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = title, style = MaterialTheme.typography.bodyLarge)
+            Text(
+                modifier = Modifier.weight(1f),
+                text = title,
+                style = MaterialTheme.typography.bodyLarge)
+            Icon(
+                imageVector = AdaptiveIcons.Outlined.KeyboardArrowRight,
+                contentDescription = null
+            )
         }
     }
 }
