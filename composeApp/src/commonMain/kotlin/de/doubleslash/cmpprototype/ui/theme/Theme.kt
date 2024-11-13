@@ -264,7 +264,7 @@ expect fun determineTheme(): Theme
 fun AppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     theme: Theme = determineTheme(),
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     AdaptiveTheme(
         target = theme,
@@ -274,7 +274,8 @@ fun AppTheme(
         cupertino = CupertinoThemeSpec.Default().copy(
             if (useDarkTheme) io.github.alexzhirkevich.cupertino.theme.darkColorScheme()
             else io.github.alexzhirkevich.cupertino.theme.lightColorScheme(),
-        ), content = content
+        ),
+        content = content
     )
 }
 
