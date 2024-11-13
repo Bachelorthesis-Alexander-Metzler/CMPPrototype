@@ -38,7 +38,7 @@ class ThemeDetailsScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val darkModeSettingsState = LocalDarkModeSettings.current // Zugriff auf den globalen Zustand
+        val darkModeSettingsState = LocalDarkModeSettings.current // access global state
         val darkModeSettings = darkModeSettingsState.value
 
         Scaffold(
@@ -77,7 +77,7 @@ class ThemeDetailsScreen : Screen {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 15.dp),
+                            .padding(15.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
@@ -101,7 +101,7 @@ class ThemeDetailsScreen : Screen {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 15.dp),
+                            .padding(15.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
