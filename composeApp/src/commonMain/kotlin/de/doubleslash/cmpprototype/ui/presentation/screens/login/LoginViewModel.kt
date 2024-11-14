@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.ui.presentation.screen.login
+package de.doubleslash.cmpprototype.ui.presentation.screens.login
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
