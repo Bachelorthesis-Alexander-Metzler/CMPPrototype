@@ -23,39 +23,42 @@ import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-val moduleApplication = module {
-    // injection for AuthApi and AuthRepository
+// Auth Module: Auth API and Repository
+val authModule = module {
     single<AuthApi> { AuthApiImpl() }
-    // Injection for encrypted shared preferences Settings instance
-    single<Settings>(named("encrypted_settings")) { provideEncryptedSharedPreferences() }
-
     single<AuthRepository> { AuthRepositoryImpl(get(), EncryptedSharedPreferencesImpl(get(named("encrypted_settings")))) }
+}
 
-    // injection for network status repository
+// Network Module: Network Status Repository
+val networkModule = module {
     single<NetworkStatusRepository> { NetworkStatusRepositoryImpl() }
+}
 
-    // Injection for shared preferences Settings instance
+// Preferences Module: Encrypted and Shared Preferences
+val preferencesModule = module {
+    single<Settings>(named("encrypted_settings")) { provideEncryptedSharedPreferences() }
     single<Settings>(named("shared_settings")) { provideSharedPreferences() }
-    // Injection for shared preferences (non-encrypted)
     single<Preferences>(named("shared")) { SharedPreferencesImpl(get(named("shared_settings"))) }
+}
 
-
-    // inject AuthenticateUserUseCase which needs AuthRepository
+// Use Case Module: Business Logic
+val useCaseModule = module {
     single { AuthenticateUserUseCase(get()) }
-
-    // inject network use cases
     single { GetConnectionStatusUseCase(get()) }
     single { GetNetworkStatusUseCase(get()) }
-
-    // inject session data use case
     single { GetSessionDataUseCase(get()) }
-
-    // inject previously authenticated use case
     single { GetPreviouslyAuthenticatedUseCase(get()) }
+}
 
-    // inject LoginViewModel which needs AuthenticateUserUseCase
+// ViewModel Module: Login and Settings ViewModels
+val viewModelModule = module {
     factory { LoginViewModel(get(), get(), get(), get(), get()) }
     factory { SettingsViewModel() }
+}
+
+// Combine all modules
+val moduleApplication = module {
+    includes(authModule, networkModule, preferencesModule, useCaseModule, viewModelModule)
 }
 
 fun initKoin() {

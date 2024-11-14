@@ -1,7 +1,6 @@
 package de.doubleslash.cmpprototype.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
@@ -12,7 +11,6 @@ import io.github.alexzhirkevich.cupertino.adaptive.CupertinoThemeSpec
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import io.github.alexzhirkevich.cupertino.adaptive.MaterialThemeSpec
 import io.github.alexzhirkevich.cupertino.adaptive.Theme
-import io.github.alexzhirkevich.cupertino.theme.CupertinoTheme
 
 
 private val lightScheme = lightColorScheme(
@@ -276,7 +274,7 @@ fun AppTheme(
     AdaptiveTheme(
         target = theme,
         material = MaterialThemeSpec.Default().copy(
-            colorScheme = if (useDarkTheme) darkColorScheme() else lightColorScheme(),
+            colorScheme = if (useDarkTheme) darkScheme else lightScheme,
         ),
         cupertino = CupertinoThemeSpec.Default().copy(
             if (useDarkTheme) io.github.alexzhirkevich.cupertino.theme.darkColorScheme()
