@@ -6,7 +6,8 @@ import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.domain.repository.auth.AuthRepository
 
 class AuthRepositoryImpl(
-    private val api: AuthApi // dependency injection
+    private val api: AuthApi, // dependency injection
+
 ) : AuthRepository {
 
     override suspend fun authenticateUser(

@@ -1,21 +1,23 @@
-package de.doubleslash.cmpprototype.ui.presentation.screens.login.components
+package de.doubleslash.cmpprototype.ui.presentation.screen.login.components
 
 import org.jetbrains.compose.resources.stringResource
 
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import cmpprototype.composeapp.generated.resources.*
-import de.doubleslash.cmpprototype.ui.presentation.screens.login.LoginViewModel
+import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveButton
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveCheckbox
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi

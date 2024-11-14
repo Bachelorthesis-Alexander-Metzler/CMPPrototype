@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.ui.presentation.screens.tabs.settings.details
+package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.details
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize

@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.ui.presentation.screens.login
+package de.doubleslash.cmpprototype.ui.presentation.screen.login
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +12,7 @@ import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.Authenticate
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
+import de.doubleslash.cmpprototype.domain.use_case.setSessionData.SetSessionDataUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -21,7 +22,8 @@ class LoginViewModel(
     private val authUserUseCase: AuthenticateUserUseCase,
     private val getConnectionStatusUseCase: GetConnectionStatusUseCase,
     private val getNetworkConnectionUseCase: GetNetworkStatusUseCase,
-    private val getSessionDataUseCase: GetSessionDataUseCase
+    private val getSessionDataUseCase: GetSessionDataUseCase,
+    private val setSessionDataUseCase: SetSessionDataUseCase
 ) : ScreenModel {
     // input fields
     var serverAddress by mutableStateOf("")
@@ -41,7 +43,7 @@ class LoginViewModel(
 
     fun onLoginClick() {
         screenModelScope.launch(Dispatchers.Main) {
-            val isLocalAuthActive = true
+            val isLocalAuthActive = false
 
             if (!isConnected.value) {
                 println("Not connected to the internet")
@@ -52,8 +54,9 @@ class LoginViewModel(
                     authState = RequestCondition.ErrorCondition("Internet connection required")
                 } else {
                     if (!isLocalAuthActive) {
-                        // TODO: get sessionId und userId from local storage
+                        // login model necessary because SuccessCondition requires data
                         val loginModel: LoginModel = getSessionData()
+                        println("session data: sessionId: ${loginModel.sessionId}, userId: ${loginModel.userId}")
                         authState = RequestCondition.SuccessCondition(loginModel)
                     } else {
                         // login via local auth
@@ -109,7 +112,10 @@ class LoginViewModel(
 
         // try authentication
         try {
+            // invoke use case and therefore request authentication
             val result = authUserUseCase.invoke(serverAddress, username, password)
+
+            setSessionDataUseCase.invoke(result)
 
             // if successful, set state to success
             authState = result

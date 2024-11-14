@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.ui.presentation.screens.tabs.settings
+package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings
 
 
 import androidx.compose.runtime.Composable
@@ -9,6 +9,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import cafe.adriel.voyager.transitions.SlideTransition
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.settings_tab_title
+import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import io.github.alexzhirkevich.cupertino.adaptive.icons.AdaptiveIcons
 import io.github.alexzhirkevich.cupertino.adaptive.icons.Settings
 import org.jetbrains.compose.resources.stringResource

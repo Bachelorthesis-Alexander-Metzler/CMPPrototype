@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.ui.presentation.screens.login
+package de.doubleslash.cmpprototype.ui.presentation.screen.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,14 +32,16 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.login_top_bar_title
 import cmpprototype.composeapp.generated.resources.no_internet_connection
-import de.doubleslash.cmpprototype.ui.presentation.screens.login.components.HandleAuthenticationState
-import de.doubleslash.cmpprototype.ui.presentation.screens.login.components.LoginButton
-import de.doubleslash.cmpprototype.ui.presentation.screens.login.components.PasswordField
-import de.doubleslash.cmpprototype.ui.presentation.screens.login.components.PreviouslyAuthenticatedCheckbox
-import de.doubleslash.cmpprototype.ui.presentation.screens.login.components.ServerAddressField
-import de.doubleslash.cmpprototype.ui.presentation.screens.login.components.UsernameField
+import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.HandleAuthenticationState
+import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.LoginButton
+import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.PasswordField
+import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.PreviouslyAuthenticatedCheckbox
+import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.ServerAddressField
+import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.UsernameField
+import io.github.alexzhirkevich.cupertino.CupertinoTopAppBarDefaults
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveTopAppBar
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
+import io.github.alexzhirkevich.cupertino.theme.CupertinoTheme
 import org.jetbrains.compose.resources.stringResource
 
 

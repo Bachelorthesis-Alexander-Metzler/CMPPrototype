@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.ui.presentation.screens.tabs.components
+package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.components
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme

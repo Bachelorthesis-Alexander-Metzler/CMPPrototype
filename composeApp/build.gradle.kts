@@ -35,6 +35,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
+            implementation("androidx.security:security-crypto:1.1.0-alpha03")
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -67,6 +68,9 @@ kotlin {
             implementation(libs.konnectivity)
 
             implementation(libs.cupertino.adaptive)
+
+            implementation("com.russhwolf:multiplatform-settings:1.2.0")
+
         }
     }
 }

@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.ui.presentation.screens.tabs.download
+package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.download
 
 
 import androidx.compose.material3.Scaffold
@@ -9,7 +9,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.downloads_tab_title
 import cmpprototype.composeapp.generated.resources.ic_cloud_download
-import de.doubleslash.cmpprototype.ui.presentation.screens.tabs.components.CustomTopAppBar
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.components.CustomTopAppBar
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
