@@ -1,5 +1,7 @@
 package de.doubleslash.cmpprototype.ui.presentation.screen.login.components
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import org.jetbrains.compose.resources.stringResource
 
 
@@ -7,12 +9,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import cmpprototype.composeapp.generated.resources.*
+import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveButton
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveCheckbox
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import org.jetbrains.compose.resources.vectorResource
 
@@ -69,6 +75,26 @@ fun PasswordField(modifier: Modifier, password: String, enabled: Boolean, onValu
         }
     )
 }
+
+@OptIn(ExperimentalAdaptiveApi::class)
+@Composable
+fun LocalAuthCheckBox(modifier: Modifier, viewModel: LoginViewModel) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AdaptiveCheckbox(
+            checked = viewModel.isLocalAuthActive,
+            onCheckedChange = null
+        )
+        Text(
+            text = stringResource(Res.string.is_local_auth_active),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(start = 16.dp)
+        )
+    }
+}
+
 
 @OptIn(ExperimentalAdaptiveApi::class)
 @Composable

@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -18,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
@@ -27,6 +30,7 @@ import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.login_top_bar_title
 import cmpprototype.composeapp.generated.resources.no_internet_connection
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.HandleAuthenticationState
+import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.LocalAuthCheckBox
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.LoginButton
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.PasswordField
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.components.ServerAddressField
@@ -104,6 +108,18 @@ class LoginScreen : Screen{
                     passwordVisible = passwordVisible,
                     onPasswordVisibilityChange = { passwordVisible = !passwordVisible }
                 )
+
+                // Checkbox for isPreviouslyAuthenticated (no requirement)
+                LocalAuthCheckBox(
+                    Modifier.fillMaxWidth()
+                        .height(56.dp)
+                        .toggleable(
+                            value = viewModel.isLocalAuthActive,
+                            onValueChange = { viewModel.isLocalAuthActive = it },
+                            role = Role.Checkbox
+                        )
+                        .padding(horizontal = 16.dp),
+                    viewModel = viewModel)
 
                 // Login Button
                 LoginButton(
