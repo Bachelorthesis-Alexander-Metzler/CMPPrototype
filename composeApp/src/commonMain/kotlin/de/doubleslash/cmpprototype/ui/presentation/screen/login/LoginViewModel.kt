@@ -12,7 +12,6 @@ import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.Authenticate
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
-import de.doubleslash.cmpprototype.domain.use_case.setSessionData.SetSessionDataUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -20,10 +19,9 @@ import kotlinx.coroutines.launch
 class LoginViewModel(
     // dependency injection
     private val authUserUseCase: AuthenticateUserUseCase,
-    private val getConnectionStatusUseCase: GetConnectionStatusUseCase,
-    private val getNetworkConnectionUseCase: GetNetworkStatusUseCase,
-    private val getSessionDataUseCase: GetSessionDataUseCase,
-    private val setSessionDataUseCase: SetSessionDataUseCase
+    getConnectionStatusUseCase: GetConnectionStatusUseCase,
+    getNetworkConnectionUseCase: GetNetworkStatusUseCase,
+    private val getSessionDataUseCase: GetSessionDataUseCase
 ) : ScreenModel {
     // input fields
     var serverAddress by mutableStateOf("")
@@ -114,8 +112,6 @@ class LoginViewModel(
         try {
             // invoke use case and therefore request authentication
             val result = authUserUseCase.invoke(serverAddress, username, password)
-
-            setSessionDataUseCase.invoke(result)
 
             // if successful, set state to success
             authState = result

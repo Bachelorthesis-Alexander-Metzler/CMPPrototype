@@ -19,13 +19,26 @@ class AuthenticateUserUseCase (
     ): RequestCondition<LoginModel> {
         val loginDTO = repository.authenticateUser(serverAddress, username, password)
 
+
+
         // convert result to login model or return error
         return when (loginDTO) {
             is RequestCondition.SuccessCondition -> {
-                RequestCondition.SuccessCondition(data = loginDTO.data.toLoginModel())
+                val loginModel = loginDTO.data.toLoginModel()
+                // persist session data
+                saveSessionData(loginModel)
+                // return success object
+                RequestCondition.SuccessCondition(data = loginModel)
             }
             is RequestCondition.ErrorCondition -> loginDTO // return error object as is
             else -> RequestCondition.ErrorCondition("Unexpected error")
         }
+    }
+
+    /** save session data to local storage
+     * */
+    private fun saveSessionData(loginModel: LoginModel) {
+        repository.saveSessionId(loginModel.sessionId)
+        repository.saveUserId(loginModel.userId)
     }
 }

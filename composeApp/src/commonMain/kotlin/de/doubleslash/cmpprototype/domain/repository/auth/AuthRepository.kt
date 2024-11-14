@@ -12,4 +12,10 @@ interface AuthRepository {
         serverAddress: String,
         username: String,
         password: String): RequestCondition<LoginDTO>
+
+    fun saveSessionId(sessionId: String)
+    fun getSessionId(): String?
+
+    fun saveUserId(userId: Int)
+    fun getUserId(): Int?
 }

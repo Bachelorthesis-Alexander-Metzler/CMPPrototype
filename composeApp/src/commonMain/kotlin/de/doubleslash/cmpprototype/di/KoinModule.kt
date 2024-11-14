@@ -10,10 +10,8 @@ import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApi
 import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApiImpl
 import de.doubleslash.cmpprototype.data.repository.auth.AuthRepositoryImpl
 import de.doubleslash.cmpprototype.data.repository.deviceApi.NetworkStatusRepositoryImpl
-import de.doubleslash.cmpprototype.data.repository.storage.SecureRepositoryImpl
 import de.doubleslash.cmpprototype.domain.repository.auth.AuthRepository
 import de.doubleslash.cmpprototype.domain.repository.deviceApi.NetworkStatusRepository
-import de.doubleslash.cmpprototype.domain.repository.storage.SecureRepository
 import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.AuthenticateUserUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
@@ -27,25 +25,19 @@ import org.koin.dsl.module
 val moduleApplication = module {
     // injection for AuthApi and AuthRepository
     single<AuthApi> { AuthApiImpl() }
-    single<AuthRepository> { AuthRepositoryImpl(get()) }
+    // Injection for encrypted shared preferences Settings instance
+    single<Settings>(named("encrypted_settings")) { provideEncryptedSharedPreferences() }
+
+    single<AuthRepository> { AuthRepositoryImpl(get(), EncryptedSharedPreferencesImpl(get(named("encrypted_settings")))) }
 
     // injection for network status repository
     single<NetworkStatusRepository> { NetworkStatusRepositoryImpl() }
 
     // Injection for shared preferences Settings instance
     single<Settings>(named("shared_settings")) { provideSharedPreferences() }
-
-    // Injection for encrypted shared preferences Settings instance
-    single<Settings>(named("encrypted_settings")) { provideEncryptedSharedPreferences() }
-
     // Injection for shared preferences (non-encrypted)
     single<Preferences>(named("shared")) { SharedPreferencesImpl(get(named("shared_settings"))) }
 
-    // Injection for encrypted shared preferences
-    single<Preferences>(named("encrypted")) { EncryptedSharedPreferencesImpl(get(named("encrypted_settings"))) }
-
-    // injection for secure repository
-    single<SecureRepository> { SecureRepositoryImpl(get(named("encrypted"))) }
 
     // inject AuthenticateUserUseCase which needs AuthRepository
     single { AuthenticateUserUseCase(get()) }
