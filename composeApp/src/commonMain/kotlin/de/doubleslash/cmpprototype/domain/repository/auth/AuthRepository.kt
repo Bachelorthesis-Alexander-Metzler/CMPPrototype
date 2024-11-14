@@ -18,4 +18,7 @@ interface AuthRepository {
 
     fun saveUserId(userId: Int)
     fun getUserId(): Int?
+
+    fun savePreviouslyAuthenticated()
+    fun getPreviouslyAuthenticated(): Boolean?
 }

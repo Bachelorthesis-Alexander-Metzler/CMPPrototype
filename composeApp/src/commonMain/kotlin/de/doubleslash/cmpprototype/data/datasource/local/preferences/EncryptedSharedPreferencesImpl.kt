@@ -21,4 +21,12 @@ class EncryptedSharedPreferencesImpl(
     override fun getInt(key: String): Int? {
         return settings.getIntOrNull(key)
     }
+
+    override fun saveBoolean(key: String, value: Boolean) {
+        settings.putBoolean(key, value)
+    }
+
+    override fun getBoolean(key: String): Boolean? {
+        return settings.getBooleanOrNull(key)
+    }
 }

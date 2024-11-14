@@ -11,6 +11,7 @@ import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.AuthenticateUserUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
+import de.doubleslash.cmpprototype.domain.use_case.getPreviouslyAuthenticated.GetPreviouslyAuthenticatedUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
@@ -21,15 +22,13 @@ class LoginViewModel(
     private val authUserUseCase: AuthenticateUserUseCase,
     getConnectionStatusUseCase: GetConnectionStatusUseCase,
     getNetworkConnectionUseCase: GetNetworkStatusUseCase,
-    private val getSessionDataUseCase: GetSessionDataUseCase
+    private val getSessionDataUseCase: GetSessionDataUseCase,
+    private val getPreviouslyAuthenticatedUseCase: GetPreviouslyAuthenticatedUseCase
 ) : ScreenModel {
     // input fields
     var serverAddress by mutableStateOf("")
     var username by mutableStateOf("")
     var password by mutableStateOf("")
-
-    // placeholder checkbox value for isPreviouslyAuthenticated (no requirement)
-    var isPreviouslyAuthenticated by mutableStateOf(false)
 
     // current state of authentication process
     var authState by mutableStateOf<RequestCondition<LoginModel>>(RequestCondition.IdleCondition)
@@ -47,7 +46,7 @@ class LoginViewModel(
                 println("Not connected to the internet")
                 authState = RequestCondition.LoadingCondition
 
-                if (!isPreviouslyAuthenticated) {
+                if (!getPreviouslyAuthenticatedUseCase.invoke()) {
                     // user cannot login
                     authState = RequestCondition.ErrorCondition("Internet connection required")
                 } else {
@@ -64,7 +63,7 @@ class LoginViewModel(
             } else {
                 println("Connected to the internet")
 
-                if (!isPreviouslyAuthenticated || !isLocalAuthActive) {
+                if (!getPreviouslyAuthenticatedUseCase.invoke() || !isLocalAuthActive) {
                     loginViaREST()
                 } else {
                     // local auth is active or user is previously authenticated

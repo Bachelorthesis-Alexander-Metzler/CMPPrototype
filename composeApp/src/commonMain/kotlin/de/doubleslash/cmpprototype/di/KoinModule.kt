@@ -15,6 +15,7 @@ import de.doubleslash.cmpprototype.domain.repository.deviceApi.NetworkStatusRepo
 import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.AuthenticateUserUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
+import de.doubleslash.cmpprototype.domain.use_case.getPreviouslyAuthenticated.GetPreviouslyAuthenticatedUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.SettingsViewModel
@@ -49,8 +50,11 @@ val moduleApplication = module {
     // inject session data use case
     single { GetSessionDataUseCase(get()) }
 
+    // inject previously authenticated use case
+    single { GetPreviouslyAuthenticatedUseCase(get()) }
+
     // inject LoginViewModel which needs AuthenticateUserUseCase
-    factory { LoginViewModel(get(), get(), get(), get()) }
+    factory { LoginViewModel(get(), get(), get(), get(), get()) }
     factory { SettingsViewModel() }
 }
 

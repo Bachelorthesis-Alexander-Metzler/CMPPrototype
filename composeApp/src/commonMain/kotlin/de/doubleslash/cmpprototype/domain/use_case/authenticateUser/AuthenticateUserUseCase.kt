@@ -27,6 +27,8 @@ class AuthenticateUserUseCase (
                 val loginModel = loginDTO.data.toLoginModel()
                 // persist session data
                 saveSessionData(loginModel)
+                // save that user has been authenticated
+                repository.savePreviouslyAuthenticated()
                 // return success object
                 RequestCondition.SuccessCondition(data = loginModel)
             }

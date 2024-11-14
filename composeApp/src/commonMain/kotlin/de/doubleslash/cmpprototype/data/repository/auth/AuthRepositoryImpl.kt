@@ -34,4 +34,12 @@ class AuthRepositoryImpl(
     override fun getUserId(): Int? {
         return encryptedSharedPreferences.getInt("userId")
     }
+
+    override fun savePreviouslyAuthenticated() {
+        encryptedSharedPreferences.saveBoolean("previouslyAuthenticated", true)
+    }
+
+    override fun getPreviouslyAuthenticated(): Boolean? {
+        return encryptedSharedPreferences.getBoolean("previouslyAuthenticated")
+    }
 }
