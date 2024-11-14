@@ -92,7 +92,7 @@ class LoginViewModel(
         val isLocalAuthSuccessful = true
 
         if (isLocalAuthSuccessful) {
-            // TODO: get sessionId und userId from local storage
+            // get sessionId und userId from local storage
             val loginModel: LoginModel = getSessionData()
             authState = RequestCondition.SuccessCondition(loginModel)
         } else {

@@ -11,4 +11,13 @@ object Constants {
     const val PASSWORD = "password"
     const val HTTP_ERROR_MSG = "HTTP Error: "
 
+
+    // Constants for the shared preferences
+    // androidMain
+    const val SHARED_PREFS_NAME = "shared_prefs"
+    const val SECURED_PREFS_NAME = "secure_prefs"
+
+    // iosMain
+    const val KEYCHAIN_SERVICE_NAME = "de.doubleslash.secure_prefs"
+
 }
