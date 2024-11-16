@@ -1,9 +1,5 @@
 package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,17 +7,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.camera_permission_denied_always
+import cmpprototype.composeapp.generated.resources.choose_from_files
+import cmpprototype.composeapp.generated.resources.choose_from_gallery
 import cmpprototype.composeapp.generated.resources.file_tab_title
 import cmpprototype.composeapp.generated.resources.gallery_permission_denied_always
 import cmpprototype.composeapp.generated.resources.ic_add_from_gallery
 import cmpprototype.composeapp.generated.resources.ic_camera
 import cmpprototype.composeapp.generated.resources.ic_upload_file
+import cmpprototype.composeapp.generated.resources.open_camera
 import cmpprototype.composeapp.generated.resources.storage_permission_denied_always
 import de.doubleslash.cmpprototype.ui.presentation.screen.PermissionsViewModel
 import de.doubleslash.cmpprototype.ui.presentation.components.FabItem
@@ -72,20 +70,20 @@ class FileScreen : Tab {
                     items = arrayListOf(
                         FabItem(
                             icon =  painterResource(Res.drawable.ic_upload_file),
-                            label = "Choose from Files",
+                            label = stringResource(Res.string.choose_from_files),
                             onFabItemClicked = {
                                 // get permission
                                 permissionsViewModel.provideOrRequestStoragePermission()
                             }),
                         FabItem(
                             icon =  painterResource(Res.drawable.ic_add_from_gallery),
-                            label = "Choose from Gallery",
+                            label = stringResource(Res.string.choose_from_gallery),
                             onFabItemClicked = {
                                 permissionsViewModel.provideOrRequestGalleryPermission()
                             }),
                         FabItem(
                             icon =  painterResource(Res.drawable.ic_camera),
-                            label = "Open Camera",
+                            label = stringResource(Res.string.open_camera),
                             onFabItemClicked = {
                                 permissionsViewModel.provideOrRequestCameraPermission()
                             })

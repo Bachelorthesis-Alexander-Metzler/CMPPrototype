@@ -29,6 +29,9 @@
     <string name="content_description_visibility_on">hide password</string>
     <string name="content_description_visibility_off">show password</string>
     <string name="content_description_back">Back</string>
+    <string name="choose_from_files">Choose from files</string>
+    <string name="choose_from_gallery">Choose from gallery</string>
+    <string name="open_camera">Open camera</string>
 
     <!-- settings screen -->
     <string name="setting_app_theme">App Theme</string>
@@ -44,6 +47,7 @@
     <string name="manage_permission_in_settings">Manage permissions in settings</string>
 
     <!-- alert dialogs -->
+    <string name="permission_denied">Permission denied</string>
     <string name="storage_permission_denied_always">Storage permission was permanently denied. Please enable it in settings.</string>
     <string name="gallery_permission_denied_always">Gallery permission was permanently denied. Please enable it in settings.</string>
     <string name="camera_permission_denied_always">Camera permission was permanently denied. Please enable it in settings.</string>
