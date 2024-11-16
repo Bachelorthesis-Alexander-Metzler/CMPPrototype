@@ -67,6 +67,10 @@ kotlin {
             implementation(libs.konnectivity)
 
             implementation(libs.cupertino.adaptive)
+
+            // api to make the permissions available for modules that depend on this module
+            api(libs.moko.permissions)
+            api(libs.moko.permissions.compose)
         }
     }
 }
