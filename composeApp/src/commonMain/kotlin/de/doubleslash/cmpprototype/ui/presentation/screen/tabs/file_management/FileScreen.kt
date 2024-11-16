@@ -16,10 +16,13 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import cmpprototype.composeapp.generated.resources.Res
+import cmpprototype.composeapp.generated.resources.camera_permission_denied_always
 import cmpprototype.composeapp.generated.resources.file_tab_title
+import cmpprototype.composeapp.generated.resources.gallery_permission_denied_always
 import cmpprototype.composeapp.generated.resources.ic_add_from_gallery
 import cmpprototype.composeapp.generated.resources.ic_camera
 import cmpprototype.composeapp.generated.resources.ic_upload_file
+import cmpprototype.composeapp.generated.resources.storage_permission_denied_always
 import de.doubleslash.cmpprototype.ui.presentation.screen.PermissionsViewModel
 import de.doubleslash.cmpprototype.ui.presentation.components.FabItem
 import de.doubleslash.cmpprototype.ui.presentation.components.MultiFloatingActionButton
@@ -91,17 +94,17 @@ class FileScreen : Tab {
         ) { paddingValues ->
 
             if (permissionsViewModel.storageState == PermissionState.DeniedAlways) {
-                dialogMessage = "Storage permission was permanently denied. Please enable it in settings."
+                dialogMessage = stringResource(Res.string.storage_permission_denied_always)
                 showDialog = true
             }
 
             if (permissionsViewModel.galleryState == PermissionState.DeniedAlways) {
-                dialogMessage = "Gallery permission was permanently denied. Please enable it in settings."
+                dialogMessage = stringResource(Res.string.gallery_permission_denied_always)
                 showDialog = true
             }
 
             if (permissionsViewModel.cameraState == PermissionState.DeniedAlways) {
-                dialogMessage = "Camera permission was permanently denied. Please enable it in settings."
+                dialogMessage = stringResource(Res.string.camera_permission_denied_always)
                 showDialog = true
             }
         }

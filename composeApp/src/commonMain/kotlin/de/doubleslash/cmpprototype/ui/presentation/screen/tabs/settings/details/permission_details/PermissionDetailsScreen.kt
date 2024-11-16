@@ -23,6 +23,8 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.content_description_back
 import cmpprototype.composeapp.generated.resources.ic_permissions
+import cmpprototype.composeapp.generated.resources.manage_permission_in_settings
+import cmpprototype.composeapp.generated.resources.permission_details_title
 import cmpprototype.composeapp.generated.resources.setting_enable_dark_mode
 import cmpprototype.composeapp.generated.resources.setting_use_system_theme
 import cmpprototype.composeapp.generated.resources.theme_details_title
@@ -52,7 +54,7 @@ class PermissionDetailsScreen : Screen {
         Scaffold(
             topBar = {
                 AdaptiveTopAppBar(
-                    title = { Text("Permission Settings") },
+                    title = { Text(stringResource(Res.string.permission_details_title)) },
                     navigationIcon = {
                         AdaptiveIconButton(
                             onClick = { navigator.pop() },
@@ -83,7 +85,7 @@ class PermissionDetailsScreen : Screen {
             ) {
                 item {
                     OpenSettingsItem(
-                        title = "Manage Permissions in Settings",
+                        title = stringResource(Res.string.manage_permission_in_settings),
                         onClick = {
                             controller.openAppSettings()
                         }

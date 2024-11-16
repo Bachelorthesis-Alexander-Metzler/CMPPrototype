@@ -38,4 +38,13 @@
     <string name="theme_details_title">Ansicht Konfiguration</string>
     <string name="setting_use_system_theme">Nutze Systemeinstellungen für dunklen Modus</string>
     <string name="setting_enable_dark_mode">Aktiviere dunklen Modus</string>
+
+    <!-- permission details screen -->
+    <string name="permission_details_title">Berechtigungskonfiguration</string>
+    <string name="manage_permission_in_settings">Berechtigungen in Systemeinstellungen verwalten</string>
+
+    <!-- alert dialogs -->
+    <string name="storage_permission_denied_always">Speicher Berechtigung permanent abgelehnt. Änderung über die Einstellungen möglich.</string>
+    <string name="gallery_permission_denied_always">Gallerie Berechtigung permanent abgelehnt. Änderung über die Einstellungen möglich.</string>
+    <string name="camera_permission_denied_always">Kamera Berechtigung permanent abgelehnt. Änderung über die Einstellungen möglich.</string>
 </resources>
