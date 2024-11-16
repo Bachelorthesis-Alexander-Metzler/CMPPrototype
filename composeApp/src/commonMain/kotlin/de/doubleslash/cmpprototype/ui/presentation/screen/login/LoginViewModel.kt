@@ -38,11 +38,12 @@ class LoginViewModel(
     var networkStatus: StateFlow<NetworkConnection> = getNetworkConnectionUseCase.invoke()
     var isConnected: StateFlow<Boolean> = getConnectionStatusUseCase.invoke()
 
+    // placeholder checkbox value for local auth active (implementation not possible)
+    var isLocalAuthActive by mutableStateOf(false)
+
 
     fun onLoginClick() {
         screenModelScope.launch(Dispatchers.Main) {
-            val isLocalAuthActive = true
-
             if (!isConnected.value) {
                 println("Not connected to the internet")
                 authState = RequestCondition.LoadingCondition
