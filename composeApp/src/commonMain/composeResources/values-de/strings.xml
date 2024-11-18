@@ -49,6 +49,8 @@
     <!-- alert dialogs -->
     <string name="permission_denied">Berechtigung abgelehnt</string>
     <string name="confirm">Bestätigen</string>
+    <string name="cancel">Abbruch</string>
+    <string name="open_settings">Öffne Einstellungen</string>
     <string name="storage_permission_denied_always">Speicher Berechtigung permanent abgelehnt. Änderung über die Einstellungen möglich.</string>
     <string name="gallery_permission_denied_always">Gallerie Berechtigung permanent abgelehnt. Änderung über die Einstellungen möglich.</string>
     <string name="camera_permission_denied_always">Kamera Berechtigung permanent abgelehnt. Änderung über die Einstellungen möglich.</string>

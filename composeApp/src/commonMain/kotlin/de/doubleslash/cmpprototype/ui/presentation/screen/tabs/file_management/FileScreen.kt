@@ -12,15 +12,16 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.camera_permission_denied_always
+import cmpprototype.composeapp.generated.resources.cancel
 import cmpprototype.composeapp.generated.resources.choose_from_files
 import cmpprototype.composeapp.generated.resources.choose_from_gallery
-import cmpprototype.composeapp.generated.resources.confirm
 import cmpprototype.composeapp.generated.resources.file_tab_title
 import cmpprototype.composeapp.generated.resources.gallery_permission_denied_always
 import cmpprototype.composeapp.generated.resources.ic_add_from_gallery
 import cmpprototype.composeapp.generated.resources.ic_camera
 import cmpprototype.composeapp.generated.resources.ic_upload_file
 import cmpprototype.composeapp.generated.resources.open_camera
+import cmpprototype.composeapp.generated.resources.open_settings
 import cmpprototype.composeapp.generated.resources.permission_denied
 import cmpprototype.composeapp.generated.resources.storage_permission_denied_always
 import de.doubleslash.cmpprototype.ui.presentation.screen.PermissionsViewModel
@@ -35,6 +36,7 @@ import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import io.github.alexzhirkevich.cupertino.adaptive.icons.AdaptiveIcons
 import io.github.alexzhirkevich.cupertino.adaptive.icons.Add
 import io.github.alexzhirkevich.cupertino.adaptive.icons.Home
+import io.github.alexzhirkevich.cupertino.cancel
 import io.github.alexzhirkevich.cupertino.default
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -62,11 +64,15 @@ class FileScreen : Tab {
                     showDialog = false
                 },
                 title = { Text(stringResource(Res.string.permission_denied)) },
-                message = { Text(dialogMessage) },
-                buttons = {
-                    default(onClick = { showDialog = false }) { stringResource(Res.string.confirm) }
+                message = { Text(dialogMessage) }
+            ) {
+                cancel(onClick = { showDialog = false }) {
+                    Text(stringResource(Res.string.cancel))
                 }
-            )
+                default(onClick = {
+                    controller.openAppSettings()
+                }) { Text(stringResource(Res.string.open_settings)) }
+            }
         }
 
         Scaffold(
