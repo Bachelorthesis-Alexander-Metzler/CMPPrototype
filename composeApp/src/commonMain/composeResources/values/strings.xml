@@ -48,6 +48,7 @@
 
     <!-- alert dialogs -->
     <string name="permission_denied">Permission denied</string>
+    <string name="confirm">Confirm</string>
     <string name="storage_permission_denied_always">Storage permission was permanently denied. Please enable it in settings.</string>
     <string name="gallery_permission_denied_always">Gallery permission was permanently denied. Please enable it in settings.</string>
     <string name="camera_permission_denied_always">Camera permission was permanently denied. Please enable it in settings.</string>

@@ -20,6 +20,7 @@ import cmpprototype.composeapp.generated.resources.ic_add_from_gallery
 import cmpprototype.composeapp.generated.resources.ic_camera
 import cmpprototype.composeapp.generated.resources.ic_upload_file
 import cmpprototype.composeapp.generated.resources.open_camera
+import cmpprototype.composeapp.generated.resources.permission_denied
 import cmpprototype.composeapp.generated.resources.storage_permission_denied_always
 import de.doubleslash.cmpprototype.ui.presentation.screen.PermissionsViewModel
 import de.doubleslash.cmpprototype.ui.presentation.components.FabItem
@@ -49,12 +50,17 @@ class FileScreen : Tab {
         var showDialog by remember { mutableStateOf(false) }
         var dialogMessage by remember { mutableStateOf("") }
 
+        // String-resources
+        val storagePermissionDeniedMessage = stringResource(Res.string.storage_permission_denied_always)
+        val galleryPermissionDeniedMessage = stringResource(Res.string.gallery_permission_denied_always)
+        val cameraPermissionDeniedMessage = stringResource(Res.string.camera_permission_denied_always)
+
         if (showDialog) {
             AdaptiveAlertDialog(
                 onDismissRequest = {
                     showDialog = false
                 },
-                title = { Text("Permission Denied") },
+                title = { Text(stringResource(Res.string.permission_denied)) },
                 message = { Text(dialogMessage) },
                 buttons = {
                     default(onClick = { showDialog = false }) { Text("OK") }
@@ -65,46 +71,57 @@ class FileScreen : Tab {
         Scaffold(
             topBar = CustomTopAppBar(text = stringResource(Res.string.file_tab_title)),
             floatingActionButton = {
-                MultiFloatingActionButton(fabIcon = rememberVectorPainter(AdaptiveIcons.Outlined.Add),
+                MultiFloatingActionButton(
+                    fabIcon = rememberVectorPainter(AdaptiveIcons.Outlined.Add),
                     showLabels = false,
                     items = arrayListOf(
                         FabItem(
-                            icon =  painterResource(Res.drawable.ic_upload_file),
+                            icon = painterResource(Res.drawable.ic_upload_file),
                             label = stringResource(Res.string.choose_from_files),
                             onFabItemClicked = {
-                                // get permission
-                                permissionsViewModel.provideOrRequestStoragePermission()
+                                when (permissionsViewModel.storageState) {
+                                    PermissionState.DeniedAlways -> {
+                                        dialogMessage = storagePermissionDeniedMessage
+                                        showDialog = true
+                                    }
+                                    else -> {
+                                        permissionsViewModel.provideOrRequestStoragePermission()
+                                    }
+                                }
                             }),
                         FabItem(
-                            icon =  painterResource(Res.drawable.ic_add_from_gallery),
+                            icon = painterResource(Res.drawable.ic_add_from_gallery),
                             label = stringResource(Res.string.choose_from_gallery),
                             onFabItemClicked = {
-                                permissionsViewModel.provideOrRequestGalleryPermission()
+                                when (permissionsViewModel.galleryState) {
+                                    PermissionState.DeniedAlways -> {
+                                        dialogMessage = galleryPermissionDeniedMessage
+                                        showDialog = true
+                                    }
+                                    else -> {
+                                        permissionsViewModel.provideOrRequestGalleryPermission()
+                                    }
+                                }
                             }),
                         FabItem(
-                            icon =  painterResource(Res.drawable.ic_camera),
+                            icon = painterResource(Res.drawable.ic_camera),
                             label = stringResource(Res.string.open_camera),
                             onFabItemClicked = {
-                                permissionsViewModel.provideOrRequestCameraPermission()
+                                when (permissionsViewModel.cameraState) {
+                                    PermissionState.DeniedAlways -> {
+                                        dialogMessage = cameraPermissionDeniedMessage
+                                        showDialog = true
+                                    }
+                                    else -> {
+                                        permissionsViewModel.provideOrRequestCameraPermission()
+                                    }
+                                }
                             })
-                        ))
+                    )
+                )
             }
         ) { paddingValues ->
-
-            if (permissionsViewModel.storageState == PermissionState.DeniedAlways) {
-                dialogMessage = stringResource(Res.string.storage_permission_denied_always)
-                showDialog = true
-            }
-
-            if (permissionsViewModel.galleryState == PermissionState.DeniedAlways) {
-                dialogMessage = stringResource(Res.string.gallery_permission_denied_always)
-                showDialog = true
-            }
-
-            if (permissionsViewModel.cameraState == PermissionState.DeniedAlways) {
-                dialogMessage = stringResource(Res.string.camera_permission_denied_always)
-                showDialog = true
-            }
+            // Keine zusätzliche Logik hier, da der Dialog direkt aus FabItem ausgelöst wird
         }
     }
 
