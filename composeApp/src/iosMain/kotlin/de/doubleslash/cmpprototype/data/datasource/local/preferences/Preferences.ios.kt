@@ -5,6 +5,7 @@ import com.russhwolf.settings.KeychainSettings
 import com.russhwolf.settings.NSUserDefaultsSettings
 import com.russhwolf.settings.Settings
 import de.doubleslash.cmpprototype.common.Constants
+import platform.Foundation.NSUserDefaults
 
 /** provides Apple Settings NSUserDefaults */
 actual fun provideSharedPreferences(): Settings {
