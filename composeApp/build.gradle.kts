@@ -71,6 +71,10 @@ kotlin {
 
             implementation("com.russhwolf:multiplatform-settings:1.2.0")
 
+
+            // api to make the permissions available for modules that depend on this module
+            api(libs.moko.permissions)
+            api(libs.moko.permissions.compose)
         }
     }
 }

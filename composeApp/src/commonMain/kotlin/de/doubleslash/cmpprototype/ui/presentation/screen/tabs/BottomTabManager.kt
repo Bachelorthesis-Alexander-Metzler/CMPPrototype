@@ -2,6 +2,7 @@ package de.doubleslash.cmpprototype.ui.presentation.screen.tabs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -37,8 +38,11 @@ class BottomTabManager : Screen {
                         TabItem(SettingsTabScreen())
                     }
                 }
-            ) {
-                CurrentTab()
+            ) { paddingValues ->
+                // give screens the padding values because of the bottom bar
+                Column(modifier = Modifier.padding(paddingValues)) {
+                    CurrentTab()
+                }
             }
         }
     }

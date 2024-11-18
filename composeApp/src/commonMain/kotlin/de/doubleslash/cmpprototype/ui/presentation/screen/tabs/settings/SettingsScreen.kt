@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -23,7 +22,8 @@ import cmpprototype.composeapp.generated.resources.setting_app_theme
 import cmpprototype.composeapp.generated.resources.setting_placeholder
 import cmpprototype.composeapp.generated.resources.settings_tab_title
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.components.CustomTopAppBar
-import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.details.ThemeDetailsScreen
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.details.permission_details.PermissionDetailsScreen
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.details.theme_details.ThemeDetailsScreen
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveHorizontalDivider
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import io.github.alexzhirkevich.cupertino.adaptive.icons.AdaptiveIcons
@@ -44,10 +44,20 @@ class SettingsScreen : Screen {
                     .fillMaxSize()
                     .padding(paddingValues),
             ) {
+                // theme settings
                 item {
                     SettingNavigationItem(
                         title = stringResource(Res.string.setting_app_theme),
                         onClick = { navigator.push(ThemeDetailsScreen()) }
+                    )
+                    AdaptiveHorizontalDivider()
+                }
+
+                // permission settings
+                item {
+                    SettingNavigationItem(
+                        title = "Permissions",
+                        onClick = { navigator.push(PermissionDetailsScreen()) }
                     )
                     AdaptiveHorizontalDivider()
                 }
@@ -158,14 +168,14 @@ class SettingsScreen : Screen {
     }
 
     @Composable
-    fun SettingNavigationItem(
+    private fun SettingNavigationItem(
         title: String,
         onClick: () -> Unit
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onClick) // Navigation bei Klick
+                .clickable(onClick = onClick)
                 .padding(15.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {

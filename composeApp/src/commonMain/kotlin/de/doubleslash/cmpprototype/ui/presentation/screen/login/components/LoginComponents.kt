@@ -11,6 +11,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -19,6 +21,7 @@ import cmpprototype.composeapp.generated.resources.*
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveButton
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveCheckbox
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveIconButton
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import org.jetbrains.compose.resources.vectorResource
 
@@ -117,18 +120,21 @@ fun LoginButton(modifier: Modifier, onClick: () -> Unit, enabled: Boolean) {
             Text(stringResource(Res.string.login_button_text))
         }
     )
+}
 
-//    ElevatedButton(
-//        modifier = modifier,
-//        onClick = onClick,
-//        enabled = enabled,
-//        colors = ButtonColors(
-//            containerColor = MaterialTheme.colorScheme.primaryContainer,
-//            contentColor = MaterialTheme.colorScheme.primary,
-//            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
-//            disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-//        )
-//    ) {
-//        Text(stringResource(Res.string.login_button_text))
-//    }
+@OptIn(ExperimentalAdaptiveApi::class)
+@Composable
+fun BiometricLoginButton(modifier: Modifier, onClick: () -> Unit, enabled: Boolean) {
+    AdaptiveIconButton(
+        modifier = modifier,
+        onClick = {
+
+        },
+        enabled = enabled,
+        content = {
+            Icon(
+                imageVector = vectorResource(Res.drawable.ic_fingerprint_scan),
+                contentDescription = "biometric authentication")
+        }
+    )
 }
