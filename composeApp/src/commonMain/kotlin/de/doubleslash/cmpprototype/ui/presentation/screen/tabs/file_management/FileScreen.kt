@@ -14,6 +14,7 @@ import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.camera_permission_denied_always
 import cmpprototype.composeapp.generated.resources.choose_from_files
 import cmpprototype.composeapp.generated.resources.choose_from_gallery
+import cmpprototype.composeapp.generated.resources.confirm
 import cmpprototype.composeapp.generated.resources.file_tab_title
 import cmpprototype.composeapp.generated.resources.gallery_permission_denied_always
 import cmpprototype.composeapp.generated.resources.ic_add_from_gallery
@@ -63,7 +64,7 @@ class FileScreen : Tab {
                 title = { Text(stringResource(Res.string.permission_denied)) },
                 message = { Text(dialogMessage) },
                 buttons = {
-                    default(onClick = { showDialog = false }) { Text("OK") }
+                    default(onClick = { showDialog = false }) { stringResource(Res.string.confirm) }
                 }
             )
         }
