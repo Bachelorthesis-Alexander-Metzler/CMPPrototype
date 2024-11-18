@@ -19,7 +19,6 @@ import de.doubleslash.cmpprototype.domain.use_case.getPreviouslyAuthenticated.Ge
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.SettingsViewModel
-import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
