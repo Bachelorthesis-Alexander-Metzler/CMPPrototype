@@ -1,12 +1,15 @@
 package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -79,9 +82,12 @@ class FileScreen : Tab {
         var dialogMessage by remember { mutableStateOf("") }
 
         // String-resources
-        val storagePermissionDeniedMessage = stringResource(Res.string.storage_permission_denied_always)
-        val galleryPermissionDeniedMessage = stringResource(Res.string.gallery_permission_denied_always)
-        val cameraPermissionDeniedMessage = stringResource(Res.string.camera_permission_denied_always)
+        val storagePermissionDeniedMessage =
+            stringResource(Res.string.storage_permission_denied_always)
+        val galleryPermissionDeniedMessage =
+            stringResource(Res.string.gallery_permission_denied_always)
+        val cameraPermissionDeniedMessage =
+            stringResource(Res.string.camera_permission_denied_always)
 
         // create a launcher for picking files
         val launcher = rememberFilePickerLauncher(mode = PickerMode.Multiple()) { files ->
@@ -95,7 +101,7 @@ class FileScreen : Tab {
                     // read content of file
                     val fileContent = file.readBytes()
 
-                    viewModel.addFile(fileName, extension, filePath)
+                    viewModel.saveFile(fileName, extension, filePath)
                 }
             }
         }
@@ -134,10 +140,12 @@ class FileScreen : Tab {
                                         // launch file picker
                                         launcher.launch()
                                     }
+
                                     PermissionState.DeniedAlways -> {
                                         dialogMessage = storagePermissionDeniedMessage
                                         showDialog = true
                                     }
+
                                     else -> {
                                         permissionsViewModel.provideOrRequestStoragePermission()
                                     }
@@ -153,6 +161,7 @@ class FileScreen : Tab {
                                         dialogMessage = galleryPermissionDeniedMessage
                                         showDialog = true
                                     }
+
                                     else -> {
                                         permissionsViewModel.provideOrRequestGalleryPermission()
                                     }
@@ -168,6 +177,7 @@ class FileScreen : Tab {
                                         dialogMessage = cameraPermissionDeniedMessage
                                         showDialog = true
                                     }
+
                                     else -> {
                                         permissionsViewModel.provideOrRequestCameraPermission()
                                     }
@@ -184,14 +194,34 @@ class FileScreen : Tab {
                 items(viewModel.getAllFiles()) { file ->
                     Row(
                         modifier = Modifier
-                            .padding(8.dp)
-                            .fillMaxWidth(),
+                            .padding(12.dp)
+                            .fillMaxWidth()
+                            .heightIn(min = 50.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.Top
                     ) {
-                        Text(
-                            text = file.baseName
-                        )
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            // Base Name
+                            Text(
+                                text = file.baseName,
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            Text(
+                                text = file.path,
+                                style = MaterialTheme
+                                    .typography
+                                    .bodySmall
+                                    .copy(color = MaterialTheme
+                                        .colorScheme
+                                        .secondary),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
 
                         AdaptiveIconButton(
                             onClick = { viewModel.deleteFile(file) },
@@ -202,8 +232,8 @@ class FileScreen : Tab {
                                 )
                             }
                         )
-
                     }
+
                     AdaptiveHorizontalDivider()
                 }
             }

@@ -26,6 +26,7 @@ moko = "0.18.1"
 androidx-security = "1.1.0-alpha06"
 multiplatorm-settings-version = "1.2.0"
 filekit = "0.8.7"
+realm = "2.3.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -75,6 +76,8 @@ security-crypto = { module = "androidx.security:security-crypto", version.ref = 
 multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatorm-settings-version" }
 
 filekit-compose = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekit" }
+mongodb-realm = { module = "io.realm.kotlin:library-base", version.ref = "realm" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -82,5 +85,5 @@ androidLibrary = { id = "com.android.library", version.ref = "agp" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-
+realm-plugin = { id = "io.realm.kotlin", version.ref = "realm" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
