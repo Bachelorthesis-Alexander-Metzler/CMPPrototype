@@ -35,7 +35,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
-            implementation("androidx.security:security-crypto:1.1.0-alpha03")
+            implementation(libs.security.crypto)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -69,7 +69,7 @@ kotlin {
 
             implementation(libs.cupertino.adaptive)
 
-            implementation("com.russhwolf:multiplatform-settings:1.2.0")
+            implementation(libs.multiplatform.settings)
 
 
             // api to make the permissions available for modules that depend on this module

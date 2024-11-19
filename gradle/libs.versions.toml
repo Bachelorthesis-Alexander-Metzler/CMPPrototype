@@ -23,6 +23,8 @@ konnectivity-version = "0.1-alpha01"
 stately = "2.1.0"
 compose-cupertino = "0.1.0-alpha04"
 moko = "0.18.1"
+androidx-security = "1.1.0-alpha06"
+multiplatorm-settings-version = "1.2.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -66,6 +68,10 @@ cupertino-icons-extended = { module = "io.github.alexzhirkevich:cupertino-icons-
 
 moko-permissions = { module = "dev.icerock.moko:permissions", version.ref = "moko" }
 moko-permissions-compose = { module = "dev.icerock.moko:permissions-compose", version.ref = "moko" }
+
+security-crypto = { module = "androidx.security:security-crypto", version.ref = "androidx-security" }
+
+multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatorm-settings-version" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
