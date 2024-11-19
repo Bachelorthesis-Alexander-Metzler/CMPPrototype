@@ -42,7 +42,7 @@ class MongoDBImpl : MongoDB {
         return realm?.query<FileDTO>()?.find()?.toList() ?: emptyList()
     }
 
-    override suspend fun deleteFile(file: FileDTO) {
+    override suspend fun deleteFile(file: FileDTO): Boolean {
         try {
             realm?.write {
                 val queriedFile = query<FileDTO>("_id == $0", file._id).first().find()
@@ -51,8 +51,10 @@ class MongoDBImpl : MongoDB {
                 }
             }
             println("FileRepository | File deleted")
+            return true
         } catch (e: Exception) {
             println("FileRepository | Error deleting file: ${e.message}")
+            return false
         }
     }
 }

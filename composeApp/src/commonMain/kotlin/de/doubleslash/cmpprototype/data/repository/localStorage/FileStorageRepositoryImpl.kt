@@ -15,8 +15,8 @@ class FileStorageRepositoryImpl(
         return mongoDB.getAllFiles()
     }
 
-    override suspend fun deleteFile(file: FileDTO) {
-        mongoDB.deleteFile(file)
+    override suspend fun deleteFile(file: FileDTO): Boolean {
+        return mongoDB.deleteFile(file)
     }
 
 }

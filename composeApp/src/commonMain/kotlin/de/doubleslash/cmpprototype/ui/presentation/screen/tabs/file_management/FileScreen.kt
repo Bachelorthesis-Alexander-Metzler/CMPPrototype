@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.getScreenModel
@@ -38,6 +39,7 @@ import cmpprototype.composeapp.generated.resources.open_camera
 import cmpprototype.composeapp.generated.resources.open_settings
 import cmpprototype.composeapp.generated.resources.permission_denied
 import cmpprototype.composeapp.generated.resources.storage_permission_denied_always
+import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.PermissionsViewModel
 import de.doubleslash.cmpprototype.ui.presentation.components.FabItem
 import de.doubleslash.cmpprototype.ui.presentation.components.MultiFloatingActionButton
@@ -99,7 +101,7 @@ class FileScreen : Tab {
                     val filePath = file.path ?: ""
 
                     // read content of file
-                    val fileContent = file.readBytes()
+//                    val fileContent = file.readBytes()
 
                     viewModel.saveFile(fileName, extension, filePath)
                 }
@@ -192,52 +194,64 @@ class FileScreen : Tab {
                     .padding(paddingValues)
             ) {
                 items(viewModel.getAllFiles()) { file ->
-                    Row(
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .fillMaxWidth()
-                            .heightIn(min = 50.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            // Base Name
-                            Text(
-                                text = file.baseName,
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-
-                            Text(
-                                text = file.path,
-                                style = MaterialTheme
-                                    .typography
-                                    .bodySmall
-                                    .copy(color = MaterialTheme
-                                        .colorScheme
-                                        .secondary),
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-
-                        AdaptiveIconButton(
-                            onClick = { viewModel.deleteFile(file) },
-                            content = {
-                                Icon(
-                                    imageVector = AdaptiveIcons.Outlined.Delete,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                    }
-
-                    AdaptiveHorizontalDivider()
+                    FileItemEntry(file, viewModel)
                 }
             }
         }
+    }
+
+    @OptIn(ExperimentalAdaptiveApi::class)
+    @Composable
+    private fun FileItemEntry(
+        file: FileModel,
+        viewModel: FileViewModel
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth()
+                .heightIn(min = 50.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                // Base Name
+                Text(
+                    text = file.baseName,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Text(
+                    text = file.path,
+                    style = MaterialTheme
+                        .typography
+                        .bodySmall
+                        .copy(
+                            color = MaterialTheme
+                                .colorScheme
+                                .secondary
+                        ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            AdaptiveIconButton(
+                onClick = { viewModel.deleteFile(file) },
+                content = {
+                    Icon(
+                        imageVector = AdaptiveIcons.Outlined.Delete,
+                        contentDescription = null,
+                        tint = Color.Red
+                    )
+                }
+            )
+        }
+
+        AdaptiveHorizontalDivider()
     }
 
 

@@ -7,13 +7,13 @@ import de.doubleslash.cmpprototype.domain.repository.localStorage.FileStorageRep
 class DeleteFileUseCase(
     private val fileStorageRepository: FileStorageRepository
 ) {
-    suspend operator fun invoke(fileModel: FileModel) {
+    suspend operator fun invoke(fileModel: FileModel): Boolean {
         val fileDTO = FileDTO().apply {
             this._id = fileModel._id
             this.baseName = fileModel.baseName
             this.extension = fileModel.extension
             this.path = fileModel.path
         }
-        fileStorageRepository.deleteFile(fileDTO)
+        return fileStorageRepository.deleteFile(fileDTO)
     }
 }

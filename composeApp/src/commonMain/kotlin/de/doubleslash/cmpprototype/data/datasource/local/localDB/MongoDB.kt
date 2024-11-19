@@ -10,5 +10,5 @@ interface MongoDB {
 
     suspend fun addFile(file: FileDTO)
     fun getAllFiles(): List<FileDTO>
-    suspend fun deleteFile(file: FileDTO)
+    suspend fun deleteFile(file: FileDTO): Boolean
 }

@@ -43,7 +43,6 @@ class FileViewModel(
             loadFiles() // refresh files after saving
         }
     }
-
     fun deleteFile(file: FileModel) {
         CoroutineScope(Dispatchers.IO).launch {
             deleteFileUseCase.invoke(file)
