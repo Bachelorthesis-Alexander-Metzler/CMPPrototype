@@ -1,5 +1,12 @@
 package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -7,7 +14,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import cmpprototype.composeapp.generated.resources.Res
@@ -32,12 +43,22 @@ import dev.icerock.moko.permissions.PermissionState
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveAlertDialog
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveHorizontalDivider
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveIconButton
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import io.github.alexzhirkevich.cupertino.adaptive.icons.AdaptiveIcons
 import io.github.alexzhirkevich.cupertino.adaptive.icons.Add
+import io.github.alexzhirkevich.cupertino.adaptive.icons.Delete
 import io.github.alexzhirkevich.cupertino.adaptive.icons.Home
 import io.github.alexzhirkevich.cupertino.cancel
 import io.github.alexzhirkevich.cupertino.default
+import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
+import io.github.vinceglb.filekit.core.PickerMode
+import io.github.vinceglb.filekit.core.extension
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -45,11 +66,15 @@ class FileScreen : Tab {
     @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
     override fun Content() {
+        val viewModel = getScreenModel<FileViewModel>()
+
+        // create a permissions controller
         val factory = rememberPermissionsControllerFactory()
         val controller = remember(factory) { factory.createPermissionsController() }
         BindEffect(controller)
         val permissionsViewModel = PermissionsViewModel(controller)
 
+        // dialog
         var showDialog by remember { mutableStateOf(false) }
         var dialogMessage by remember { mutableStateOf("") }
 
@@ -57,6 +82,23 @@ class FileScreen : Tab {
         val storagePermissionDeniedMessage = stringResource(Res.string.storage_permission_denied_always)
         val galleryPermissionDeniedMessage = stringResource(Res.string.gallery_permission_denied_always)
         val cameraPermissionDeniedMessage = stringResource(Res.string.camera_permission_denied_always)
+
+        // create a launcher for picking files
+        val launcher = rememberFilePickerLauncher(mode = PickerMode.Multiple()) { files ->
+            // extract file names and store in selectedFiles list
+            files?.forEach { file ->
+                CoroutineScope(Dispatchers.IO).launch {
+                    val fileName = file.name
+                    val extension = file.extension
+                    val filePath = file.path ?: ""
+
+                    // read content of file
+                    val fileContent = file.readBytes()
+
+                    viewModel.addFile(fileName, extension, filePath)
+                }
+            }
+        }
 
         if (showDialog) {
             AdaptiveAlertDialog(
@@ -82,11 +124,16 @@ class FileScreen : Tab {
                     fabIcon = rememberVectorPainter(AdaptiveIcons.Outlined.Add),
                     showLabels = false,
                     items = arrayListOf(
+                        // FabItem for choosing files
                         FabItem(
                             icon = painterResource(Res.drawable.ic_upload_file),
                             label = stringResource(Res.string.choose_from_files),
                             onFabItemClicked = {
                                 when (permissionsViewModel.storageState) {
+                                    PermissionState.Granted -> {
+                                        // launch file picker
+                                        launcher.launch()
+                                    }
                                     PermissionState.DeniedAlways -> {
                                         dialogMessage = storagePermissionDeniedMessage
                                         showDialog = true
@@ -96,6 +143,7 @@ class FileScreen : Tab {
                                     }
                                 }
                             }),
+                        // FabItem for choosing from gallery
                         FabItem(
                             icon = painterResource(Res.drawable.ic_add_from_gallery),
                             label = stringResource(Res.string.choose_from_gallery),
@@ -110,6 +158,7 @@ class FileScreen : Tab {
                                     }
                                 }
                             }),
+                        // FabItem for opening camera
                         FabItem(
                             icon = painterResource(Res.drawable.ic_camera),
                             label = stringResource(Res.string.open_camera),
@@ -128,7 +177,36 @@ class FileScreen : Tab {
                 )
             }
         ) { paddingValues ->
-            // Keine zusätzliche Logik hier, da der Dialog direkt aus FabItem ausgelöst wird
+            LazyColumn(
+                modifier = Modifier
+                    .padding(paddingValues)
+            ) {
+                items(viewModel.getAllFiles()) { file ->
+                    Row(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = file.baseName
+                        )
+
+                        AdaptiveIconButton(
+                            onClick = { viewModel.deleteFile(file) },
+                            content = {
+                                Icon(
+                                    imageVector = AdaptiveIcons.Outlined.Delete,
+                                    contentDescription = null
+                                )
+                            }
+                        )
+
+                    }
+                    AdaptiveHorizontalDivider()
+                }
+            }
         }
     }
 

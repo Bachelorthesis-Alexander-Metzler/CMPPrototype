@@ -18,6 +18,7 @@ import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetwork
 import de.doubleslash.cmpprototype.domain.use_case.getPreviouslyAuthenticated.GetPreviouslyAuthenticatedUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management.FileViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.SettingsViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
@@ -54,6 +55,7 @@ val useCaseModule = module {
 val viewModelModule = module {
     factory { LoginViewModel(get(), get(), get(), get(), get()) }
     factory { SettingsViewModel() }
+    factory { FileViewModel() }
 }
 
 // Combine all modules

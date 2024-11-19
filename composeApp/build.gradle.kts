@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -70,6 +69,8 @@ kotlin {
             implementation(libs.cupertino.adaptive)
 
             implementation(libs.multiplatform.settings)
+
+            implementation(libs.filekit.compose)
 
 
             // api to make the permissions available for modules that depend on this module
