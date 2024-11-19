@@ -92,21 +92,7 @@ class FileScreen : Tab {
             stringResource(Res.string.camera_permission_denied_always)
 
         // create a launcher for picking files
-        val launcher = rememberFilePickerLauncher(mode = PickerMode.Multiple()) { files ->
-            // extract file names and store in selectedFiles list
-            files?.forEach { file ->
-                CoroutineScope(Dispatchers.IO).launch {
-                    val fileName = file.name
-                    val extension = file.extension
-                    val filePath = file.path ?: ""
-
-                    // read content of file
-//                    val fileContent = file.readBytes()
-
-                    viewModel.saveFile(fileName, extension, filePath)
-                }
-            }
-        }
+        val launcher = createLauncher(viewModel)
 
         if (showDialog) {
             AdaptiveAlertDialog(
@@ -199,6 +185,24 @@ class FileScreen : Tab {
             }
         }
     }
+
+    @Composable
+    private fun createLauncher(viewModel: FileViewModel) =
+        rememberFilePickerLauncher(mode = PickerMode.Multiple()) { files ->
+            // extract file names and store in selectedFiles list
+            files?.forEach { file ->
+                CoroutineScope(Dispatchers.IO).launch {
+                    val fileName = file.name
+                    val extension = file.extension
+                    val filePath = file.path ?: ""
+
+                    // read content of file
+    //                    val fileContent = file.readBytes()
+
+                    viewModel.saveFile(fileName, extension, filePath)
+                }
+            }
+        }
 
     @OptIn(ExperimentalAdaptiveApi::class)
     @Composable

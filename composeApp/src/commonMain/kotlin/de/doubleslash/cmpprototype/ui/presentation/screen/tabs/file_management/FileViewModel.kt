@@ -18,10 +18,6 @@ class FileViewModel(
 ) : ScreenModel {
     private val allFiles = mutableStateListOf<FileModel>()
 
-    fun getAllFiles(): List<FileModel> {
-        return allFiles
-    }
-
     init {
         loadFiles()
     }
@@ -48,5 +44,9 @@ class FileViewModel(
             deleteFileUseCase.invoke(file)
             loadFiles() // load data again to update the UI
         }
+    }
+
+    fun getAllFiles(): List<FileModel> {
+        return allFiles
     }
 }
