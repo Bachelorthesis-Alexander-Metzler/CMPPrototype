@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -8,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.realm.plugin)
 }
 
 kotlin {
@@ -62,6 +62,7 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
 
             implementation(libs.coroutines.core)
+            implementation(libs.mongodb.realm)
 
             implementation(libs.stately.common)
 
@@ -70,6 +71,8 @@ kotlin {
             implementation(libs.cupertino.adaptive)
 
             implementation(libs.multiplatform.settings)
+
+            implementation(libs.filekit.compose)
 
             implementation(libs.camerak)
             implementation("io.github.kashif-mehmood-km:image_saver_plugin:0.0.1")
