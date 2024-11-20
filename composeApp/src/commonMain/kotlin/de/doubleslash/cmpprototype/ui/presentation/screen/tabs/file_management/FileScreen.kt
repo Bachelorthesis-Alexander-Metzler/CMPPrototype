@@ -59,6 +59,7 @@ import io.github.alexzhirkevich.cupertino.cancel
 import io.github.alexzhirkevich.cupertino.default
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.core.PickerMode
+import io.github.vinceglb.filekit.core.PickerType
 import io.github.vinceglb.filekit.core.extension
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -92,7 +93,8 @@ class FileScreen : Tab {
             stringResource(Res.string.camera_permission_denied_always)
 
         // create a launcher for picking files
-        val launcher = createLauncher(viewModel)
+        val documentLauncher = createLauncher(viewModel, PickerType.File())
+        val imgVidLauncher = createLauncher(viewModel, PickerType.ImageAndVideo)
 
         if (showDialog) {
             AdaptiveAlertDialog(
@@ -126,7 +128,7 @@ class FileScreen : Tab {
                                 when (permissionsViewModel.storageState) {
                                     PermissionState.Granted -> {
                                         // launch file picker
-                                        launcher.launch()
+                                        documentLauncher.launch()
                                     }
 
                                     PermissionState.DeniedAlways -> {
@@ -145,6 +147,10 @@ class FileScreen : Tab {
                             label = stringResource(Res.string.choose_from_gallery),
                             onFabItemClicked = {
                                 when (permissionsViewModel.galleryState) {
+                                    PermissionState.Granted -> {
+                                        // launch image/video picker
+                                        imgVidLauncher.launch()
+                                    }
                                     PermissionState.DeniedAlways -> {
                                         dialogMessage = galleryPermissionDeniedMessage
                                         showDialog = true
@@ -187,8 +193,10 @@ class FileScreen : Tab {
     }
 
     @Composable
-    private fun createLauncher(viewModel: FileViewModel) =
-        rememberFilePickerLauncher(mode = PickerMode.Multiple()) { files ->
+    private fun createLauncher(viewModel: FileViewModel, pickerType: PickerType) =
+        rememberFilePickerLauncher(
+            mode = PickerMode.Multiple(),
+            type = pickerType) { files ->
             // extract file names and store in selectedFiles list
             files?.forEach { file ->
                 CoroutineScope(Dispatchers.IO).launch {
