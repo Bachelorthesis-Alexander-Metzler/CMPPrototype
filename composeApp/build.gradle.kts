@@ -71,6 +71,8 @@ kotlin {
 
             implementation(libs.multiplatform.settings)
 
+            implementation(libs.camerak)
+            implementation("io.github.kashif-mehmood-km:image_saver_plugin:0.0.1")
 
             // api to make the permissions available for modules that depend on this module
             api(libs.moko.permissions)

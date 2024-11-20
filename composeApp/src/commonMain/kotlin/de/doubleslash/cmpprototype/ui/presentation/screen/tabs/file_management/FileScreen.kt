@@ -8,8 +8,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import cafe.adriel.voyager.navigator.tab.Tab
-import cafe.adriel.voyager.navigator.tab.TabOptions
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.camera_permission_denied_always
 import cmpprototype.composeapp.generated.resources.cancel
@@ -24,6 +25,7 @@ import cmpprototype.composeapp.generated.resources.open_camera
 import cmpprototype.composeapp.generated.resources.open_settings
 import cmpprototype.composeapp.generated.resources.permission_denied
 import cmpprototype.composeapp.generated.resources.storage_permission_denied_always
+import de.doubleslash.cmpprototype.ui.presentation.camera.CameraScreen
 import de.doubleslash.cmpprototype.ui.presentation.screen.PermissionsViewModel
 import de.doubleslash.cmpprototype.ui.presentation.components.FabItem
 import de.doubleslash.cmpprototype.ui.presentation.components.MultiFloatingActionButton
@@ -35,16 +37,16 @@ import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveAlertDialog
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import io.github.alexzhirkevich.cupertino.adaptive.icons.AdaptiveIcons
 import io.github.alexzhirkevich.cupertino.adaptive.icons.Add
-import io.github.alexzhirkevich.cupertino.adaptive.icons.Home
 import io.github.alexzhirkevich.cupertino.cancel
 import io.github.alexzhirkevich.cupertino.default
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-class FileScreen : Tab {
+class FileScreen : Screen {
     @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
     override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
         val factory = rememberPermissionsControllerFactory()
         val controller = remember(factory) { factory.createPermissionsController() }
         BindEffect(controller)
@@ -115,6 +117,9 @@ class FileScreen : Tab {
                             label = stringResource(Res.string.open_camera),
                             onFabItemClicked = {
                                 when (permissionsViewModel.cameraState) {
+                                    PermissionState.Granted -> {
+                                        navigator.push(CameraScreen())
+                                    }
                                     PermissionState.DeniedAlways -> {
                                         dialogMessage = cameraPermissionDeniedMessage
                                         showDialog = true
@@ -128,23 +133,12 @@ class FileScreen : Tab {
                 )
             }
         ) { paddingValues ->
-            // Keine zusätzliche Logik hier, da der Dialog direkt aus FabItem ausgelöst wird
+
         }
     }
 
 
-    override val options: TabOptions
-        @Composable
-        get() {
-            val icon = rememberVectorPainter(image = (AdaptiveIcons.Outlined.Home))
-            val title = stringResource(Res.string.file_tab_title)
-            val index: UShort = 0u
 
-            return TabOptions(
-                icon = icon,
-                title = title,
-                index = index
-            )
-        }
+
 
 }

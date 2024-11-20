@@ -25,6 +25,7 @@ compose-cupertino = "0.1.0-alpha04"
 moko = "0.18.1"
 androidx-security = "1.1.0-alpha06"
 multiplatorm-settings-version = "1.2.0"
+camerak-version = "0.0.7"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -72,6 +73,8 @@ moko-permissions-compose = { module = "dev.icerock.moko:permissions-compose", ve
 security-crypto = { module = "androidx.security:security-crypto", version.ref = "androidx-security" }
 
 multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatorm-settings-version" }
+
+camerak = { module = "io.github.kashif-mehmood-km:camerak", version.ref = "camerak-version" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
