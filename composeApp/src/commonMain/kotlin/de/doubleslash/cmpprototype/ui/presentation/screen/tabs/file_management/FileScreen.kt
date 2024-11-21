@@ -233,30 +233,39 @@ class FileScreen : Screen {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
         ) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                // Base Name
+            if (file.path.isNotBlank()) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    // Base Name
+                    Text(
+                        text = file.baseName,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Text(
+                        text = file.path,
+                        style = MaterialTheme
+                            .typography
+                            .bodySmall
+                            .copy(
+                                color = MaterialTheme
+                                    .colorScheme
+                                    .secondary
+                            ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            } else {
                 Text(
+                    modifier = Modifier.align(Alignment.CenterVertically),
                     text = file.baseName,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Text(
-                    text = file.path,
-                    style = MaterialTheme
-                        .typography
-                        .bodySmall
-                        .copy(
-                            color = MaterialTheme
-                                .colorScheme
-                                .secondary
-                        ),
-                    modifier = Modifier.fillMaxWidth()
                 )
             }
+
 
             AdaptiveIconButton(
                 onClick = { viewModel.deleteFile(file) },
