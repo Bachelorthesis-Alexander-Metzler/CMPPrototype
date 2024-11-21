@@ -12,7 +12,8 @@ class LoadAllFilesUseCase(
                 _id = it._id,
                 baseName = it.baseName,
                 extension = it.extension,
-                path = it.path
+                path = it.path,
+                fileContent = byteArrayOf(0) // don't load file content for ui
             )
         }
     }

@@ -22,18 +22,19 @@ class FileViewModel(
         loadFiles()
     }
 
-    private fun loadFiles() {
+    fun loadFiles() {
         allFiles.clear()
         allFiles.addAll(loadAllFilesUseCase.invoke())
     }
 
 
-    fun saveFile(name: String, extension: String, path: String) {
+    fun saveFile(name: String, extension: String, path: String, fileContent: ByteArray) {
         CoroutineScope(Dispatchers.IO).launch {
             val fileModel = FileModel(
                 baseName = name,
                 extension = extension,
                 path = path,
+                fileContent = fileContent
             )
             saveFileUseCase.invoke(fileModel)
             loadFiles() // refresh files after saving

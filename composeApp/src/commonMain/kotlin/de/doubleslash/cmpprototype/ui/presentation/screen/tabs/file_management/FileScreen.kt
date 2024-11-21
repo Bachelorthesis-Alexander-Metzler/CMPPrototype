@@ -23,8 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.getScreenModel
-import cafe.adriel.voyager.navigator.tab.Tab
-import cafe.adriel.voyager.navigator.tab.TabOptions
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -78,6 +76,7 @@ class FileScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = getScreenModel<FileViewModel>()
+        viewModel.loadFiles()
 
         // create a permissions controller
         val factory = rememberPermissionsControllerFactory()
@@ -184,7 +183,8 @@ class FileScreen : Screen {
                                         permissionsViewModel.provideOrRequestCameraPermission()
                                     }
                                 }
-                            })
+                            }
+                        )
                     )
                 )
             }
@@ -213,9 +213,9 @@ class FileScreen : Screen {
                     val filePath = file.path ?: ""
 
                     // read content of file
-    //                    val fileContent = file.readBytes()
+                    val fileContent = file.readBytes()
 
-                    viewModel.saveFile(fileName, extension, filePath)
+                    viewModel.saveFile(fileName, extension, filePath, fileContent)
                 }
             }
         }
@@ -270,14 +270,6 @@ class FileScreen : Screen {
                 }
             )
         }
-
         AdaptiveHorizontalDivider()
-
-        }
     }
-
-
-
-
-
 }
