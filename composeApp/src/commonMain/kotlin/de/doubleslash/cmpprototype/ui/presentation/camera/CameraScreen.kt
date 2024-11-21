@@ -59,9 +59,8 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.decodeToImageBitmap
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
-import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalResourceApi::class, ExperimentalUuidApi::class)
+@OptIn(ExperimentalResourceApi::class)
 class CameraScreen : Screen {
 
     @Composable
@@ -87,14 +86,14 @@ class CameraScreen : Screen {
                 println("Camera Controller Ready ${cameraController.value}")
             })
             cameraController.value?.let { controller ->
-                CameraContent(cameraController = controller, imageSaverPlugin)
+                CameraContent(cameraController = controller)
             }
         }
     }
 
     @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
-    fun CameraContent(cameraController: CameraController, imageSaverPlugin: ImageSaverPlugin) {
+    fun CameraContent(cameraController: CameraController) {
         val viewModel = getScreenModel<CameraViewModel>()
         val navigator = LocalNavigator.currentOrThrow
         val scope = rememberCoroutineScope()
