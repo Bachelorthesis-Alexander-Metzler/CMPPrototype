@@ -28,7 +28,9 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
+import cmpprototype.composeapp.generated.resources.btn_change
 import cmpprototype.composeapp.generated.resources.content_description_back
+import cmpprototype.composeapp.generated.resources.enter_a_color
 import cmpprototype.composeapp.generated.resources.setting_enable_dark_mode
 import cmpprototype.composeapp.generated.resources.setting_use_system_theme
 import cmpprototype.composeapp.generated.resources.theme_details_title
@@ -152,7 +154,7 @@ class ThemeDetailsScreen : Screen {
                                 colorInput = it
                                 isValidColor = parseColor(it.text) != null
                             },
-                            label = { Text("Enter a color (e.g., #FF5733)") },
+                            label = { Text(stringResource(Res.string.enter_a_color)) },
                             isError = !isValidColor,
                             modifier = Modifier.weight(1f),
                         )
@@ -169,7 +171,7 @@ class ThemeDetailsScreen : Screen {
                             },
                             enabled = isValidColor
                         ) {
-                            Text("Change")
+                            Text(stringResource(Res.string.btn_change))
                         }
 
                     }

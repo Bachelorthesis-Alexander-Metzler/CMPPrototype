@@ -41,6 +41,8 @@
     <string name="theme_details_title">Ansicht Konfiguration</string>
     <string name="setting_use_system_theme">Nutze Systemeinstellungen für dunklen Modus</string>
     <string name="setting_enable_dark_mode">Aktiviere dunklen Modus</string>
+    <string name="enter_a_color">Farbe eingeben (z.B., #FF5733)</string>
+    <string name="btn_change">Ändern</string>
 
     <!-- permission details screen -->
     <string name="permission_details_title">Berechtigungskonfiguration</string>

@@ -41,6 +41,8 @@
     <string name="theme_details_title">Theme Configuration</string>
     <string name="setting_use_system_theme">Use system settings for dark theme</string>
     <string name="setting_enable_dark_mode">Enable Dark Mode</string>
+    <string name="enter_a_color">Enter a color (e.g., #FF5733)</string>
+    <string name="btn_change">Change</string>
 
     <!-- permission details screen -->
     <string name="permission_details_title">Permission Configuration</string>
