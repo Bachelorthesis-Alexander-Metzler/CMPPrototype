@@ -26,8 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.koin.getScreenModel
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.navigator.tab.Tab
-import cafe.adriel.voyager.navigator.tab.TabOptions
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -161,38 +159,41 @@ class FileScreen : Screen {
                                             // launch image/video picker
                                             imgVidLauncher.launch()
                                         }
+
                                         PermissionState.DeniedAlways -> {
                                             dialogMessage = galleryPermissionDeniedMessage
                                             showDialog = true
                                         }
 
-                                    else -> {
-                                        permissionsViewModel.provideOrRequestGalleryPermission()
+                                        else -> {
+                                            permissionsViewModel.provideOrRequestGalleryPermission()
+                                        }
                                     }
-                                }
-                            }),
-                        // FabItem for opening camera
-                        FabItem(
-                            icon = painterResource(Res.drawable.ic_camera),
-                            label = stringResource(Res.string.open_camera),
-                            onFabItemClicked = {
-                                when (permissionsViewModel.cameraState) {
-                                    PermissionState.Granted -> {
-                                        navigator.push(CameraScreen())
-                                    }
-                                    PermissionState.DeniedAlways -> {
-                                        dialogMessage = cameraPermissionDeniedMessage
-                                        showDialog = true
-                                    }
+                                }),
+                            // FabItem for opening camera
+                            FabItem(
+                                icon = painterResource(Res.drawable.ic_camera),
+                                label = stringResource(Res.string.open_camera),
+                                onFabItemClicked = {
+                                    when (permissionsViewModel.cameraState) {
+                                        PermissionState.Granted -> {
+                                            navigator.push(CameraScreen())
+                                        }
 
-                                    else -> {
-                                        permissionsViewModel.provideOrRequestCameraPermission()
+                                        PermissionState.DeniedAlways -> {
+                                            dialogMessage = cameraPermissionDeniedMessage
+                                            showDialog = true
+                                        }
+
+                                        else -> {
+                                            permissionsViewModel.provideOrRequestCameraPermission()
+                                        }
                                     }
                                 }
-                            }
+                            )
                         )
                     )
-                )
+                }
             }
         ) { paddingValues ->
             if (isConnected) {
@@ -207,12 +208,12 @@ class FileScreen : Screen {
             } else {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize(), // Nimmt den gesamten Bildschirm ein
-                    contentAlignment = Alignment.Center // Zentriert den Inhalt (vertikal und horizontal)
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "Unable to load files. No internet connection.",
-                        modifier = Modifier.padding(16.dp) // Optional: Padding hinzufügen
+                        modifier = Modifier.padding(16.dp)
                     )
                 }
 
