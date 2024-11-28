@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import cmpprototype.composeapp.generated.resources.Res
@@ -45,6 +46,7 @@ class FileScreen : Tab {
     @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
     override fun Content() {
+        val viewModel = getScreenModel<FileViewModel>()
         val factory = rememberPermissionsControllerFactory()
         val controller = remember(factory) { factory.createPermissionsController() }
         BindEffect(controller)
