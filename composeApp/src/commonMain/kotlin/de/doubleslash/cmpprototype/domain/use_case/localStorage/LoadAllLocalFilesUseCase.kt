@@ -3,7 +3,7 @@ package de.doubleslash.cmpprototype.domain.use_case.localStorage
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import de.doubleslash.cmpprototype.domain.repository.localStorage.FileStorageRepository
 
-class LoadAllFilesUseCase(
+class LoadAllLocalFilesUseCase(
     private val fileStorageRepository: FileStorageRepository
 ) {
     operator fun invoke(): List<FileModel> {
@@ -13,6 +13,8 @@ class LoadAllFilesUseCase(
                 baseName = it.baseName,
                 extension = it.extension,
                 path = it.path,
+                isRemoteFile = false,
+                baseTypeId = it.baseTypeId,
                 fileContent = byteArrayOf(0) // don't load file content for ui
             )
         }

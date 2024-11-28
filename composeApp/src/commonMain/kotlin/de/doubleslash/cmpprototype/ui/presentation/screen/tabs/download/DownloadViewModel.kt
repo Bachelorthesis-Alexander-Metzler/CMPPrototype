@@ -4,17 +4,18 @@ import androidx.compose.runtime.mutableStateListOf
 import cafe.adriel.voyager.core.model.ScreenModel
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.DeleteLocalFileUseCase
-import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadAllFilesUseCase
+import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadAllLocalFilesUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 
 class DownloadViewModel(
-    private val loadAllFilesUseCase: LoadAllFilesUseCase,
+    private val loadAllLocalFilesUseCase: LoadAllLocalFilesUseCase,
     private val deleteLocalFileUseCase: DeleteLocalFileUseCase
 ) : ScreenModel {
     private val allFiles = mutableStateListOf<FileModel>()
+
 
     init {
         loadFiles()
@@ -22,7 +23,7 @@ class DownloadViewModel(
 
     private fun loadFiles() {
         allFiles.clear()
-        allFiles.addAll(loadAllFilesUseCase.invoke())
+        allFiles.addAll(loadAllLocalFilesUseCase.invoke())
     }
 
     fun deleteFileLocally(file: FileModel) {

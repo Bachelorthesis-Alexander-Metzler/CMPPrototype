@@ -4,10 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
@@ -24,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.text.style.TextOverflow
 import cafe.adriel.voyager.koin.getScreenModel
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
@@ -38,11 +41,16 @@ import cmpprototype.composeapp.generated.resources.file_tab_title
 import cmpprototype.composeapp.generated.resources.gallery_permission_denied_always
 import cmpprototype.composeapp.generated.resources.ic_add_from_gallery
 import cmpprototype.composeapp.generated.resources.ic_camera
+import cmpprototype.composeapp.generated.resources.ic_cloud
+import cmpprototype.composeapp.generated.resources.ic_file
+import cmpprototype.composeapp.generated.resources.ic_file_download_done_24
+import cmpprototype.composeapp.generated.resources.ic_folder
 import cmpprototype.composeapp.generated.resources.ic_upload_file
 import cmpprototype.composeapp.generated.resources.open_camera
 import cmpprototype.composeapp.generated.resources.open_settings
 import cmpprototype.composeapp.generated.resources.permission_denied
 import cmpprototype.composeapp.generated.resources.storage_permission_denied_always
+import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.ui.presentation.camera.CameraScreen
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.PermissionsViewModel
@@ -53,12 +61,11 @@ import dev.icerock.moko.permissions.PermissionState
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveAlertDialog
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveCircularProgressIndicator
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveHorizontalDivider
-import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveIconButton
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import io.github.alexzhirkevich.cupertino.adaptive.icons.AdaptiveIcons
 import io.github.alexzhirkevich.cupertino.adaptive.icons.Add
-import io.github.alexzhirkevich.cupertino.adaptive.icons.Delete
 import io.github.alexzhirkevich.cupertino.cancel
 import io.github.alexzhirkevich.cupertino.default
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
@@ -71,6 +78,7 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 class FileScreen : Screen {
     @OptIn(ExperimentalAdaptiveApi::class)
@@ -78,7 +86,7 @@ class FileScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = getScreenModel<FileViewModel>()
-        viewModel.loadFiles()
+//        viewModel.loadFiles()
         val isConnected by viewModel.isConnected.collectAsState()
 
         // create a permissions controller
@@ -196,13 +204,61 @@ class FileScreen : Screen {
                 }
             }
         ) { paddingValues ->
+
             if (isConnected) {
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                ) {
-                    items(viewModel.getAllFiles()) { file ->
-                        FileItemEntry(file, viewModel)
+                when (viewModel.cmisState) {
+                    is RequestCondition.LoadingCondition -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            AdaptiveCircularProgressIndicator()
+                        }
+                    }
+
+                    is RequestCondition.SuccessCondition -> {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues)
+                        ) {
+                            items(viewModel.getAllFiles().sortedBy { it.baseName }) { file ->
+                                FileItemEntry(file)
+                            }
+                        }
+                    }
+
+                    is RequestCondition.ErrorCondition -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = (viewModel.cmisState as RequestCondition.ErrorCondition).errorMsg,
+                                color = Color.Red,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
+                    }
+
+                    else -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "No files loaded.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
                     }
                 }
             } else {
@@ -243,64 +299,84 @@ class FileScreen : Screen {
 
     @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
-    private fun FileItemEntry(
-        file: FileModel,
-        viewModel: FileViewModel
-    ) {
+    private fun FileItemEntry(file: FileModel) {
         Row(
             modifier = Modifier
                 .padding(12.dp)
                 .fillMaxWidth()
                 .heightIn(min = 50.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            if (file.path.isNotBlank()) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    // Base Name
-                    Text(
-                        text = file.baseName,
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Text(
-                        text = file.path,
-                        style = MaterialTheme
-                            .typography
-                            .bodySmall
-                            .copy(
-                                color = MaterialTheme
-                                    .colorScheme
-                                    .secondary
-                            ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+            // Linkes Icon
+            (if (file.baseTypeId == "cmis:folder") {
+                vectorResource(Res.drawable.ic_folder) // Beispiel-Icon
+            } else if (file.baseTypeId == "cmis:document") {
+                vectorResource(Res.drawable.ic_file)
             } else {
-                Text(
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    text = file.baseName,
-                    style = MaterialTheme.typography.titleMedium,
+                null
+            })?.let {
+                Icon(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(end = 8.dp), // Abstand zum Text
+                    imageVector = it,
+                    contentDescription = "File Type Icon",
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
 
+            // Text (Name und optional Pfad)
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 16.dp), // Platz für das Icon rechts
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                // Base Name
+                Text(
+                    text = file.baseName,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleMedium
+                )
 
-            AdaptiveIconButton(
-                onClick = { viewModel.deleteFile(file) },
-                content = {
-                    Icon(
-                        imageVector = AdaptiveIcons.Outlined.Delete,
-                        contentDescription = null,
-                        tint = Color.Red
+                // Pfad (falls vorhanden)
+                if (file.path != null) {
+                    Text(
+                        text = file.path,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = MaterialTheme.colorScheme.secondary
+                        )
                     )
+                }
+            }
+
+            // Rechtes Icon
+            Icon(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                imageVector = if (file.isRemoteFile) {
+                    vectorResource(Res.drawable.ic_cloud)
+                } else {
+                    vectorResource(Res.drawable.ic_file_download_done_24)
+                },
+                contentDescription = if (file.isRemoteFile) {
+                    "Remote Object"
+                } else {
+                    "Local Object"
+                },
+                tint = if (file.isRemoteFile) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    Color.Green
                 }
             )
         }
 
         AdaptiveHorizontalDivider()
     }
+
+
 }

@@ -10,5 +10,6 @@ class FileDTO : RealmObject {
     var baseName: String = "" // file name
     var extension: String = "" // file extension
     var path: String = "" // file path
+    var baseTypeId: String = "" // base type id
     var fileContent: ByteArray = byteArrayOf() // file content
 }

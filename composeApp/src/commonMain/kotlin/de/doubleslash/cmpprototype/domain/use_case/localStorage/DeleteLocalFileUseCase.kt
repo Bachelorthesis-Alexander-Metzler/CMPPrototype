@@ -8,12 +8,18 @@ class DeleteLocalFileUseCase(
     private val fileStorageRepository: FileStorageRepository
 ) {
     suspend operator fun invoke(fileModel: FileModel): Boolean {
-        val fileDTO = FileDTO().apply {
-            this._id = fileModel._id
-            this.baseName = fileModel.baseName
-            this.extension = fileModel.extension
-            this.path = fileModel.path
+        if (fileModel._id != null) {
+            val fileDTO = FileDTO().apply {
+                this._id = fileModel._id!!
+                this.baseName = fileModel.baseName
+                this.extension = fileModel.extension
+                this.path = fileModel.path.toString()
+            }
+            return fileStorageRepository.deleteFile(fileDTO)
+        } else {
+            println("FileModel has no _id. Cannot delete file.")
+            return false
         }
-        return fileStorageRepository.deleteFile(fileDTO)
+
     }
 }

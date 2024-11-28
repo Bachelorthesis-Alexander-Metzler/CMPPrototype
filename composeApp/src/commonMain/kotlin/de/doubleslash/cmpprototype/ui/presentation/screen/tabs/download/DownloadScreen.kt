@@ -39,6 +39,7 @@ class DownloadScreen : Tab {
     @Composable
     override fun Content() {
         val viewModel = getScreenModel<DownloadViewModel>()
+//        viewModel.loadFiles()
 
         Scaffold(
             topBar = CustomTopAppBar(text = stringResource(Res.string.downloads_tab_title))
@@ -68,7 +69,7 @@ class DownloadScreen : Tab {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
         ) {
-            if (file.path.isNotBlank()) {
+            if (file.path != null) {
                 Column(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
