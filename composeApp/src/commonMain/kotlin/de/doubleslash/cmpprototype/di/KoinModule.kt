@@ -22,11 +22,12 @@ import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetwork
 import de.doubleslash.cmpprototype.domain.use_case.getPreviouslyAuthenticated.GetPreviouslyAuthenticatedUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetCredentialsUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
-import de.doubleslash.cmpprototype.domain.use_case.localStorage.DeleteFileUseCase
+import de.doubleslash.cmpprototype.domain.use_case.localStorage.DeleteLocalFileUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadAllFilesUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.SaveFileUseCase
 import de.doubleslash.cmpprototype.ui.presentation.camera.CameraViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.download.DownloadViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management.FileViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.SettingsViewModel
 import org.koin.core.context.startKoin
@@ -66,7 +67,7 @@ val useCaseModule = module {
     single { GetCredentialsUseCase(get()) }
 
     // File Management Use Cases
-    single { DeleteFileUseCase(get()) }
+    single { DeleteLocalFileUseCase(get()) }
     single { LoadAllFilesUseCase(get()) }
     single { SaveFileUseCase(get()) }
 }
@@ -77,6 +78,7 @@ val viewModelModule = module {
     factory { SettingsViewModel() }
     factory { FileViewModel(get(), get(), get(), get(), get()) }
     factory { CameraViewModel(get()) }
+    factory { DownloadViewModel(get(), get()) }
 }
 
 // Combine all modules

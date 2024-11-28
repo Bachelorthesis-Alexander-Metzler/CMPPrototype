@@ -4,7 +4,7 @@ import de.doubleslash.cmpprototype.data.datasource.local.localDB.dto.FileDTO
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import de.doubleslash.cmpprototype.domain.repository.localStorage.FileStorageRepository
 
-class DeleteFileUseCase(
+class DeleteLocalFileUseCase(
     private val fileStorageRepository: FileStorageRepository
 ) {
     suspend operator fun invoke(fileModel: FileModel): Boolean {

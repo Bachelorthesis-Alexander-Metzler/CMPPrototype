@@ -6,7 +6,7 @@ import com.plusmobileapps.konnectivity.NetworkConnection
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
-import de.doubleslash.cmpprototype.domain.use_case.localStorage.DeleteFileUseCase
+import de.doubleslash.cmpprototype.domain.use_case.localStorage.DeleteLocalFileUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadAllFilesUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.SaveFileUseCase
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class FileViewModel(
     private val saveFileUseCase: SaveFileUseCase,
     private val loadAllFilesUseCase: LoadAllFilesUseCase,
-    private val deleteFileUseCase: DeleteFileUseCase,
+    private val deleteLocalFileUseCase: DeleteLocalFileUseCase,
     private val getConnectionStatusUseCase: GetConnectionStatusUseCase,
     private val getNetworkConnectionUseCase: GetNetworkStatusUseCase,
 ) : ScreenModel {
@@ -52,7 +52,7 @@ class FileViewModel(
     }
     fun deleteFile(file: FileModel) {
         CoroutineScope(Dispatchers.IO).launch {
-            deleteFileUseCase.invoke(file)
+            deleteLocalFileUseCase.invoke(file)
             loadFiles() // load data again to update the UI
         }
     }
