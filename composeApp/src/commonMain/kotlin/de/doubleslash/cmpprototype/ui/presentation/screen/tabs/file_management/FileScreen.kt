@@ -45,10 +45,14 @@ import cmpprototype.composeapp.generated.resources.ic_file
 import cmpprototype.composeapp.generated.resources.ic_file_download_done_24
 import cmpprototype.composeapp.generated.resources.ic_folder
 import cmpprototype.composeapp.generated.resources.ic_upload_file
+import cmpprototype.composeapp.generated.resources.local_object
+import cmpprototype.composeapp.generated.resources.no_files_loaded
 import cmpprototype.composeapp.generated.resources.open_camera
 import cmpprototype.composeapp.generated.resources.open_settings
 import cmpprototype.composeapp.generated.resources.permission_denied
+import cmpprototype.composeapp.generated.resources.remote_object
 import cmpprototype.composeapp.generated.resources.storage_permission_denied_always
+import cmpprototype.composeapp.generated.resources.unable_to_load_files
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.ui.presentation.camera.CameraScreen
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
@@ -90,7 +94,7 @@ class FileScreen : Screen {
         LaunchedEffect(Unit) {
             viewModel.refreshFiles()
         }
-//        viewModel.loadFiles()
+
         val isConnected by viewModel.isConnected.collectAsState()
 
         // create a permissions controller
@@ -258,7 +262,7 @@ class FileScreen : Screen {
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "No files loaded.",
+                                text = stringResource(Res.string.no_files_loaded),
                                 style = MaterialTheme.typography.bodyMedium,
                                 modifier = Modifier.padding(16.dp)
                             )
@@ -272,7 +276,7 @@ class FileScreen : Screen {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Unable to load files. No internet connection.",
+                        text = stringResource(Res.string.unable_to_load_files),
                         modifier = Modifier.padding(16.dp)
                     )
                 }
@@ -312,9 +316,9 @@ class FileScreen : Screen {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Linkes Icon
+            // left Icon
             (if (file.baseTypeId == "cmis:folder") {
-                vectorResource(Res.drawable.ic_folder) // Beispiel-Icon
+                vectorResource(Res.drawable.ic_folder)
             } else if (file.baseTypeId == "cmis:document") {
                 vectorResource(Res.drawable.ic_file)
             } else {
@@ -323,14 +327,13 @@ class FileScreen : Screen {
                 Icon(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
-                        .padding(end = 8.dp), // Abstand zum Text
+                        .padding(end = 8.dp),
                     imageVector = it,
-                    contentDescription = "File Type Icon",
+                    contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
 
-            // Text (Name und optional Pfad)
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -345,7 +348,6 @@ class FileScreen : Screen {
                     style = MaterialTheme.typography.titleMedium
                 )
 
-                // Pfad (falls vorhanden)
                 if (file.path != null) {
                     Text(
                         text = file.path,
@@ -358,7 +360,6 @@ class FileScreen : Screen {
                 }
             }
 
-            // Rechtes Icon
             Icon(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 imageVector = if (file.isRemoteFile) {
@@ -367,9 +368,9 @@ class FileScreen : Screen {
                     vectorResource(Res.drawable.ic_file_download_done_24)
                 },
                 contentDescription = if (file.isRemoteFile) {
-                    "Remote Object"
+                    stringResource(Res.string.remote_object)
                 } else {
-                    "Local Object"
+                    stringResource(Res.string.local_object)
                 },
                 tint = if (file.isRemoteFile) {
                     MaterialTheme.colorScheme.primary
@@ -378,9 +379,6 @@ class FileScreen : Screen {
                 }
             )
         }
-
         AdaptiveHorizontalDivider()
     }
-
-
 }

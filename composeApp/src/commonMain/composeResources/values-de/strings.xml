@@ -47,6 +47,12 @@
     <string name="permission_details_title">Berechtigungskonfiguration</string>
     <string name="manage_permission_in_settings">Berechtigungen in Systemeinstellungen verwalten</string>
 
+    <!-- file screen -->
+    <string name="no_files_loaded">Keine Dateien geladen.</string>
+    <string name="unable_to_load_files">Keine Dateien geladen. Keine Internetverbindung.</string>
+    <string name="remote_object">Remote Objekt</string>
+    <string name="local_object">Lokales Objekt</string>
+
     <!-- alert dialogs -->
     <string name="permission_denied">Berechtigung abgelehnt</string>
     <string name="confirm">Bestätigen</string>

@@ -47,6 +47,12 @@
     <string name="permission_details_title">Permission Configuration</string>
     <string name="manage_permission_in_settings">Manage permissions in settings</string>
 
+    <!-- file screen -->
+    <string name="no_files_loaded">No files loaded.</string>
+    <string name="unable_to_load_files">Unable to load files. No internet connection.</string>
+    <string name="remote_object">Remote Object</string>
+    <string name="local_object">Local Object</string>
+
     <!-- alert dialogs -->
     <string name="permission_denied">Permission denied</string>
     <string name="confirm">Confirm</string>

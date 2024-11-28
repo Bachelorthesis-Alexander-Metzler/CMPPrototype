@@ -2,8 +2,6 @@ package de.doubleslash.cmpprototype.data.datasource.remote.rest.cmis
 
 import de.doubleslash.cmpprototype.common.Constants
 import de.doubleslash.cmpprototype.common.Constants.ACCEPT
-import de.doubleslash.cmpprototype.common.Constants.AUTH_API_ENDPOINT
-import de.doubleslash.cmpprototype.common.Constants.CONTENT_TYPE
 import de.doubleslash.cmpprototype.common.Constants.HEADERS_APPLICATION_TYPE
 import de.doubleslash.cmpprototype.common.Constants.HTTPS_PROTOCOL
 import de.doubleslash.cmpprototype.data.datasource.remote.rest.cmis.dto.CMISObjectDTO
@@ -16,16 +14,11 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.headers
-import io.ktor.client.statement.bodyAsText
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.core.toByteArray
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -60,20 +53,20 @@ class CMISServiceImpl : CMISService {
         return try {
             println("Sending request to $baseUrl")
 
-            // JSON-Antwort direkt in das Modell deserialisieren
+            // deserialize json objects directly into model
             val response: CMISResponse = httpClient.get(baseUrl) {
                 header("Authorization", "Basic ${encodeCredentials(username, password)}")
             }.body()
 
             println("Response received with ${response.objects.size} objects.")
 
-            // Extrahiere die relevanten Daten
+            // extract relevant fields from response
             val cmisObjects = response.objects.mapNotNull { wrapper ->
                 val properties = wrapper.objectData.properties
                 val name = properties.name?.value
                 val baseTypeId = properties.baseTypeId?.value
 
-                // Nur hinzufügen, wenn alle relevanten Felder vorhanden sind
+                // just add if both fields are present
                 if (name != null && baseTypeId != null) {
                     CMISObjectDTO(name = name, baseTypeId = baseTypeId)
                 } else {
@@ -85,10 +78,8 @@ class CMISServiceImpl : CMISService {
 
             println("Parsed ${cmisObjects.size} objects.")
 
-            // Erfolgreiche Verarbeitung zurückgeben
             RequestCondition.SuccessCondition(cmisObjects)
         } catch (e: Exception) {
-            // Fehlerbehandlung
             e.printStackTrace()
             RequestCondition.ErrorCondition(errorMsg = e.message ?: "Error fetching CMIS objects")
         }
