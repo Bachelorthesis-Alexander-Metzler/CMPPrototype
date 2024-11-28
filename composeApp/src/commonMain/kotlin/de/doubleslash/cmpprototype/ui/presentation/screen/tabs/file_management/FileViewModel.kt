@@ -1,18 +1,52 @@
 package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management
 
+import androidx.compose.runtime.mutableStateListOf
 import cafe.adriel.voyager.core.model.ScreenModel
-import com.plusmobileapps.konnectivity.NetworkConnection
-import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
-import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
-import kotlinx.coroutines.flow.StateFlow
+import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
+import de.doubleslash.cmpprototype.domain.use_case.localStorage.DeleteFileUseCase
+import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadAllFilesUseCase
+import de.doubleslash.cmpprototype.domain.use_case.localStorage.SaveFileUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 
 class FileViewModel(
-    getConnectionStatusUseCase: GetConnectionStatusUseCase,
-    getNetworkConnectionUseCase: GetNetworkStatusUseCase,
+    private val saveFileUseCase: SaveFileUseCase,
+    private val loadAllFilesUseCase: LoadAllFilesUseCase,
+    private val deleteFileUseCase: DeleteFileUseCase
 ) : ScreenModel {
-    // network status
-    var networkStatus: StateFlow<NetworkConnection> = getNetworkConnectionUseCase.invoke()
-    var isConnected: StateFlow<Boolean> = getConnectionStatusUseCase.invoke()
+    private val allFiles = mutableStateListOf<FileModel>()
+
+    init {
+        loadFiles()
+    }
+
+    private fun loadFiles() {
+        allFiles.clear()
+        allFiles.addAll(loadAllFilesUseCase.invoke())
+    }
 
 
+    fun saveFile(name: String, extension: String, path: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val fileModel = FileModel(
+                baseName = name,
+                extension = extension,
+                path = path,
+            )
+            saveFileUseCase.invoke(fileModel)
+            loadFiles() // refresh files after saving
+        }
+    }
+    fun deleteFile(file: FileModel) {
+        CoroutineScope(Dispatchers.IO).launch {
+            deleteFileUseCase.invoke(file)
+            loadFiles() // load data again to update the UI
+        }
+    }
+
+    fun getAllFiles(): List<FileModel> {
+        return allFiles
+    }
 }
