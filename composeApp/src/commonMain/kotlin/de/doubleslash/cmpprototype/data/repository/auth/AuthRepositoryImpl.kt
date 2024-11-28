@@ -16,7 +16,25 @@ class AuthRepositoryImpl(
         username: String,
         password: String
     ): RequestCondition<LoginDTO> {
-        return api.authenticateUser(serverAddress, username, password)
+        val requestCondition = api.authenticateUser(serverAddress, username, password)
+
+        when (requestCondition) {
+            is RequestCondition.SuccessCondition -> {
+                // store session data and credentials if authentication was successful
+                saveServerAddress(serverAddress)
+                saveUsername(username)
+                savePassword(password)
+                saveSessionId(requestCondition.data.sessionId)
+                saveUserId(requestCondition.data.userId)
+                savePreviouslyAuthenticated()
+            }
+
+            is RequestCondition.ErrorCondition -> { /* nothing to do */ }
+            is RequestCondition.IdleCondition -> { /* nothing to do */ }
+            is RequestCondition.LoadingCondition -> { /* nothing to do */ }
+        }
+
+        return requestCondition
     }
 
     override fun saveSessionId(sessionId: String) {
@@ -25,6 +43,30 @@ class AuthRepositoryImpl(
 
     override fun getSessionId(): String? {
         return encryptedSharedPreferences.getString("sessionId")
+    }
+
+    override fun saveServerAddress(serverAddress: String) {
+        encryptedSharedPreferences.saveString("serverAddress", serverAddress)
+    }
+
+    override fun getServerAddress(): String? {
+        return encryptedSharedPreferences.getString("serverAddress")
+    }
+
+    override fun saveUsername(username: String) {
+        encryptedSharedPreferences.saveString("username", username)
+    }
+
+    override fun getUsername(): String? {
+        return encryptedSharedPreferences.getString("username")
+    }
+
+    override fun savePassword(password: String) {
+        encryptedSharedPreferences.saveString("password", password)
+    }
+
+    override fun getPassword(): String? {
+        return encryptedSharedPreferences.getString("password")
     }
 
     override fun saveUserId(userId: Int) {

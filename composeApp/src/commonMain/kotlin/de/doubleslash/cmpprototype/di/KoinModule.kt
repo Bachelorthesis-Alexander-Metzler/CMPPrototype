@@ -16,6 +16,7 @@ import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.Authenticate
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getPreviouslyAuthenticated.GetPreviouslyAuthenticatedUseCase
+import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetCredentialsUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.SettingsViewModel
@@ -48,11 +49,12 @@ val useCaseModule = module {
     single { GetNetworkStatusUseCase(get()) }
     single { GetSessionDataUseCase(get()) }
     single { GetPreviouslyAuthenticatedUseCase(get()) }
+    single { GetCredentialsUseCase(get()) }
 }
 
 // ViewModel Module: Login and Settings ViewModels
 val viewModelModule = module {
-    factory { LoginViewModel(get(), get(), get(), get(), get()) }
+    factory { LoginViewModel(get(), get(), get(), get(), get(), get()) }
     factory { SettingsViewModel() }
 }
 

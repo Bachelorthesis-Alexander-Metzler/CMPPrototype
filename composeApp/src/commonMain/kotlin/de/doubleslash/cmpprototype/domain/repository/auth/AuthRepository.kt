@@ -16,6 +16,15 @@ interface AuthRepository {
     fun saveSessionId(sessionId: String)
     fun getSessionId(): String?
 
+    fun saveServerAddress(serverAddress: String)
+    fun getServerAddress(): String?
+
+    fun saveUsername(username: String)
+    fun getUsername(): String?
+
+    fun savePassword(password: String)
+    fun getPassword(): String?
+
     fun saveUserId(userId: Int)
     fun getUserId(): Int?
 

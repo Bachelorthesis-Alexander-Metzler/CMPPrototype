@@ -88,7 +88,7 @@ class LoginScreen : Screen{
                         .fillMaxWidth()
                         .padding(bottom = 15.dp),
                     serverAddress = viewModel.serverAddress,
-                    enabled = isConnected,
+                    enabled = isConnected && !viewModel.isLocalAuthActive,
                     onValueChange = { viewModel.serverAddress = it })
 
                 // Username Field
@@ -97,7 +97,7 @@ class LoginScreen : Screen{
                         .fillMaxWidth()
                         .padding(bottom = 15.dp),
                     username = viewModel.username,
-                    enabled = isConnected,
+                    enabled = isConnected && !viewModel.isLocalAuthActive,
                     onValueChange = { viewModel.username = it })
 
                 // Password Field
@@ -106,23 +106,25 @@ class LoginScreen : Screen{
                         .fillMaxWidth()
                         .padding(bottom = 15.dp),
                     password = viewModel.password,
-                    enabled = isConnected,
+                    enabled = isConnected && !viewModel.isLocalAuthActive,
                     onValueChange = { viewModel.password = it },
                     passwordVisible = passwordVisible,
                     onPasswordVisibilityChange = { passwordVisible = !passwordVisible }
                 )
 
                 // Checkbox for isPreviouslyAuthenticated (no requirement)
-                LocalAuthCheckBox(
-                    Modifier.fillMaxWidth()
-                        .height(56.dp)
-                        .toggleable(
-                            value = viewModel.isLocalAuthActive,
-                            onValueChange = { viewModel.isLocalAuthActive = it },
-                            role = Role.Checkbox
-                        )
-                        .padding(horizontal = 16.dp),
-                    viewModel = viewModel)
+                if (viewModel.isPreviouslyAuthenticated) {
+                    LocalAuthCheckBox(
+                        Modifier.fillMaxWidth()
+                            .height(56.dp)
+                            .toggleable(
+                                value = viewModel.isLocalAuthActive,
+                                onValueChange = { viewModel.isLocalAuthActive = it },
+                                role = Role.Checkbox
+                            )
+                            .padding(horizontal = 16.dp),
+                        viewModel = viewModel)
+                }
 
                 // Login Button
                 LoginButton(
@@ -132,9 +134,10 @@ class LoginScreen : Screen{
                         viewModel.serverAddress.isNotBlank()
                                 && viewModel.username.isNotBlank()
                                 && viewModel.password.isNotBlank()
+                                && !viewModel.isLocalAuthActive
                     } else {
                         // login button enabled if no internet connection to allow login with local auth
-                        true
+                        !viewModel.isLocalAuthActive
                     }
                 )
 

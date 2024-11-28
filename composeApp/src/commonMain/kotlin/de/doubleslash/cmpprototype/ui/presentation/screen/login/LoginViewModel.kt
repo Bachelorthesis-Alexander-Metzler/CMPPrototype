@@ -12,6 +12,7 @@ import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.Authenticate
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getPreviouslyAuthenticated.GetPreviouslyAuthenticatedUseCase
+import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetCredentialsUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +24,8 @@ class LoginViewModel(
     getConnectionStatusUseCase: GetConnectionStatusUseCase,
     getNetworkConnectionUseCase: GetNetworkStatusUseCase,
     private val getSessionDataUseCase: GetSessionDataUseCase,
-    private val getPreviouslyAuthenticatedUseCase: GetPreviouslyAuthenticatedUseCase
+    private val getPreviouslyAuthenticatedUseCase: GetPreviouslyAuthenticatedUseCase,
+    private val getCredentialsUseCase: GetCredentialsUseCase
 ) : ScreenModel {
     // input fields
     var serverAddress by mutableStateOf("")
@@ -39,6 +41,8 @@ class LoginViewModel(
 
     // placeholder checkbox value for local auth active (implementation not possible)
     var isLocalAuthActive by mutableStateOf(false)
+
+    var isPreviouslyAuthenticated: Boolean = getPreviouslyAuthenticatedUseCase.invoke()
 
 
     fun onLoginClick() {
@@ -65,6 +69,17 @@ class LoginViewModel(
             } else {
                 println("Connected to the internet")
 
+                if (!getPreviouslyAuthenticatedUseCase.invoke()) {
+                    loginViaREST()
+                } else {
+                    // user is previously authenticated
+                    if (!isLocalAuthActive) {
+                        loginViaREST()
+                    } else {
+                        loginViaLocalAuthOnline()
+                    }
+                }
+
                 if (!getPreviouslyAuthenticatedUseCase.invoke() || !isLocalAuthActive) {
                     loginViaREST()
                 } else {
@@ -80,6 +95,11 @@ class LoginViewModel(
         val isLocalAuthSuccessful = true
 
         if (isLocalAuthSuccessful) {
+            // get stored credentials
+            val credentials = getCredentialsUseCase.invoke()
+            serverAddress = credentials.serverAddress
+            username = credentials.username
+            password = credentials.password
             loginViaREST()
         } else {
             authState = RequestCondition.ErrorCondition("Local authentication failed")

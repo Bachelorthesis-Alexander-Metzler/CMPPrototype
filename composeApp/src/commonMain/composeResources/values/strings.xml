@@ -23,7 +23,7 @@
     <string name="no_internet_connection">No internet connection available</string>
 
     <!-- checkbox labels -->
-    <string name="is_local_auth_active">Local authentication active</string>
+    <string name="is_local_auth_active">Login via local authentication</string>
 
     <!-- content descriptions -->
     <string name="content_description_visibility_on">hide password</string>
@@ -36,6 +36,7 @@
     <!-- settings screen -->
     <string name="setting_app_theme">App Theme</string>
     <string name="setting_placeholder">Setting</string>
+    <string name="permissions">Permissions</string>
 
     <!-- theme details screen -->
     <string name="theme_details_title">Theme Configuration</string>

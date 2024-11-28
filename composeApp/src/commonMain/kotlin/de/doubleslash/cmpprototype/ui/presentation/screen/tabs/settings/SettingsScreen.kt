@@ -18,6 +18,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
+import cmpprototype.composeapp.generated.resources.permissions
 import cmpprototype.composeapp.generated.resources.setting_app_theme
 import cmpprototype.composeapp.generated.resources.setting_placeholder
 import cmpprototype.composeapp.generated.resources.settings_tab_title
@@ -56,7 +57,7 @@ class SettingsScreen : Screen {
                 // permission settings
                 item {
                     SettingNavigationItem(
-                        title = "Permissions",
+                        title = stringResource(Res.string.permissions),
                         onClick = { navigator.push(PermissionDetailsScreen()) }
                     )
                     AdaptiveHorizontalDivider()
