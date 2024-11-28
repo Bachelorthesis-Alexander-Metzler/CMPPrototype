@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,7 +40,10 @@ class DownloadScreen : Tab {
     @Composable
     override fun Content() {
         val viewModel = getScreenModel<DownloadViewModel>()
-//        viewModel.loadFiles()
+
+        LaunchedEffect(Unit) {
+            viewModel.refreshFiles()
+        }
 
         Scaffold(
             topBar = CustomTopAppBar(text = stringResource(Res.string.downloads_tab_title))

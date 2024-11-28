@@ -21,6 +21,10 @@ class DownloadViewModel(
         loadFiles()
     }
 
+    fun refreshFiles() {
+        loadFiles()
+    }
+
     private fun loadFiles() {
         allFiles.clear()
         allFiles.addAll(loadAllLocalFilesUseCase.invoke())

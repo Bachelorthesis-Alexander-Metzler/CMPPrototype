@@ -7,7 +7,6 @@ import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.plusmobileapps.konnectivity.NetworkConnection
-import de.doubleslash.cmpprototype.domain.model.auth.LoginModel
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
@@ -46,6 +45,10 @@ class FileViewModel(
     var cmisState by mutableStateOf<RequestCondition<List<FileModel>>>(RequestCondition.IdleCondition)
 
     init {
+        loadFiles()
+    }
+
+    fun refreshFiles() {
         loadFiles()
     }
 
