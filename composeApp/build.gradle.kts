@@ -49,6 +49,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.kotlinx.datetime)
 
             implementation(libs.koin.core)
             implementation(libs.voyager.navigator)
@@ -74,6 +75,8 @@ kotlin {
 
             implementation(libs.filekit.compose)
 
+            implementation(libs.camerak)
+            implementation("io.github.kashif-mehmood-km:image_saver_plugin:0.0.1")
 
             // api to make the permissions available for modules that depend on this module
             api(libs.moko.permissions)

@@ -12,6 +12,7 @@ class SaveFileUseCase(
             this.baseName = fileModel.baseName
             this.extension = fileModel.extension
             this.path = fileModel.path
+            this.fileContent = fileModel.fileContent
         }
         fileStorageRepository.addFile(fileDTO)
     }

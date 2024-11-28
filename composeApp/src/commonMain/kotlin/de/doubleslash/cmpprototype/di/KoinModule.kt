@@ -25,6 +25,7 @@ import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionData
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.DeleteFileUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadAllFilesUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.SaveFileUseCase
+import de.doubleslash.cmpprototype.ui.presentation.camera.CameraViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management.FileViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.SettingsViewModel
@@ -75,6 +76,7 @@ val viewModelModule = module {
     factory { LoginViewModel(get(), get(), get(), get(), get(), get()) }
     factory { SettingsViewModel() }
     factory { FileViewModel(get(), get(), get(), get(), get()) }
+    factory { CameraViewModel(get()) }
 }
 
 // Combine all modules

@@ -28,6 +28,9 @@ import cafe.adriel.voyager.koin.getScreenModel
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.camera_permission_denied_always
 import cmpprototype.composeapp.generated.resources.cancel
@@ -42,6 +45,7 @@ import cmpprototype.composeapp.generated.resources.open_camera
 import cmpprototype.composeapp.generated.resources.open_settings
 import cmpprototype.composeapp.generated.resources.permission_denied
 import cmpprototype.composeapp.generated.resources.storage_permission_denied_always
+import de.doubleslash.cmpprototype.ui.presentation.camera.CameraScreen
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.PermissionsViewModel
 import de.doubleslash.cmpprototype.ui.presentation.components.FabItem
@@ -57,7 +61,6 @@ import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import io.github.alexzhirkevich.cupertino.adaptive.icons.AdaptiveIcons
 import io.github.alexzhirkevich.cupertino.adaptive.icons.Add
 import io.github.alexzhirkevich.cupertino.adaptive.icons.Delete
-import io.github.alexzhirkevich.cupertino.adaptive.icons.Home
 import io.github.alexzhirkevich.cupertino.cancel
 import io.github.alexzhirkevich.cupertino.default
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
@@ -71,11 +74,13 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-class FileScreen : Tab {
+class FileScreen : Screen {
     @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
     override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
         val viewModel = getScreenModel<FileViewModel>()
+        viewModel.loadFiles()
         val isConnected by viewModel.isConnected.collectAsState()
 
         // create a permissions controller
@@ -161,30 +166,33 @@ class FileScreen : Tab {
                                             showDialog = true
                                         }
 
-                                        else -> {
-                                            permissionsViewModel.provideOrRequestGalleryPermission()
-                                        }
+                                    else -> {
+                                        permissionsViewModel.provideOrRequestGalleryPermission()
                                     }
-                                }),
-                            // FabItem for opening camera
-                            FabItem(
-                                icon = painterResource(Res.drawable.ic_camera),
-                                label = stringResource(Res.string.open_camera),
-                                onFabItemClicked = {
-                                    when (permissionsViewModel.cameraState) {
-                                        PermissionState.DeniedAlways -> {
-                                            dialogMessage = cameraPermissionDeniedMessage
-                                            showDialog = true
-                                        }
+                                }
+                            }),
+                        // FabItem for opening camera
+                        FabItem(
+                            icon = painterResource(Res.drawable.ic_camera),
+                            label = stringResource(Res.string.open_camera),
+                            onFabItemClicked = {
+                                when (permissionsViewModel.cameraState) {
+                                    PermissionState.Granted -> {
+                                        navigator.push(CameraScreen())
+                                    }
+                                    PermissionState.DeniedAlways -> {
+                                        dialogMessage = cameraPermissionDeniedMessage
+                                        showDialog = true
+                                    }
 
-                                        else -> {
-                                            permissionsViewModel.provideOrRequestCameraPermission()
-                                        }
+                                    else -> {
+                                        permissionsViewModel.provideOrRequestCameraPermission()
                                     }
-                                })
+                                }
+                            }
                         )
                     )
-                }
+                )
             }
         ) { paddingValues ->
             if (isConnected) {
@@ -225,9 +233,9 @@ class FileScreen : Tab {
                     val filePath = file.path ?: ""
 
                     // read content of file
-    //                    val fileContent = file.readBytes()
+                    val fileContent = file.readBytes()
 
-                    viewModel.saveFile(fileName, extension, filePath)
+                    viewModel.saveFile(fileName, extension, filePath, fileContent)
                 }
             }
         }
@@ -246,30 +254,39 @@ class FileScreen : Tab {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
         ) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                // Base Name
+            if (file.path.isNotBlank()) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    // Base Name
+                    Text(
+                        text = file.baseName,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Text(
+                        text = file.path,
+                        style = MaterialTheme
+                            .typography
+                            .bodySmall
+                            .copy(
+                                color = MaterialTheme
+                                    .colorScheme
+                                    .secondary
+                            ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            } else {
                 Text(
+                    modifier = Modifier.align(Alignment.CenterVertically),
                     text = file.baseName,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Text(
-                    text = file.path,
-                    style = MaterialTheme
-                        .typography
-                        .bodySmall
-                        .copy(
-                            color = MaterialTheme
-                                .colorScheme
-                                .secondary
-                        ),
-                    modifier = Modifier.fillMaxWidth()
                 )
             }
+
 
             AdaptiveIconButton(
                 onClick = { viewModel.deleteFile(file) },
@@ -285,20 +302,4 @@ class FileScreen : Tab {
 
         AdaptiveHorizontalDivider()
     }
-
-
-    override val options: TabOptions
-        @Composable
-        get() {
-            val icon = rememberVectorPainter(image = (AdaptiveIcons.Outlined.Home))
-            val title = stringResource(Res.string.file_tab_title)
-            val index: UShort = 0u
-
-            return TabOptions(
-                icon = icon,
-                title = title,
-                index = index
-            )
-        }
-
 }

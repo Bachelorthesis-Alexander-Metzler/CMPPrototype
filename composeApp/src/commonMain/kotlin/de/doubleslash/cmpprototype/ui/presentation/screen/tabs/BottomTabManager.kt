@@ -18,6 +18,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.download.DownloadScreen
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management.FileScreen
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management.FileTabScreen
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.SettingsTabScreen
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveNavigationBar
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveNavigationBarItem
@@ -32,11 +33,11 @@ class BottomTabManager(
     @Composable
     override fun Content() {
         if (!offlineLogin) {
-            TabNavigator(FileScreen()) {
+            TabNavigator(FileTabScreen()) {
                 Scaffold(
                     bottomBar = {
                         AdaptiveNavigationBar {
-                            TabItem(FileScreen())
+                            TabItem(FileTabScreen())
                             TabItem(DownloadScreen())
                             TabItem(SettingsTabScreen())
                         }
@@ -53,7 +54,7 @@ class BottomTabManager(
                 Scaffold(
                     bottomBar = {
                         AdaptiveNavigationBar {
-                            TabItem(FileScreen())
+                            TabItem(FileTabScreen())
                             TabItem(DownloadScreen())
                             TabItem(SettingsTabScreen())
                         }
