@@ -1,8 +1,10 @@
 package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -13,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.koin.getScreenModel
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import cmpprototype.composeapp.generated.resources.Res
@@ -74,6 +76,7 @@ class FileScreen : Tab {
     @Composable
     override fun Content() {
         val viewModel = getScreenModel<FileViewModel>()
+        val isConnected by viewModel.isConnected.collectAsState()
 
         // create a permissions controller
         val factory = rememberPermissionsControllerFactory()
@@ -117,78 +120,94 @@ class FileScreen : Tab {
         Scaffold(
             topBar = CustomTopAppBar(text = stringResource(Res.string.file_tab_title)),
             floatingActionButton = {
-                MultiFloatingActionButton(
-                    fabIcon = rememberVectorPainter(AdaptiveIcons.Outlined.Add),
-                    showLabels = false,
-                    items = arrayListOf(
-                        // FabItem for choosing files
-                        FabItem(
-                            icon = painterResource(Res.drawable.ic_upload_file),
-                            label = stringResource(Res.string.choose_from_files),
-                            onFabItemClicked = {
-                                when (permissionsViewModel.storageState) {
-                                    PermissionState.Granted -> {
-                                        // launch file picker
-                                        documentLauncher.launch()
-                                    }
+                if (isConnected) {
+                    MultiFloatingActionButton(
+                        fabIcon = rememberVectorPainter(AdaptiveIcons.Outlined.Add),
+                        showLabels = false,
+                        items = arrayListOf(
+                            // FabItem for choosing files
+                            FabItem(
+                                icon = painterResource(Res.drawable.ic_upload_file),
+                                label = stringResource(Res.string.choose_from_files),
+                                onFabItemClicked = {
+                                    when (permissionsViewModel.storageState) {
+                                        PermissionState.Granted -> {
+                                            // launch file picker
+                                            documentLauncher.launch()
+                                        }
 
-                                    PermissionState.DeniedAlways -> {
-                                        dialogMessage = storagePermissionDeniedMessage
-                                        showDialog = true
-                                    }
+                                        PermissionState.DeniedAlways -> {
+                                            dialogMessage = storagePermissionDeniedMessage
+                                            showDialog = true
+                                        }
 
-                                    else -> {
-                                        permissionsViewModel.provideOrRequestStoragePermission()
+                                        else -> {
+                                            permissionsViewModel.provideOrRequestStoragePermission()
+                                        }
                                     }
-                                }
-                            }),
-                        // FabItem for choosing from gallery
-                        FabItem(
-                            icon = painterResource(Res.drawable.ic_add_from_gallery),
-                            label = stringResource(Res.string.choose_from_gallery),
-                            onFabItemClicked = {
-                                when (permissionsViewModel.galleryState) {
-                                    PermissionState.Granted -> {
-                                        // launch image/video picker
-                                        imgVidLauncher.launch()
-                                    }
-                                    PermissionState.DeniedAlways -> {
-                                        dialogMessage = galleryPermissionDeniedMessage
-                                        showDialog = true
-                                    }
+                                }),
+                            // FabItem for choosing from gallery
+                            FabItem(
+                                icon = painterResource(Res.drawable.ic_add_from_gallery),
+                                label = stringResource(Res.string.choose_from_gallery),
+                                onFabItemClicked = {
+                                    when (permissionsViewModel.galleryState) {
+                                        PermissionState.Granted -> {
+                                            // launch image/video picker
+                                            imgVidLauncher.launch()
+                                        }
+                                        PermissionState.DeniedAlways -> {
+                                            dialogMessage = galleryPermissionDeniedMessage
+                                            showDialog = true
+                                        }
 
-                                    else -> {
-                                        permissionsViewModel.provideOrRequestGalleryPermission()
+                                        else -> {
+                                            permissionsViewModel.provideOrRequestGalleryPermission()
+                                        }
                                     }
-                                }
-                            }),
-                        // FabItem for opening camera
-                        FabItem(
-                            icon = painterResource(Res.drawable.ic_camera),
-                            label = stringResource(Res.string.open_camera),
-                            onFabItemClicked = {
-                                when (permissionsViewModel.cameraState) {
-                                    PermissionState.DeniedAlways -> {
-                                        dialogMessage = cameraPermissionDeniedMessage
-                                        showDialog = true
-                                    }
+                                }),
+                            // FabItem for opening camera
+                            FabItem(
+                                icon = painterResource(Res.drawable.ic_camera),
+                                label = stringResource(Res.string.open_camera),
+                                onFabItemClicked = {
+                                    when (permissionsViewModel.cameraState) {
+                                        PermissionState.DeniedAlways -> {
+                                            dialogMessage = cameraPermissionDeniedMessage
+                                            showDialog = true
+                                        }
 
-                                    else -> {
-                                        permissionsViewModel.provideOrRequestCameraPermission()
+                                        else -> {
+                                            permissionsViewModel.provideOrRequestCameraPermission()
+                                        }
                                     }
-                                }
-                            })
+                                })
+                        )
                     )
-                )
+                }
             }
         ) { paddingValues ->
-            LazyColumn(
-                modifier = Modifier
-                    .padding(paddingValues)
-            ) {
-                items(viewModel.getAllFiles()) { file ->
-                    FileItemEntry(file, viewModel)
+            if (isConnected) {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                ) {
+                    items(viewModel.getAllFiles()) { file ->
+                        FileItemEntry(file, viewModel)
+                    }
                 }
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(), // Nimmt den gesamten Bildschirm ein
+                    contentAlignment = Alignment.Center // Zentriert den Inhalt (vertikal und horizontal)
+                ) {
+                    Text(
+                        text = "Unable to load files. No internet connection.",
+                        modifier = Modifier.padding(16.dp) // Optional: Padding hinzufügen
+                    )
+                }
+
             }
         }
     }

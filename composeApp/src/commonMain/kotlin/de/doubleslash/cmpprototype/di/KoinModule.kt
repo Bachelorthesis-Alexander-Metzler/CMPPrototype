@@ -20,6 +20,7 @@ import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.Authenticate
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getPreviouslyAuthenticated.GetPreviouslyAuthenticatedUseCase
+import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetCredentialsUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.DeleteFileUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadAllFilesUseCase
@@ -61,6 +62,7 @@ val useCaseModule = module {
     single { GetNetworkStatusUseCase(get()) }
     single { GetSessionDataUseCase(get()) }
     single { GetPreviouslyAuthenticatedUseCase(get()) }
+    single { GetCredentialsUseCase(get()) }
 
     // File Management Use Cases
     single { DeleteFileUseCase(get()) }
@@ -70,9 +72,9 @@ val useCaseModule = module {
 
 // ViewModel Module: Login and Settings ViewModels
 val viewModelModule = module {
-    factory { LoginViewModel(get(), get(), get(), get(), get()) }
+    factory { LoginViewModel(get(), get(), get(), get(), get(), get()) }
     factory { SettingsViewModel() }
-    factory { FileViewModel(get(), get(), get()) }
+    factory { FileViewModel(get(), get(), get(), get(), get()) }
 }
 
 // Combine all modules
