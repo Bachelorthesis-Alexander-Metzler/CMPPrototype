@@ -8,8 +8,16 @@ import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
  * Works with a CMIS server to enable file handling features.
  */
 interface CMISService {
-    suspend fun fetchCMISObjects(
+    suspend fun fetchCMISFiles(
         serverAddress: String,
         username: String,
-        password: String): RequestCondition<List<CMISObjectDTO>>
+        password: String
+    ): RequestCondition<List<CMISObjectDTO>>
+
+    suspend fun fetchCMISFolders(
+        serverAddress: String,
+        username: String,
+        password: String
+    ): RequestCondition<List<CMISObjectDTO>>
+
 }

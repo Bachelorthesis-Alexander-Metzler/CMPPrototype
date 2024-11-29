@@ -4,7 +4,7 @@ import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import de.doubleslash.cmpprototype.domain.repository.cmis.CMISRepository
 
-class LoadAllRemoteObjectsUseCase(
+class LoadAllRemoteFilesUseCase(
     private val cmisRepository: CMISRepository
 ) {
     suspend operator fun invoke(
@@ -12,6 +12,6 @@ class LoadAllRemoteObjectsUseCase(
         username: String,
         password: String
     ) : RequestCondition<List<FileModel>> {
-        return cmisRepository.fetchCMISObjects(serverAddress, username, password)
+        return cmisRepository.fetchCMISFiles(serverAddress, username, password)
     }
 }

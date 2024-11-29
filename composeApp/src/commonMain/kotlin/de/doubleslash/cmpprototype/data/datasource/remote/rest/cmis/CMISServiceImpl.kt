@@ -41,52 +41,61 @@ class CMISServiceImpl : CMISService {
         }
     }
 
-
-    override suspend fun fetchCMISObjects(
+    override suspend fun fetchCMISFiles(
         serverAddress: String,
         username: String,
         password: String
+    ): RequestCondition<List<CMISObjectDTO>> {
+        return fetchFilteredCMISObjects(serverAddress, username, password, "cmis:document")
+    }
+
+    override suspend fun fetchCMISFolders(
+        serverAddress: String,
+        username: String,
+        password: String
+    ): RequestCondition<List<CMISObjectDTO>> {
+        return fetchFilteredCMISObjects(serverAddress, username, password, "cmis:folder")
+    }
+
+    private suspend fun fetchFilteredCMISObjects(
+        serverAddress: String,
+        username: String,
+        password: String,
+        baseTypeIdFilter: String
     ): RequestCondition<List<CMISObjectDTO>> {
         val baseUrl =
             HTTPS_PROTOCOL + serverAddress + Constants.CMIS_API_HOME_ENDPOINT + "/$username"
 
         return try {
-            println("Sending request to $baseUrl")
+            println("Sending request to $baseUrl with filter baseTypeId=$baseTypeIdFilter")
 
-            // deserialize json objects directly into model
             val response: CMISResponse = httpClient.get(baseUrl) {
                 header("Authorization", "Basic ${encodeCredentials(username, password)}")
             }.body()
 
             println("Response received with ${response.objects.size} objects.")
 
-            // extract relevant fields from response
-            val cmisObjects = response.objects.mapNotNull { wrapper ->
+            val filteredObjects = response.objects.mapNotNull { wrapper ->
                 val properties = wrapper.objectData.properties
                 val name = properties.name?.value
                 val baseTypeId = properties.baseTypeId?.value
 
-                // just add if both fields are present
-                if (name != null && baseTypeId != null) {
+                if (name != null && baseTypeId == baseTypeIdFilter) {
                     CMISObjectDTO(name = name, baseTypeId = baseTypeId)
                 } else {
-                    println("Skipping object due to missing fields: name=$name, baseTypeId=$baseTypeId")
+                    println("Skipping object: name=$name, baseTypeId=$baseTypeId")
                     null
                 }
             }
 
+            println("Parsed ${filteredObjects.size} objects matching baseTypeId=$baseTypeIdFilter.")
 
-            println("Parsed ${cmisObjects.size} objects.")
-
-            RequestCondition.SuccessCondition(cmisObjects)
+            RequestCondition.SuccessCondition(filteredObjects)
         } catch (e: Exception) {
             e.printStackTrace()
             RequestCondition.ErrorCondition(errorMsg = e.message ?: "Error fetching CMIS objects")
         }
     }
-
-
-
 
     @OptIn(ExperimentalEncodingApi::class)
     private fun encodeCredentials(username: String, password: String): String {

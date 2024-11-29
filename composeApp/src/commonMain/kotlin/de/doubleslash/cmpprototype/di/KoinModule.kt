@@ -23,7 +23,8 @@ import de.doubleslash.cmpprototype.domain.repository.localStorage.FileStorageRep
 import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.AuthenticateUserUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
-import de.doubleslash.cmpprototype.domain.use_case.cmis.LoadAllRemoteObjectsUseCase
+import de.doubleslash.cmpprototype.domain.use_case.cmis.LoadAllRemoteFilesUseCase
+import de.doubleslash.cmpprototype.domain.use_case.cmis.LoadAllRemoteFoldersUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getPreviouslyAuthenticated.GetPreviouslyAuthenticatedUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetCredentialsUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
@@ -80,14 +81,15 @@ val useCaseModule = module {
     single { DeleteLocalFileUseCase(get()) }
     single { LoadAllLocalFilesUseCase(get()) }
     single { SaveLocalFileUseCase(get()) }
-    single { LoadAllRemoteObjectsUseCase(get()) }
+    single { LoadAllRemoteFilesUseCase(get()) }
+    single { LoadAllRemoteFoldersUseCase(get()) }
 }
 
 // ViewModel Module: Login and Settings ViewModels
 val viewModelModule = module {
     factory { LoginViewModel(get(), get(), get(), get(), get(), get()) }
     factory { SettingsViewModel() }
-    factory { FileViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    factory { FileViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     factory { CameraViewModel(get()) }
     factory { DownloadViewModel(get(), get()) }
 }

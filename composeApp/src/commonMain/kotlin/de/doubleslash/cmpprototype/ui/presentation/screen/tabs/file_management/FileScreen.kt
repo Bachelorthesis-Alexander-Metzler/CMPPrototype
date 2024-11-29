@@ -26,9 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.style.TextOverflow
-import cafe.adriel.voyager.koin.getScreenModel
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
@@ -54,11 +54,12 @@ import cmpprototype.composeapp.generated.resources.remote_object
 import cmpprototype.composeapp.generated.resources.storage_permission_denied_always
 import cmpprototype.composeapp.generated.resources.unable_to_load_files
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
-import de.doubleslash.cmpprototype.ui.presentation.camera.CameraScreen
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
-import de.doubleslash.cmpprototype.ui.presentation.screen.PermissionsViewModel
+import de.doubleslash.cmpprototype.domain.model.file_mgmt.FolderModel
+import de.doubleslash.cmpprototype.ui.presentation.camera.CameraScreen
 import de.doubleslash.cmpprototype.ui.presentation.components.FabItem
 import de.doubleslash.cmpprototype.ui.presentation.components.MultiFloatingActionButton
+import de.doubleslash.cmpprototype.ui.presentation.screen.PermissionsViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.components.CustomTopAppBar
 import dev.icerock.moko.permissions.PermissionState
 import dev.icerock.moko.permissions.compose.BindEffect
@@ -81,7 +82,6 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.resources.vectorResource
 
 class FileScreen : Screen {
     @OptIn(ExperimentalAdaptiveApi::class)
@@ -90,49 +90,46 @@ class FileScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = getScreenModel<FileViewModel>()
 
-        // refresh files when screen is opened
+        // Refresh files and folders when screen is opened
         LaunchedEffect(Unit) {
-            viewModel.refreshFiles()
+            viewModel.refreshFilesAndFolders()
         }
 
         val isConnected by viewModel.isConnected.collectAsState()
+        val fileState = viewModel.fetchRemoteFilesState
+        val folderState = viewModel.fetchRemoteFoldersState
 
-        // create a permissions controller
+        // Dialog
+        var showDialog by remember { mutableStateOf(false) }
+        var dialogMessage by remember { mutableStateOf("") }
+
+        // Create permissions controller
         val factory = rememberPermissionsControllerFactory()
         val controller = remember(factory) { factory.createPermissionsController() }
         BindEffect(controller)
         val permissionsViewModel = PermissionsViewModel(controller)
 
-        // dialog
-        var showDialog by remember { mutableStateOf(false) }
-        var dialogMessage by remember { mutableStateOf("") }
+        // Permission denied messages
+        val storagePermissionDeniedMessage = stringResource(Res.string.storage_permission_denied_always)
+        val galleryPermissionDeniedMessage = stringResource(Res.string.gallery_permission_denied_always)
+        val cameraPermissionDeniedMessage = stringResource(Res.string.camera_permission_denied_always)
 
-        // String-resources
-        val storagePermissionDeniedMessage =
-            stringResource(Res.string.storage_permission_denied_always)
-        val galleryPermissionDeniedMessage =
-            stringResource(Res.string.gallery_permission_denied_always)
-        val cameraPermissionDeniedMessage =
-            stringResource(Res.string.camera_permission_denied_always)
-
-        // create a launcher for picking files
+        // File pickers
         val documentLauncher = createLauncher(viewModel, PickerType.File())
         val imgVidLauncher = createLauncher(viewModel, PickerType.ImageAndVideo)
 
         if (showDialog) {
             AdaptiveAlertDialog(
-                onDismissRequest = {
-                    showDialog = false
-                },
+                onDismissRequest = { showDialog = false },
                 title = { Text(stringResource(Res.string.permission_denied)) },
                 message = { Text(dialogMessage) }
             ) {
                 cancel(onClick = { showDialog = false }) {
                     Text(stringResource(Res.string.cancel))
                 }
-                default(onClick = {
-                    controller.openAppSettings()
-                }) { Text(stringResource(Res.string.open_settings)) }
+                default(onClick = { controller.openAppSettings() }) {
+                    Text(stringResource(Res.string.open_settings))
+                }
             }
         }
 
@@ -144,66 +141,48 @@ class FileScreen : Screen {
                         fabIcon = rememberVectorPainter(AdaptiveIcons.Outlined.Add),
                         showLabels = false,
                         items = arrayListOf(
-                            // FabItem for choosing files
+                            // Choose files
                             FabItem(
                                 icon = painterResource(Res.drawable.ic_upload_file),
                                 label = stringResource(Res.string.choose_from_files),
                                 onFabItemClicked = {
                                     when (permissionsViewModel.storageState) {
-                                        PermissionState.Granted -> {
-                                            // launch file picker
-                                            documentLauncher.launch()
-                                        }
-
+                                        PermissionState.Granted -> documentLauncher.launch()
                                         PermissionState.DeniedAlways -> {
                                             dialogMessage = storagePermissionDeniedMessage
                                             showDialog = true
                                         }
-
-                                        else -> {
-                                            permissionsViewModel.provideOrRequestStoragePermission()
-                                        }
+                                        else -> permissionsViewModel.provideOrRequestStoragePermission()
                                     }
-                                }),
-                            // FabItem for choosing from gallery
+                                }
+                            ),
+                            // Choose from gallery
                             FabItem(
                                 icon = painterResource(Res.drawable.ic_add_from_gallery),
                                 label = stringResource(Res.string.choose_from_gallery),
                                 onFabItemClicked = {
                                     when (permissionsViewModel.galleryState) {
-                                        PermissionState.Granted -> {
-                                            // launch image/video picker
-                                            imgVidLauncher.launch()
-                                        }
-
+                                        PermissionState.Granted -> imgVidLauncher.launch()
                                         PermissionState.DeniedAlways -> {
                                             dialogMessage = galleryPermissionDeniedMessage
                                             showDialog = true
                                         }
-
-                                        else -> {
-                                            permissionsViewModel.provideOrRequestGalleryPermission()
-                                        }
+                                        else -> permissionsViewModel.provideOrRequestGalleryPermission()
                                     }
-                                }),
-                            // FabItem for opening camera
+                                }
+                            ),
+                            // Open camera
                             FabItem(
                                 icon = painterResource(Res.drawable.ic_camera),
                                 label = stringResource(Res.string.open_camera),
                                 onFabItemClicked = {
                                     when (permissionsViewModel.cameraState) {
-                                        PermissionState.Granted -> {
-                                            navigator.push(CameraScreen())
-                                        }
-
+                                        PermissionState.Granted -> navigator.push(CameraScreen())
                                         PermissionState.DeniedAlways -> {
                                             dialogMessage = cameraPermissionDeniedMessage
                                             showDialog = true
                                         }
-
-                                        else -> {
-                                            permissionsViewModel.provideOrRequestCameraPermission()
-                                        }
+                                        else -> permissionsViewModel.provideOrRequestCameraPermission()
                                     }
                                 }
                             )
@@ -212,10 +191,10 @@ class FileScreen : Screen {
                 }
             }
         ) { paddingValues ->
-
             if (isConnected) {
-                when (viewModel.cmisState) {
-                    is RequestCondition.LoadingCondition -> {
+                when {
+                    fileState is RequestCondition.LoadingCondition ||
+                            folderState is RequestCondition.LoadingCondition -> {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -226,19 +205,34 @@ class FileScreen : Screen {
                         }
                     }
 
-                    is RequestCondition.SuccessCondition -> {
+                    fileState is RequestCondition.SuccessCondition &&
+                            folderState is RequestCondition.SuccessCondition -> {
+                        val allFolders = viewModel.getAllFolders().sortedBy { it.name }
+                        val allFiles = viewModel.getAllFiles().sortedBy { it.baseName }
+
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(paddingValues)
                         ) {
-                            items(viewModel.getAllFiles().sortedBy { it.baseName }) { file ->
+                            // Display folders
+                            items(allFolders) { folder ->
+                                FolderItemEntry(folder)
+                            }
+
+                            // Display files
+                            items(allFiles) { file ->
                                 FileItemEntry(file)
                             }
                         }
                     }
 
-                    is RequestCondition.ErrorCondition -> {
+                    fileState is RequestCondition.ErrorCondition ||
+                            folderState is RequestCondition.ErrorCondition -> {
+                        val errorMessage = (fileState as? RequestCondition.ErrorCondition)?.errorMsg
+                            ?: (folderState as? RequestCondition.ErrorCondition)?.errorMsg
+                            ?: stringResource(Res.string.unable_to_load_files)
+
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -246,7 +240,7 @@ class FileScreen : Screen {
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = (viewModel.cmisState as RequestCondition.ErrorCondition).errorMsg,
+                                text = errorMessage,
                                 color = Color.Red,
                                 style = MaterialTheme.typography.bodyMedium,
                                 modifier = Modifier.padding(16.dp)
@@ -271,8 +265,7 @@ class FileScreen : Screen {
                 }
             } else {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -280,7 +273,6 @@ class FileScreen : Screen {
                         modifier = Modifier.padding(16.dp)
                     )
                 }
-
             }
         }
     }
@@ -289,21 +281,48 @@ class FileScreen : Screen {
     private fun createLauncher(viewModel: FileViewModel, pickerType: PickerType) =
         rememberFilePickerLauncher(
             mode = PickerMode.Multiple(),
-            type = pickerType) { files ->
-            // extract file names and store in selectedFiles list
+            type = pickerType
+        ) { files ->
             files?.forEach { file ->
                 CoroutineScope(Dispatchers.IO).launch {
                     val fileName = file.name
                     val extension = file.extension
                     val filePath = file.path ?: ""
-
-                    // read content of file
                     val fileContent = file.readBytes()
 
-                    viewModel.saveFile(fileName, extension, filePath, fileContent)
+                    viewModel.saveFileLocally(fileName, extension, filePath, fileContent)
                 }
             }
         }
+
+    @OptIn(ExperimentalAdaptiveApi::class)
+    @Composable
+    private fun FolderItemEntry(folder: FolderModel) {
+        Row(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth()
+                .heightIn(min = 50.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(end = 8.dp),
+                painter = painterResource(Res.drawable.ic_folder),
+                contentDescription = stringResource(Res.string.remote_object),
+                tint = MaterialTheme.colorScheme.primary
+            )
+
+            Text(
+                text = folder.name,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+        AdaptiveHorizontalDivider()
+    }
 
     @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
@@ -316,31 +335,21 @@ class FileScreen : Screen {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // left Icon
-            (if (file.baseTypeId == "cmis:folder") {
-                vectorResource(Res.drawable.ic_folder)
-            } else if (file.baseTypeId == "cmis:document") {
-                vectorResource(Res.drawable.ic_file)
-            } else {
-                null
-            })?.let {
-                Icon(
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .padding(end = 8.dp),
-                    imageVector = it,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(end = 8.dp),
+                painter = painterResource(Res.drawable.ic_file),
+                contentDescription = stringResource(Res.string.remote_object),
+                tint = MaterialTheme.colorScheme.primary
+            )
 
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = 16.dp), // Platz für das Icon rechts
+                    .padding(end = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                // Base Name
                 Text(
                     text = file.baseName,
                     maxLines = 1,
@@ -362,11 +371,9 @@ class FileScreen : Screen {
 
             Icon(
                 modifier = Modifier.align(Alignment.CenterVertically),
-                imageVector = if (file.isRemoteFile) {
-                    vectorResource(Res.drawable.ic_cloud)
-                } else {
-                    vectorResource(Res.drawable.ic_file_download_done_24)
-                },
+                painter = painterResource(
+                    if (file.isRemoteFile) Res.drawable.ic_cloud else Res.drawable.ic_file_download_done_24
+                ),
                 contentDescription = if (file.isRemoteFile) {
                     stringResource(Res.string.remote_object)
                 } else {

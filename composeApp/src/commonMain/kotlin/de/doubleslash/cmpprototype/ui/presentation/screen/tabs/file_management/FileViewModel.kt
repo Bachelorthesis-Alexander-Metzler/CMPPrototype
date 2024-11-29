@@ -9,9 +9,11 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import com.plusmobileapps.konnectivity.NetworkConnection
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
+import de.doubleslash.cmpprototype.domain.model.file_mgmt.FolderModel
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
-import de.doubleslash.cmpprototype.domain.use_case.cmis.LoadAllRemoteObjectsUseCase
+import de.doubleslash.cmpprototype.domain.use_case.cmis.LoadAllRemoteFilesUseCase
+import de.doubleslash.cmpprototype.domain.use_case.cmis.LoadAllRemoteFoldersUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetCredentialsUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.DeleteLocalFileUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadAllLocalFilesUseCase
@@ -28,24 +30,28 @@ class FileViewModel(
     private val loadAllLocalFilesUseCase: LoadAllLocalFilesUseCase,
     private val deleteLocalFileUseCase: DeleteLocalFileUseCase,
     // network
-    private val getConnectionStatusUseCase: GetConnectionStatusUseCase,
-    private val getNetworkConnectionUseCase: GetNetworkStatusUseCase,
+    getConnectionStatusUseCase: GetConnectionStatusUseCase,
+    getNetworkConnectionUseCase: GetNetworkStatusUseCase,
     // remote storage
-    private val loadAllRemoteObjectsUseCase: LoadAllRemoteObjectsUseCase,
+    private val loadAllRemoteFilesUseCase: LoadAllRemoteFilesUseCase,
+    private val loadAllRemoteFoldersUseCase: LoadAllRemoteFoldersUseCase,
     // credentials
     private val getCredentialsUseCase: GetCredentialsUseCase
 ) : ScreenModel {
     private val allFiles = mutableStateListOf<FileModel>()
+    private val allFolders = mutableStateListOf<FolderModel>()
 
     // network status
     var networkStatus: StateFlow<NetworkConnection> = getNetworkConnectionUseCase.invoke()
     var isConnected: StateFlow<Boolean> = getConnectionStatusUseCase.invoke()
 
     // current state of loading cmis files
-    var cmisState by mutableStateOf<RequestCondition<List<FileModel>>>(RequestCondition.IdleCondition)
+    var fetchRemoteFilesState by mutableStateOf<RequestCondition<List<FileModel>>>(RequestCondition.IdleCondition)
+    var fetchRemoteFoldersState by mutableStateOf<RequestCondition<List<FolderModel>>>(RequestCondition.IdleCondition)
 
-    fun refreshFiles() {
+    fun refreshFilesAndFolders() {
         loadFiles()
+        loadFolders()
     }
 
     private fun loadFiles() {
@@ -53,11 +59,11 @@ class FileViewModel(
         // load files remotely
         screenModelScope.launch {
             // set state to loading
-            cmisState = RequestCondition.LoadingCondition
+            fetchRemoteFilesState = RequestCondition.LoadingCondition
 
             val credentials = getCredentialsUseCase.invoke()
             // fetch remote files
-            val requestCondition = loadAllRemoteObjectsUseCase.invoke(
+            val requestCondition = loadAllRemoteFilesUseCase.invoke(
                 serverAddress = credentials.serverAddress,
                 username = credentials.username,
                 password = credentials.password
@@ -67,19 +73,44 @@ class FileViewModel(
                 is RequestCondition.SuccessCondition -> {
                     val remoteObjects = requestCondition.data
                     allFiles.addAll(remoteObjects)
-                    cmisState = RequestCondition.SuccessCondition(data = remoteObjects)
+                    fetchRemoteFilesState = RequestCondition.SuccessCondition(data = remoteObjects)
                 }
 
-                else -> cmisState = RequestCondition.ErrorCondition(errorMsg = "Error loading remote files")
-
+                else -> fetchRemoteFilesState = RequestCondition.ErrorCondition(errorMsg = "Error loading remote files")
             }
         }
         // load local files
         allFiles.addAll(loadAllLocalFilesUseCase.invoke())
     }
 
+    private fun loadFolders() {
+        allFolders.clear()
+        // load folders remotely
+        screenModelScope.launch {
+            // set state to loading
+            fetchRemoteFoldersState = RequestCondition.LoadingCondition
 
-    fun saveFile(name: String, extension: String, path: String, fileContent: ByteArray) {
+            val credentials = getCredentialsUseCase.invoke()
+            // fetch remote folders
+            val requestCondition = loadAllRemoteFoldersUseCase.invoke(
+                serverAddress = credentials.serverAddress,
+                username = credentials.username,
+                password = credentials.password
+            )
+
+            when (requestCondition) {
+                is RequestCondition.SuccessCondition -> {
+                    val remoteFolders = requestCondition.data
+                    allFolders.addAll(remoteFolders)
+                    fetchRemoteFoldersState = RequestCondition.SuccessCondition(data = remoteFolders)
+                }
+
+                else -> fetchRemoteFoldersState = RequestCondition.ErrorCondition(errorMsg = "Error loading remote folders")
+            }
+        }
+    }
+
+    fun saveFileLocally(name: String, extension: String, path: String, fileContent: ByteArray) {
         CoroutineScope(Dispatchers.IO).launch {
             val fileModel = FileModel(
                 baseName = name,
@@ -93,6 +124,7 @@ class FileViewModel(
             loadFiles() // refresh files after saving
         }
     }
+
     fun deleteFileLocally(file: FileModel) {
         CoroutineScope(Dispatchers.IO).launch {
             deleteLocalFileUseCase.invoke(file)
@@ -102,5 +134,9 @@ class FileViewModel(
 
     fun getAllFiles(): List<FileModel> {
         return allFiles
+    }
+
+    fun getAllFolders(): List<FolderModel> {
+        return allFolders
     }
 }
