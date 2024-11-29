@@ -1,6 +1,7 @@
 package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.common
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,6 +20,10 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.content_description_back
+import cmpprototype.composeapp.generated.resources.file_preview_title
+import cmpprototype.composeapp.generated.resources.image
+import cmpprototype.composeapp.generated.resources.no_content
+import cmpprototype.composeapp.generated.resources.no_file_preview_available
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveIconButton
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveTopAppBar
@@ -34,7 +39,6 @@ class FilePreviewScreen(
 ) : Screen {
     @OptIn(
         ExperimentalAdaptiveApi::class, ExperimentalMaterial3Api::class,
-        ExperimentalResourceApi::class
     )
     @Composable
     override fun Content() {
@@ -44,7 +48,7 @@ class FilePreviewScreen(
         Scaffold(
             topBar = {
                 AdaptiveTopAppBar(
-                    title = { Text("File Preview") },
+                    title = { Text(stringResource(Res.string.file_preview_title)) },
                     navigationIcon = {
                         AdaptiveIconButton(
                             onClick = { navigator.pop() },
@@ -73,47 +77,64 @@ class FilePreviewScreen(
             if (file._id == null || file.extension !in listOf("png", "jpg", "txt")) {
                 Text(
                     modifier = Modifier.padding(paddingValues),
-                    text = "No File Preview available",
+                    text = stringResource(Res.string.no_file_preview_available),
                 )
             } else {
                 // Load file with byte array
                 val fileWithContent = viewModel.loadLocalFile(file._id!!)
                 when (fileWithContent.extension) {
                     "png", "jpg" -> {
-                        val bitmapImage = fileWithContent.fileContent?.decodeToImageBitmap()
-                        bitmapImage?.let {
-                            // Display image
-                            Image(
-                                bitmap = it,
-                                contentDescription = "Image",
-                                modifier = Modifier
-                                    .padding(paddingValues)
-                                    .fillMaxSize()
-                            )
-                        }
+                        ImagePreview(fileWithContent, paddingValues)
                     }
 
                     "txt" -> {
-                        val textContent =
-                            fileWithContent.fileContent?.decodeToString() ?: "No Content"
-                        // Display text content
-                        LazyColumn(
-                            modifier = Modifier
-                                .padding(paddingValues)
-                                .fillMaxSize()
-                        ) {
-                            item {
-                                Text(
-                                    text = textContent,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    modifier = Modifier.padding(16.dp)
-                                )
-                            }
-                        }
+                        txtPreview(fileWithContent, paddingValues)
                     }
                 }
             }
+        }
+    }
 
+    @Composable
+    private fun txtPreview(
+        fileWithContent: FileModel,
+        paddingValues: PaddingValues
+    ) {
+        val textContent =
+            fileWithContent.fileContent?.decodeToString()
+                ?: stringResource(Res.string.no_content)
+        // Display text content
+        LazyColumn(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
+            item {
+                Text(
+                    text = textContent,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+    }
+
+    @Composable
+    @OptIn(ExperimentalResourceApi::class)
+    private fun ImagePreview(
+        fileWithContent: FileModel,
+        paddingValues: PaddingValues
+    ) {
+        val bitmapImage = fileWithContent.fileContent?.decodeToImageBitmap()
+        bitmapImage?.let {
+            // Display image
+            Image(
+                bitmap = it,
+                contentDescription = stringResource(Res.string.image),
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
+            )
         }
     }
 }

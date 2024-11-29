@@ -32,6 +32,7 @@
     <string name="choose_from_files">Choose from files</string>
     <string name="choose_from_gallery">Choose from gallery</string>
     <string name="open_camera">Open camera</string>
+    <string name="image">Image</string>
 
     <!-- settings screen -->
     <string name="setting_app_theme">App Theme</string>
@@ -54,6 +55,11 @@
     <string name="unable_to_load_files">Unable to load files. No internet connection.</string>
     <string name="remote_object">Remote Object</string>
     <string name="local_object">Local Object</string>
+
+    <!-- file preview screen -->
+    <string name="file_preview_title">File Preview</string>
+    <string name="no_file_preview_available">No file preview available.</string>
+    <string name="no_content">No content</string>
 
     <!-- alert dialogs -->
     <string name="permission_denied">Permission denied</string>

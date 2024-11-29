@@ -32,6 +32,7 @@
     <string name="choose_from_files">Wähle aus Dateien</string>
     <string name="choose_from_gallery">Wähle aus der Galerie</string>
     <string name="open_camera">Öffne Kamera</string>
+    <string name="image">Bild</string>
 
     <!-- settings screen -->
     <string name="setting_app_theme">Ansicht</string>
@@ -54,6 +55,11 @@
     <string name="unable_to_load_files">Keine Dateien geladen. Keine Internetverbindung.</string>
     <string name="remote_object">Remote Objekt</string>
     <string name="local_object">Lokales Objekt</string>
+
+    <!-- file preview screen -->
+    <string name="file_preview_title">Dateivorschau</string>
+    <string name="no_file_preview_available">Keine Dateivorschau verfügbar</string>
+    <string name="no_content">Kein Inhalt</string>
 
     <!-- alert dialogs -->
     <string name="permission_denied">Berechtigung abgelehnt</string>
