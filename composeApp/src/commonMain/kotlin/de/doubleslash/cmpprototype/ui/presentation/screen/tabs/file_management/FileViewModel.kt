@@ -44,10 +44,6 @@ class FileViewModel(
     // current state of loading cmis files
     var cmisState by mutableStateOf<RequestCondition<List<FileModel>>>(RequestCondition.IdleCondition)
 
-    init {
-        loadFiles()
-    }
-
     fun refreshFiles() {
         loadFiles()
     }
@@ -97,7 +93,7 @@ class FileViewModel(
             loadFiles() // refresh files after saving
         }
     }
-    fun deleteFile(file: FileModel) {
+    fun deleteFileLocally(file: FileModel) {
         CoroutineScope(Dispatchers.IO).launch {
             deleteLocalFileUseCase.invoke(file)
             loadFiles() // load data again to update the UI

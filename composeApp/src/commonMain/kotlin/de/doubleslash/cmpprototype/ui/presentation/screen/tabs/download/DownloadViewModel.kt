@@ -16,11 +16,6 @@ class DownloadViewModel(
 ) : ScreenModel {
     private val allFiles = mutableStateListOf<FileModel>()
 
-
-    init {
-        loadFiles()
-    }
-
     fun refreshFiles() {
         loadFiles()
     }
