@@ -4,6 +4,7 @@ import de.doubleslash.cmpprototype.data.datasource.local.localDB.dto.FileDTO
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
+import org.mongodb.kbson.ObjectId
 
 /**
  * Manages local storage operations for files, including saving, retrieving, and deleting files.
@@ -56,5 +57,9 @@ class MongoDBImpl : MongoDB {
             println("FileRepository | Error deleting file: ${e.message}")
             return false
         }
+    }
+
+    override fun getFileWithContent(id: ObjectId): FileDTO {
+        return realm?.query<FileDTO>("_id == $0", id)?.find()?.first() ?: FileDTO()
     }
 }

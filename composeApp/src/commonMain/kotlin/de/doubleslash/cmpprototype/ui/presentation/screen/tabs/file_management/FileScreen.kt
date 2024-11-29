@@ -232,7 +232,8 @@ class FileScreen : Screen {
                             // Display files
                             items(allFiles) { file ->
                                 FileItemEntry(file, onClick = {
-                                    navigator.push(FilePreviewScreen())
+                                    // only allow preview for downloaded files
+                                    if (!file.isRemoteFile) navigator.push(FilePreviewScreen(file))
                                 })
                             }
                         }

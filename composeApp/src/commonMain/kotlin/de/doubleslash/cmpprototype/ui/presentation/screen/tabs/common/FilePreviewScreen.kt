@@ -1,5 +1,7 @@
 package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.common
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -10,22 +12,32 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.content_description_back
+import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveIconButton
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveTopAppBar
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import io.github.alexzhirkevich.cupertino.adaptive.icons.AdaptiveIcons
 import io.github.alexzhirkevich.cupertino.adaptive.icons.KeyboardArrowLeft
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.decodeToImageBitmap
 import org.jetbrains.compose.resources.stringResource
 
-class FilePreviewScreen : Screen {
-    @OptIn(ExperimentalAdaptiveApi::class, ExperimentalMaterial3Api::class)
+class FilePreviewScreen(
+    private val file: FileModel
+) : Screen {
+    @OptIn(
+        ExperimentalAdaptiveApi::class, ExperimentalMaterial3Api::class,
+        ExperimentalResourceApi::class
+    )
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val viewModel = getScreenModel<FilePreviewViewModel>()
 
         Scaffold(
             topBar = {
@@ -53,12 +65,31 @@ class FilePreviewScreen : Screen {
                 )
             }
         ) { paddingValues ->
-            Text(
-                modifier = Modifier.padding(paddingValues),
-                text = "File Preview",
-            )
 
+
+            // file preview for images
+            if (file._id == null || file.extension != "png" && file.extension != "jpg") {
+                Text(
+                    modifier = Modifier.padding(paddingValues),
+                    text = "No File Preview available",
+                )
+            } else {
+                // load file with byte array
+                val fileWithContent = viewModel.loadLocalFile(file._id!!)
+                if (fileWithContent.extension == "png" || fileWithContent.extension == "jpg") {
+                    val bitmapImage = fileWithContent.fileContent?.decodeToImageBitmap()
+                    bitmapImage?.let {
+                        // Display image
+                        Image(
+                            bitmap = it,
+                            contentDescription = "Image",
+                            modifier = Modifier
+                                .padding(paddingValues)
+                                .fillMaxSize()
+                        )
+                    }
+                }
+            }
         }
     }
-
 }

@@ -30,9 +30,11 @@ import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetCredentials
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.DeleteLocalFileUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadAllLocalFilesUseCase
+import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadLocalFileUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.SaveLocalFileUseCase
 import de.doubleslash.cmpprototype.ui.presentation.camera.CameraViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.common.FilePreviewViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.download.DownloadViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management.FileViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.SettingsViewModel
@@ -43,7 +45,12 @@ import org.koin.dsl.module
 // Auth Module: Auth API and Repository
 val authModule = module {
     single<AuthApi> { AuthApiImpl() }
-    single<AuthRepository> { AuthRepositoryImpl(get(), EncryptedSharedPreferencesImpl(get(named("encrypted_settings")))) }
+    single<AuthRepository> {
+        AuthRepositoryImpl(
+            get(),
+            EncryptedSharedPreferencesImpl(get(named("encrypted_settings")))
+        )
+    }
 }
 
 // Network Module: Network Status Repository
@@ -83,6 +90,7 @@ val useCaseModule = module {
     single { SaveLocalFileUseCase(get()) }
     single { LoadAllRemoteFilesUseCase(get()) }
     single { LoadAllRemoteFoldersUseCase(get()) }
+    single { LoadLocalFileUseCase(get()) }
 }
 
 // ViewModel Module: Login and Settings ViewModels
@@ -92,11 +100,19 @@ val viewModelModule = module {
     factory { FileViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     factory { CameraViewModel(get()) }
     factory { DownloadViewModel(get(), get()) }
+    factory { FilePreviewViewModel(get()) }
 }
 
 // Combine all modules
 val moduleApplication = module {
-    includes(authModule, networkModule, preferencesModule, filePersistenceModule, useCaseModule, viewModelModule)
+    includes(
+        authModule,
+        networkModule,
+        preferencesModule,
+        filePersistenceModule,
+        useCaseModule,
+        viewModelModule
+    )
 }
 
 fun initKoin() {

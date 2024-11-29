@@ -56,7 +56,7 @@ class DownloadScreen : Screen {
             ) {
                 items(viewModel.getAllFiles()) { file ->
                     DownloadedFileItemEntry(file, viewModel, onClick = {
-                        navigator.push(FilePreviewScreen())
+                        navigator.push(FilePreviewScreen(file))
                     })
                 }
             }
