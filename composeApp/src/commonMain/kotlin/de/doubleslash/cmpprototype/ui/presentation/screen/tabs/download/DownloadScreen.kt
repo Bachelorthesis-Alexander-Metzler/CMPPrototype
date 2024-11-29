@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
@@ -71,39 +72,31 @@ class DownloadScreen : Tab {
                 .fillMaxWidth()
                 .heightIn(min = 50.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            if (file.path != null) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    // Base Name
-                    Text(
-                        text = file.baseName,
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = file.baseName,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleMedium
+                )
 
+                if (file.path != null) {
                     Text(
                         text = file.path,
-                        style = MaterialTheme
-                            .typography
-                            .bodySmall
-                            .copy(
-                                color = MaterialTheme
-                                    .colorScheme
-                                    .secondary
-                            ),
-                        modifier = Modifier.fillMaxWidth()
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = MaterialTheme.colorScheme.secondary
+                        )
                     )
                 }
-            } else {
-                Text(
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    text = file.baseName,
-                    style = MaterialTheme.typography.titleMedium,
-                )
             }
 
             AdaptiveIconButton(
