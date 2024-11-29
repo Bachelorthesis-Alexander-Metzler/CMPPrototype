@@ -40,9 +40,9 @@ import cmpprototype.composeapp.generated.resources.file_tab_title
 import cmpprototype.composeapp.generated.resources.gallery_permission_denied_always
 import cmpprototype.composeapp.generated.resources.ic_add_from_gallery
 import cmpprototype.composeapp.generated.resources.ic_camera
-import cmpprototype.composeapp.generated.resources.ic_cloud
+import cmpprototype.composeapp.generated.resources.ic_cloud_file_download
+import cmpprototype.composeapp.generated.resources.ic_cloud_upload
 import cmpprototype.composeapp.generated.resources.ic_file
-import cmpprototype.composeapp.generated.resources.ic_file_download_done_24
 import cmpprototype.composeapp.generated.resources.ic_folder
 import cmpprototype.composeapp.generated.resources.ic_upload_file
 import cmpprototype.composeapp.generated.resources.local_object
@@ -67,6 +67,7 @@ import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveAlertDialog
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveCircularProgressIndicator
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveHorizontalDivider
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveIconButton
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import io.github.alexzhirkevich.cupertino.adaptive.icons.AdaptiveIcons
 import io.github.alexzhirkevich.cupertino.adaptive.icons.Add
@@ -110,9 +111,12 @@ class FileScreen : Screen {
         val permissionsViewModel = PermissionsViewModel(controller)
 
         // Permission denied messages
-        val storagePermissionDeniedMessage = stringResource(Res.string.storage_permission_denied_always)
-        val galleryPermissionDeniedMessage = stringResource(Res.string.gallery_permission_denied_always)
-        val cameraPermissionDeniedMessage = stringResource(Res.string.camera_permission_denied_always)
+        val storagePermissionDeniedMessage =
+            stringResource(Res.string.storage_permission_denied_always)
+        val galleryPermissionDeniedMessage =
+            stringResource(Res.string.gallery_permission_denied_always)
+        val cameraPermissionDeniedMessage =
+            stringResource(Res.string.camera_permission_denied_always)
 
         // File pickers
         val documentLauncher = createLauncher(viewModel, PickerType.File())
@@ -152,6 +156,7 @@ class FileScreen : Screen {
                                             dialogMessage = storagePermissionDeniedMessage
                                             showDialog = true
                                         }
+
                                         else -> permissionsViewModel.provideOrRequestStoragePermission()
                                     }
                                 }
@@ -167,6 +172,7 @@ class FileScreen : Screen {
                                             dialogMessage = galleryPermissionDeniedMessage
                                             showDialog = true
                                         }
+
                                         else -> permissionsViewModel.provideOrRequestGalleryPermission()
                                     }
                                 }
@@ -182,6 +188,7 @@ class FileScreen : Screen {
                                             dialogMessage = cameraPermissionDeniedMessage
                                             showDialog = true
                                         }
+
                                         else -> permissionsViewModel.provideOrRequestCameraPermission()
                                     }
                                 }
@@ -369,22 +376,34 @@ class FileScreen : Screen {
                 }
             }
 
-            Icon(
-                modifier = Modifier.align(Alignment.CenterVertically),
-                painter = painterResource(
-                    if (file.isRemoteFile) Res.drawable.ic_cloud else Res.drawable.ic_file_download_done_24
-                ),
-                contentDescription = if (file.isRemoteFile) {
-                    stringResource(Res.string.remote_object)
-                } else {
-                    stringResource(Res.string.local_object)
-                },
-                tint = if (file.isRemoteFile) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    Color.Green
-                }
-            )
+            // Conditional Icon Buttons (Download/Upload)
+            if (file.isRemoteFile) {
+                AdaptiveIconButton(
+                    onClick = {
+                        // TODO: Action for downloading remote file
+                    },
+                    content = {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_cloud_file_download),
+                            contentDescription = stringResource(Res.string.remote_object),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                )
+            } else {
+                AdaptiveIconButton(
+                    onClick = {
+                        // TODO: Action for uploading local file
+                    },
+                    content = {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_cloud_upload),
+                            contentDescription = stringResource(Res.string.local_object),
+                            tint = Color(0xFFFFA500) // Orange
+                        )
+                    }
+                )
+            }
         }
         AdaptiveHorizontalDivider()
     }
