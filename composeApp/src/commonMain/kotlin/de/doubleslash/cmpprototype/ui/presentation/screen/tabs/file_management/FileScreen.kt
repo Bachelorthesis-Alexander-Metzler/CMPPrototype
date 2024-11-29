@@ -1,5 +1,6 @@
 package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -60,6 +61,7 @@ import de.doubleslash.cmpprototype.ui.presentation.camera.CameraScreen
 import de.doubleslash.cmpprototype.ui.presentation.components.FabItem
 import de.doubleslash.cmpprototype.ui.presentation.components.MultiFloatingActionButton
 import de.doubleslash.cmpprototype.ui.presentation.screen.PermissionsViewModel
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.common.FilePreviewScreen
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.components.CustomTopAppBar
 import dev.icerock.moko.permissions.PermissionState
 import dev.icerock.moko.permissions.compose.BindEffect
@@ -229,7 +231,9 @@ class FileScreen : Screen {
 
                             // Display files
                             items(allFiles) { file ->
-                                FileItemEntry(file)
+                                FileItemEntry(file, onClick = {
+                                    navigator.push(FilePreviewScreen())
+                                })
                             }
                         }
                     }
@@ -304,11 +308,12 @@ class FileScreen : Screen {
 
     @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
-    private fun FolderItemEntry(folder: FolderModel) {
+    private fun FolderItemEntry(folder: FolderModel, onClick: () -> Unit = {}) {
         Row(
             modifier = Modifier
                 .padding(12.dp)
                 .fillMaxWidth()
+                .clickable(onClick = onClick)
                 .heightIn(min = 50.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -333,11 +338,12 @@ class FileScreen : Screen {
 
     @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
-    private fun FileItemEntry(file: FileModel) {
+    private fun FileItemEntry(file: FileModel, onClick: () -> Unit = {}) {
         Row(
             modifier = Modifier
                 .padding(12.dp)
                 .fillMaxWidth()
+                .clickable(onClick = onClick)
                 .heightIn(min = 50.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically

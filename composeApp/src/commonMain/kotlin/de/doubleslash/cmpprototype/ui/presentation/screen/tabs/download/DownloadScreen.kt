@@ -1,6 +1,7 @@
 package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.download
 
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,9 +23,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.downloads_tab_title
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.common.FilePreviewScreen
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.components.CustomTopAppBar
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveHorizontalDivider
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveIconButton
@@ -37,6 +41,7 @@ class DownloadScreen : Screen {
     @Composable
     override fun Content() {
         val viewModel = getScreenModel<DownloadViewModel>()
+        val navigator = LocalNavigator.currentOrThrow
 
         LaunchedEffect(Unit) {
             viewModel.refreshFiles()
@@ -50,7 +55,9 @@ class DownloadScreen : Screen {
                     .padding(paddingValues)
             ) {
                 items(viewModel.getAllFiles()) { file ->
-                    DownloadedFileItemEntry(file, viewModel)
+                    DownloadedFileItemEntry(file, viewModel, onClick = {
+                        navigator.push(FilePreviewScreen())
+                    })
                 }
             }
         }
@@ -60,12 +67,14 @@ class DownloadScreen : Screen {
     @Composable
     private fun DownloadedFileItemEntry(
         file: FileModel,
-        viewModel: DownloadViewModel
+        viewModel: DownloadViewModel,
+        onClick: () -> Unit = {}
     ) {
         Row(
             modifier = Modifier
                 .padding(12.dp)
                 .fillMaxWidth()
+                .clickable(onClick = onClick)
                 .heightIn(min = 50.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
