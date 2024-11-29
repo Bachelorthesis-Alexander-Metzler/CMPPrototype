@@ -16,8 +16,7 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
-import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.download.DownloadScreen
-import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management.FileScreen
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.download.DownloadTabScreen
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management.FileTabScreen
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.SettingsTabScreen
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveNavigationBar
@@ -38,7 +37,7 @@ class BottomTabManager(
                     bottomBar = {
                         AdaptiveNavigationBar {
                             TabItem(FileTabScreen())
-                            TabItem(DownloadScreen())
+                            TabItem(DownloadTabScreen())
                             TabItem(SettingsTabScreen())
                         }
                     }
@@ -50,12 +49,12 @@ class BottomTabManager(
                 }
             }
         } else {
-            TabNavigator(DownloadScreen()) {
+            TabNavigator(DownloadTabScreen()) {
                 Scaffold(
                     bottomBar = {
                         AdaptiveNavigationBar {
                             TabItem(FileTabScreen())
-                            TabItem(DownloadScreen())
+                            TabItem(DownloadTabScreen())
                             TabItem(SettingsTabScreen())
                         }
                     }
@@ -85,7 +84,8 @@ class BottomTabManager(
                         Icon(
                             painter = painter,
                             contentDescription = tab.options.title,
-                            modifier = Modifier.size(24.dp))
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
 
                     Text(text = tab.options.title)

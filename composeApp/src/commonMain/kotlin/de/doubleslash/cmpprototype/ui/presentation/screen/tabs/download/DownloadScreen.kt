@@ -18,15 +18,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
-import cafe.adriel.voyager.navigator.tab.Tab
-import cafe.adriel.voyager.navigator.tab.TabOptions
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.downloads_tab_title
-import cmpprototype.composeapp.generated.resources.ic_cloud_download
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.components.CustomTopAppBar
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveHorizontalDivider
@@ -35,9 +32,8 @@ import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import io.github.alexzhirkevich.cupertino.adaptive.icons.AdaptiveIcons
 import io.github.alexzhirkevich.cupertino.adaptive.icons.Delete
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.resources.vectorResource
 
-class DownloadScreen : Tab {
+class DownloadScreen : Screen {
     @Composable
     override fun Content() {
         val viewModel = getScreenModel<DownloadViewModel>()
@@ -113,18 +109,4 @@ class DownloadScreen : Tab {
 
         AdaptiveHorizontalDivider()
     }
-
-    override val options: TabOptions
-        @Composable
-        get() {
-            val icon = rememberVectorPainter(vectorResource(Res.drawable.ic_cloud_download))
-            val title = stringResource(Res.string.downloads_tab_title)
-            val index: UShort = 1u
-
-            return TabOptions(
-                icon = icon,
-                title = title,
-                index = index
-            )
-        }
 }

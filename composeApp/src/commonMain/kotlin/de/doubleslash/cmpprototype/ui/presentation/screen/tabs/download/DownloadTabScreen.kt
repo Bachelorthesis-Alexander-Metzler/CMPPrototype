@@ -1,5 +1,4 @@
-package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management
-
+package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.download
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -8,18 +7,18 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import cafe.adriel.voyager.transitions.SlideTransition
 import cmpprototype.composeapp.generated.resources.Res
-import cmpprototype.composeapp.generated.resources.file_tab_title
-import io.github.alexzhirkevich.cupertino.adaptive.icons.AdaptiveIcons
-import io.github.alexzhirkevich.cupertino.adaptive.icons.Home
+import cmpprototype.composeapp.generated.resources.downloads_tab_title
+import cmpprototype.composeapp.generated.resources.ic_cloud_download
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
-/** File tab screen which holds the file screen and pass it the navigator for
+/** Download tab screen which holds the download screen and pass it the navigator for
  * linear navigation inside of the tab */
-class FileTabScreen : Tab {
+class DownloadTabScreen : Tab {
 
     @Composable
     override fun Content() {
-        Navigator(screen = FileScreen()) { navigator ->
+        Navigator(screen = DownloadScreen()) { navigator ->
             SlideTransition(navigator = navigator)
         }
     }
@@ -27,9 +26,9 @@ class FileTabScreen : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val icon = rememberVectorPainter(image = (AdaptiveIcons.Outlined.Home))
-            val title = stringResource(Res.string.file_tab_title)
-            val index: UShort = 0u
+            val icon = rememberVectorPainter(vectorResource(Res.drawable.ic_cloud_download))
+            val title = stringResource(Res.string.downloads_tab_title)
+            val index: UShort = 1u
 
             return TabOptions(
                 icon = icon,
