@@ -3,6 +3,7 @@ package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.common
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -67,29 +69,51 @@ class FilePreviewScreen(
         ) { paddingValues ->
 
 
-            // file preview for images
-            if (file._id == null || file.extension != "png" && file.extension != "jpg") {
+            // File preview for images or text files
+            if (file._id == null || file.extension !in listOf("png", "jpg", "txt")) {
                 Text(
                     modifier = Modifier.padding(paddingValues),
                     text = "No File Preview available",
                 )
             } else {
-                // load file with byte array
+                // Load file with byte array
                 val fileWithContent = viewModel.loadLocalFile(file._id!!)
-                if (fileWithContent.extension == "png" || fileWithContent.extension == "jpg") {
-                    val bitmapImage = fileWithContent.fileContent?.decodeToImageBitmap()
-                    bitmapImage?.let {
-                        // Display image
-                        Image(
-                            bitmap = it,
-                            contentDescription = "Image",
+                when (fileWithContent.extension) {
+                    "png", "jpg" -> {
+                        val bitmapImage = fileWithContent.fileContent?.decodeToImageBitmap()
+                        bitmapImage?.let {
+                            // Display image
+                            Image(
+                                bitmap = it,
+                                contentDescription = "Image",
+                                modifier = Modifier
+                                    .padding(paddingValues)
+                                    .fillMaxSize()
+                            )
+                        }
+                    }
+
+                    "txt" -> {
+                        val textContent =
+                            fileWithContent.fileContent?.decodeToString() ?: "No Content"
+                        // Display text content
+                        LazyColumn(
                             modifier = Modifier
                                 .padding(paddingValues)
                                 .fillMaxSize()
-                        )
+                        ) {
+                            item {
+                                Text(
+                                    text = textContent,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                            }
+                        }
                     }
                 }
             }
+
         }
     }
 }
