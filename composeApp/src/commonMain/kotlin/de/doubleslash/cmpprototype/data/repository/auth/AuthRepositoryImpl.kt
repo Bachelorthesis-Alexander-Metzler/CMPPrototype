@@ -2,7 +2,8 @@ package de.doubleslash.cmpprototype.data.repository.auth
 
 import de.doubleslash.cmpprototype.data.datasource.local.preferences.Preferences
 import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApi
-import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.dto.LoginDTO
+import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.dto.toLoginModel
+import de.doubleslash.cmpprototype.domain.model.auth.LoginModel
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.domain.repository.auth.AuthRepository
 
@@ -15,10 +16,10 @@ class AuthRepositoryImpl(
         serverAddress: String,
         username: String,
         password: String
-    ): RequestCondition<LoginDTO> {
+    ): RequestCondition<LoginModel> {
         val requestCondition = api.authenticateUser(serverAddress, username, password)
 
-        when (requestCondition) {
+        return when (requestCondition) {
             is RequestCondition.SuccessCondition -> {
                 // store session data and credentials if authentication was successful
                 saveServerAddress(serverAddress)
@@ -27,14 +28,16 @@ class AuthRepositoryImpl(
                 saveSessionId(requestCondition.data.sessionId)
                 saveUserId(requestCondition.data.userId)
                 savePreviouslyAuthenticated()
+
+                // map data to login model for UI
+                val loginModel = requestCondition.data.toLoginModel()
+                // return success object
+                RequestCondition.SuccessCondition(data = loginModel)
             }
 
-            is RequestCondition.ErrorCondition -> { /* nothing to do */ }
-            is RequestCondition.IdleCondition -> { /* nothing to do */ }
-            is RequestCondition.LoadingCondition -> { /* nothing to do */ }
+            is RequestCondition.ErrorCondition -> requestCondition // return error object as is
+            else -> RequestCondition.ErrorCondition("Unexpected error")
         }
-
-        return requestCondition
     }
 
     override fun saveSessionId(sessionId: String) {
