@@ -1,6 +1,5 @@
 package de.doubleslash.cmpprototype.domain.use_case.authenticateUser
 
-import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.dto.toLoginModel
 import de.doubleslash.cmpprototype.domain.model.auth.LoginModel
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.domain.repository.auth.AuthRepository
@@ -17,30 +16,6 @@ class AuthenticateUserUseCase (
         username: String,
         password: String
     ): RequestCondition<LoginModel> {
-        val loginDTO = repository.authenticateUser(serverAddress, username, password)
-
-
-
-        // convert result to login model or return error
-        return when (loginDTO) {
-            is RequestCondition.SuccessCondition -> {
-                val loginModel = loginDTO.data.toLoginModel()
-                // persist session data
-                saveSessionData(loginModel)
-                // save that user has been authenticated
-                repository.savePreviouslyAuthenticated()
-                // return success object
-                RequestCondition.SuccessCondition(data = loginModel)
-            }
-            is RequestCondition.ErrorCondition -> loginDTO // return error object as is
-            else -> RequestCondition.ErrorCondition("Unexpected error")
-        }
-    }
-
-    /** save session data to local storage
-     * */
-    private fun saveSessionData(loginModel: LoginModel) {
-        repository.saveSessionId(loginModel.sessionId)
-        repository.saveUserId(loginModel.userId)
+        return repository.authenticateUser(serverAddress, username, password)
     }
 }

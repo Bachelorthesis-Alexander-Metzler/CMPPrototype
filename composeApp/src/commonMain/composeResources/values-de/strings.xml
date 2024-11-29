@@ -23,7 +23,7 @@
     <string name="no_internet_connection">Keine Internetverbindung</string>
 
     <!-- checkbox labels -->
-    <string name="is_local_auth_active">Lokale Authentifizierung aktiv</string>
+    <string name="is_local_auth_active">Mit lokaler Authentifizierung einloggen</string>
 
     <!-- content descriptions -->
     <string name="content_description_visibility_on">Passwort versteckt</string>
@@ -36,6 +36,7 @@
     <!-- settings screen -->
     <string name="setting_app_theme">Ansicht</string>
     <string name="setting_placeholder">Einstellung</string>
+    <string name="permissions">Berechtigungen</string>
 
     <!-- theme details screen -->
     <string name="theme_details_title">Ansicht Konfiguration</string>
@@ -47,6 +48,12 @@
     <!-- permission details screen -->
     <string name="permission_details_title">Berechtigungskonfiguration</string>
     <string name="manage_permission_in_settings">Berechtigungen in Systemeinstellungen verwalten</string>
+
+    <!-- file screen -->
+    <string name="no_files_loaded">Keine Dateien geladen.</string>
+    <string name="unable_to_load_files">Keine Dateien geladen. Keine Internetverbindung.</string>
+    <string name="remote_object">Remote Objekt</string>
+    <string name="local_object">Lokales Objekt</string>
 
     <!-- alert dialogs -->
     <string name="permission_denied">Berechtigung abgelehnt</string>

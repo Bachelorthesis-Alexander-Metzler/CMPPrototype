@@ -11,6 +11,9 @@ object Constants {
     const val PASSWORD = "password"
     const val HTTP_ERROR_MSG = "HTTP Error: "
 
+    // Constants for the CMIS API
+    const val CMIS_API_HOME_ENDPOINT = "/cmis/browser/default/root/home"
+
 
     // Constants for the shared preferences
     // androidMain

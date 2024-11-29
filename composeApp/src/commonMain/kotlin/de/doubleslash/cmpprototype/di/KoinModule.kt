@@ -10,22 +10,30 @@ import de.doubleslash.cmpprototype.data.datasource.local.preferences.provideEncr
 import de.doubleslash.cmpprototype.data.datasource.local.preferences.provideSharedPreferences
 import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApi
 import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApiImpl
+import de.doubleslash.cmpprototype.data.datasource.remote.rest.cmis.CMISService
+import de.doubleslash.cmpprototype.data.datasource.remote.rest.cmis.CMISServiceImpl
 import de.doubleslash.cmpprototype.data.repository.auth.AuthRepositoryImpl
+import de.doubleslash.cmpprototype.data.repository.cmis.CMISRepositoryImpl
 import de.doubleslash.cmpprototype.data.repository.deviceApi.NetworkStatusRepositoryImpl
 import de.doubleslash.cmpprototype.data.repository.localStorage.FileStorageRepositoryImpl
 import de.doubleslash.cmpprototype.domain.repository.auth.AuthRepository
+import de.doubleslash.cmpprototype.domain.repository.cmis.CMISRepository
 import de.doubleslash.cmpprototype.domain.repository.deviceApi.NetworkStatusRepository
 import de.doubleslash.cmpprototype.domain.repository.localStorage.FileStorageRepository
 import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.AuthenticateUserUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
+import de.doubleslash.cmpprototype.domain.use_case.cmis.LoadAllRemoteFilesUseCase
+import de.doubleslash.cmpprototype.domain.use_case.cmis.LoadAllRemoteFoldersUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getPreviouslyAuthenticated.GetPreviouslyAuthenticatedUseCase
+import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetCredentialsUseCase
 import de.doubleslash.cmpprototype.domain.use_case.getSessionData.GetSessionDataUseCase
-import de.doubleslash.cmpprototype.domain.use_case.localStorage.DeleteFileUseCase
-import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadAllFilesUseCase
-import de.doubleslash.cmpprototype.domain.use_case.localStorage.SaveFileUseCase
+import de.doubleslash.cmpprototype.domain.use_case.localStorage.DeleteLocalFileUseCase
+import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadAllLocalFilesUseCase
+import de.doubleslash.cmpprototype.domain.use_case.localStorage.SaveLocalFileUseCase
 import de.doubleslash.cmpprototype.ui.presentation.camera.CameraViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.download.DownloadViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management.FileViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.SettingsViewModel
 import org.koin.core.context.startKoin
@@ -51,8 +59,13 @@ val preferencesModule = module {
 }
 
 val filePersistenceModule = module {
+    // Local Database
     single<MongoDB> { MongoDBImpl() }
     single<FileStorageRepository> { FileStorageRepositoryImpl(get()) }
+
+    // cmis file management
+    single<CMISService> { CMISServiceImpl() }
+    single<CMISRepository> { CMISRepositoryImpl(get()) }
 }
 
 // Use Case Module: Business Logic
@@ -62,19 +75,23 @@ val useCaseModule = module {
     single { GetNetworkStatusUseCase(get()) }
     single { GetSessionDataUseCase(get()) }
     single { GetPreviouslyAuthenticatedUseCase(get()) }
+    single { GetCredentialsUseCase(get()) }
 
     // File Management Use Cases
-    single { DeleteFileUseCase(get()) }
-    single { LoadAllFilesUseCase(get()) }
-    single { SaveFileUseCase(get()) }
+    single { DeleteLocalFileUseCase(get()) }
+    single { LoadAllLocalFilesUseCase(get()) }
+    single { SaveLocalFileUseCase(get()) }
+    single { LoadAllRemoteFilesUseCase(get()) }
+    single { LoadAllRemoteFoldersUseCase(get()) }
 }
 
 // ViewModel Module: Login and Settings ViewModels
 val viewModelModule = module {
-    factory { LoginViewModel(get(), get(), get(), get(), get()) }
+    factory { LoginViewModel(get(), get(), get(), get(), get(), get()) }
     factory { SettingsViewModel() }
-    factory { FileViewModel(get(), get(), get()) }
+    factory { FileViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     factory { CameraViewModel(get()) }
+    factory { DownloadViewModel(get(), get()) }
 }
 
 // Combine all modules

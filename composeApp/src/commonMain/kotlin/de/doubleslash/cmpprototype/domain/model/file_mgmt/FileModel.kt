@@ -4,11 +4,13 @@ import org.mongodb.kbson.BsonObjectId
 import org.mongodb.kbson.ObjectId
 
 data class FileModel(
-    var _id: ObjectId = BsonObjectId(),
+    var _id: ObjectId? = BsonObjectId(),
     val baseName: String,
     val extension: String,
-    val path: String,
-    val fileContent: ByteArray
+    val isRemoteFile: Boolean,
+    val path: String? = null,
+    val baseTypeId: String,
+    val fileContent: ByteArray? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

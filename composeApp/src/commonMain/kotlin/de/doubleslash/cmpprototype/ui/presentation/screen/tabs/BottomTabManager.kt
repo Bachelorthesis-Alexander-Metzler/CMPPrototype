@@ -26,23 +26,44 @@ import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 
 /** Main Tab Screen only for Tab navigation
  * manages bottom tabs */
-class BottomTabManager : Screen {
+class BottomTabManager(
+    private val offlineLogin: Boolean
+) : Screen {
     @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
     override fun Content() {
-        TabNavigator(FileTabScreen()) {
-            Scaffold(
-                bottomBar = {
-                    AdaptiveNavigationBar {
-                        TabItem(FileTabScreen())
-                        TabItem(DownloadScreen())
-                        TabItem(SettingsTabScreen())
+        if (!offlineLogin) {
+            TabNavigator(FileTabScreen()) {
+                Scaffold(
+                    bottomBar = {
+                        AdaptiveNavigationBar {
+                            TabItem(FileTabScreen())
+                            TabItem(DownloadScreen())
+                            TabItem(SettingsTabScreen())
+                        }
+                    }
+                ) { paddingValues ->
+                    // give screens the padding values because of the bottom bar
+                    Column(modifier = Modifier.padding(paddingValues)) {
+                        CurrentTab()
                     }
                 }
-            ) { paddingValues ->
-                // give screens the padding values because of the bottom bar
-                Column(modifier = Modifier.padding(paddingValues)) {
-                    CurrentTab()
+            }
+        } else {
+            TabNavigator(DownloadScreen()) {
+                Scaffold(
+                    bottomBar = {
+                        AdaptiveNavigationBar {
+                            TabItem(FileTabScreen())
+                            TabItem(DownloadScreen())
+                            TabItem(SettingsTabScreen())
+                        }
+                    }
+                ) { paddingValues ->
+                    // give screens the padding values because of the bottom bar
+                    Column(modifier = Modifier.padding(paddingValues)) {
+                        CurrentTab()
+                    }
                 }
             }
         }

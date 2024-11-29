@@ -4,16 +4,17 @@ import de.doubleslash.cmpprototype.data.datasource.local.localDB.dto.FileDTO
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import de.doubleslash.cmpprototype.domain.repository.localStorage.FileStorageRepository
 
-class DeleteFileUseCase(
+class SaveLocalFileUseCase(
     private val fileStorageRepository: FileStorageRepository
 ) {
-    suspend operator fun invoke(fileModel: FileModel): Boolean {
+    suspend operator fun invoke(fileModel: FileModel) {
         val fileDTO = FileDTO().apply {
-            this._id = fileModel._id
             this.baseName = fileModel.baseName
             this.extension = fileModel.extension
-            this.path = fileModel.path
+            this.path = fileModel.path.toString()
+            this.baseTypeId = fileModel.baseTypeId
+            this.fileContent = fileModel.fileContent!!
         }
-        return fileStorageRepository.deleteFile(fileDTO)
+        fileStorageRepository.addFile(fileDTO)
     }
 }

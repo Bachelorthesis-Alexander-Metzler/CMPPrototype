@@ -18,8 +18,8 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
+import cmpprototype.composeapp.generated.resources.permissions
 import cmpprototype.composeapp.generated.resources.setting_app_theme
-import cmpprototype.composeapp.generated.resources.setting_placeholder
 import cmpprototype.composeapp.generated.resources.settings_tab_title
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.components.CustomTopAppBar
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.details.permission_details.PermissionDetailsScreen
@@ -56,113 +56,11 @@ class SettingsScreen : Screen {
                 // permission settings
                 item {
                     SettingNavigationItem(
-                        title = "Permissions",
+                        title = stringResource(Res.string.permissions),
                         onClick = { navigator.push(PermissionDetailsScreen()) }
                     )
                     AdaptiveHorizontalDivider()
                 }
-
-                // placeholder for more settings
-                item {
-                    SettingNavigationItem(
-                        title = stringResource(Res.string.setting_placeholder) + 1,
-                        onClick = {  }
-                    )
-                    AdaptiveHorizontalDivider()
-                }
-
-                item {
-                    SettingNavigationItem(
-                        title = stringResource(Res.string.setting_placeholder) + 2,
-                        onClick = {  }
-                    )
-                    AdaptiveHorizontalDivider()
-                }
-                item {
-                    SettingNavigationItem(
-                        title = stringResource(Res.string.setting_placeholder) + 3,
-                        onClick = {  }
-                    )
-                    AdaptiveHorizontalDivider()
-                }
-                item {
-                    SettingNavigationItem(
-                        title = stringResource(Res.string.setting_placeholder) + 4,
-                        onClick = {  }
-                    )
-                    AdaptiveHorizontalDivider()
-                }
-                item {
-                    SettingNavigationItem(
-                        title = stringResource(Res.string.setting_placeholder) + 5,
-                        onClick = {  }
-                    )
-                    AdaptiveHorizontalDivider()
-                }
-                item {
-                    SettingNavigationItem(
-                        title = stringResource(Res.string.setting_placeholder) + 6,
-                        onClick = {  }
-                    )
-                    AdaptiveHorizontalDivider()
-                }
-                item {
-                    SettingNavigationItem(
-                        title = stringResource(Res.string.setting_placeholder) + 7,
-                        onClick = {  }
-                    )
-                    AdaptiveHorizontalDivider()
-                }
-                item {
-                    SettingNavigationItem(
-                        title = stringResource(Res.string.setting_placeholder) + 8,
-                        onClick = {  }
-                    )
-                    AdaptiveHorizontalDivider()
-                }
-                item {
-                    SettingNavigationItem(
-                        title = stringResource(Res.string.setting_placeholder) + 9,
-                        onClick = {  }
-                    )
-                    AdaptiveHorizontalDivider()
-                }
-                item {
-                    SettingNavigationItem(
-                        title = stringResource(Res.string.setting_placeholder) + 10,
-                        onClick = {  }
-                    )
-                    AdaptiveHorizontalDivider()
-                }
-                item {
-                    SettingNavigationItem(
-                        title = stringResource(Res.string.setting_placeholder) + 11,
-                        onClick = {  }
-                    )
-                    AdaptiveHorizontalDivider()
-                }
-                item {
-                    SettingNavigationItem(
-                        title = stringResource(Res.string.setting_placeholder) + 12,
-                        onClick = {  }
-                    )
-                    AdaptiveHorizontalDivider()
-                }
-                item {
-                    SettingNavigationItem(
-                        title = stringResource(Res.string.setting_placeholder) + 13,
-                        onClick = {  }
-                    )
-                    AdaptiveHorizontalDivider()
-                }
-                item {
-                    SettingNavigationItem(
-                        title = stringResource(Res.string.setting_placeholder) + 14,
-                        onClick = {  }
-                    )
-                    AdaptiveHorizontalDivider()
-                }
-
             }
         }
     }
