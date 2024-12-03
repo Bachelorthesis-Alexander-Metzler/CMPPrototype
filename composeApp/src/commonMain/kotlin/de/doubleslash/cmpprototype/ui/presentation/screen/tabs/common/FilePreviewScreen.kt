@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -17,8 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
@@ -35,7 +37,8 @@ import cmpprototype.composeapp.generated.resources.image
 import cmpprototype.composeapp.generated.resources.no_content
 import cmpprototype.composeapp.generated.resources.no_file_preview_available
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
-import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.tools.renderAllPdfPagesToBitmaps
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.tools.getPdfPageCount
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.tools.renderPdfPageToBitmap
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveIconButton
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveTopAppBar
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
@@ -124,11 +127,12 @@ class FilePreviewScreen(
             return
         }
 
-        val bitmaps = remember { mutableStateListOf<ImageBitmap>() }
+        val pageCount = remember { mutableStateOf(0) }
+        val lazyBitmaps = remember { mutableMapOf<Int, ImageBitmap>() }
 
+        // Lade die Anzahl der Seiten
         LaunchedEffect(pdfData) {
-            val renderedPages = renderAllPdfPagesToBitmaps(pdfData)
-            bitmaps.addAll(renderedPages)
+            pageCount.value = getPdfPageCount(pdfData)
         }
 
         LazyColumn(
@@ -136,7 +140,7 @@ class FilePreviewScreen(
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            items(bitmaps.size) { index ->
+            items(pageCount.value) { pageIndex ->
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -146,14 +150,27 @@ class FilePreviewScreen(
                             color = MaterialTheme.colorScheme.primary,
                         )
                 ) {
-                    Image(
-                        bitmap = bitmaps[index],
-                        contentDescription = "PDF Page ${index + 1}",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(color = Color.White)
-                    )
+                    // just render, if the bitmap is already loaded
+                    val bitmap = lazyBitmaps[pageIndex]
+                    if (bitmap != null) {
+                        Image(
+                            bitmap = bitmap,
+                            contentDescription = "PDF Page ${pageIndex + 1}",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = Color.White)
+                        )
+                    } else {
+                        // render page
+                        LaunchedEffect(pageIndex) {
+                            val renderedBitmap = renderPdfPageToBitmap(pdfData, pageIndex)
+                            lazyBitmaps[pageIndex] = renderedBitmap
+                        }
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
                 }
             }
         }
