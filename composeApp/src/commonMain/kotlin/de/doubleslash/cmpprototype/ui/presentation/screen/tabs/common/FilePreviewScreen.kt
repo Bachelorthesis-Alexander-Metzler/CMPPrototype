@@ -130,7 +130,7 @@ class FilePreviewScreen(
         val pageCount = remember { mutableStateOf(0) }
         val lazyBitmaps = remember { mutableMapOf<Int, ImageBitmap>() }
 
-        // Lade die Anzahl der Seiten
+        // load page count
         LaunchedEffect(pdfData) {
             pageCount.value = getPdfPageCount(pdfData)
         }
