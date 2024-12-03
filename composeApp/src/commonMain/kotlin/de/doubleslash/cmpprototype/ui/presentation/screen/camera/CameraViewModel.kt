@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.ui.presentation.camera
+package de.doubleslash.cmpprototype.ui.presentation.screen.camera
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope

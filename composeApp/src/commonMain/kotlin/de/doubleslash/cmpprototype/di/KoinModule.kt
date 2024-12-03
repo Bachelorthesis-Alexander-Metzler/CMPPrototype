@@ -32,7 +32,7 @@ import de.doubleslash.cmpprototype.domain.use_case.localStorage.DeleteLocalFileU
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadAllLocalFilesUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadLocalFileUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.SaveLocalFileUseCase
-import de.doubleslash.cmpprototype.ui.presentation.camera.CameraViewModel
+import de.doubleslash.cmpprototype.ui.presentation.screen.camera.CameraViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.common.FilePreviewViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.download.DownloadViewModel

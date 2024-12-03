@@ -57,10 +57,10 @@ import cmpprototype.composeapp.generated.resources.unable_to_load_files
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FolderModel
-import de.doubleslash.cmpprototype.ui.presentation.camera.CameraScreen
 import de.doubleslash.cmpprototype.ui.presentation.components.FabItem
 import de.doubleslash.cmpprototype.ui.presentation.components.MultiFloatingActionButton
 import de.doubleslash.cmpprototype.ui.presentation.screen.PermissionsViewModel
+import de.doubleslash.cmpprototype.ui.presentation.screen.camera.CameraScreen
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.common.FilePreviewScreen
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.components.CustomTopAppBar
 import dev.icerock.moko.permissions.PermissionState
@@ -101,6 +101,7 @@ class FileScreen : Screen {
         val isConnected by viewModel.isConnected.collectAsState()
         val fileState = viewModel.fetchRemoteFilesState
         val folderState = viewModel.fetchRemoteFoldersState
+        var isLoading by remember { mutableStateOf(false) }
 
         // Dialog
         var showDialog by remember { mutableStateOf(false) }
@@ -233,7 +234,13 @@ class FileScreen : Screen {
                             items(allFiles) { file ->
                                 FileItemEntry(file, onClick = {
                                     // only allow preview for downloaded files
-                                    if (!file.isRemoteFile) navigator.push(FilePreviewScreen(file))
+                                    if (!file.isRemoteFile) {
+                                        if (!file.isRemoteFile) {
+                                            isLoading = true
+                                            navigator.push(FilePreviewScreen(file))
+                                            isLoading = false
+                                        }
+                                    }
                                 })
                             }
                         }

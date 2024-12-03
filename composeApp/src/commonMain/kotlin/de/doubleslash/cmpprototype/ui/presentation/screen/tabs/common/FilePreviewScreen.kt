@@ -1,8 +1,12 @@
 package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.common
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,7 +16,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
@@ -25,6 +35,7 @@ import cmpprototype.composeapp.generated.resources.image
 import cmpprototype.composeapp.generated.resources.no_content
 import cmpprototype.composeapp.generated.resources.no_file_preview_available
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
+import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.tools.renderAllPdfPagesToBitmaps
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveIconButton
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveTopAppBar
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
@@ -74,7 +85,7 @@ class FilePreviewScreen(
 
 
             // File preview for images or text files
-            if (file._id == null || file.extension !in listOf("png", "jpg", "txt")) {
+            if (file._id == null || file.extension !in listOf("png", "jpg", "txt", "pdf")) {
                 Text(
                     modifier = Modifier.padding(paddingValues),
                     text = stringResource(Res.string.no_file_preview_available),
@@ -90,10 +101,64 @@ class FilePreviewScreen(
                     "txt" -> {
                         txtPreview(fileWithContent, paddingValues)
                     }
+
+                    "pdf" -> {
+                        PdfPreview(fileWithContent, paddingValues)
+                    }
                 }
             }
         }
     }
+
+    @Composable
+    private fun PdfPreview(
+        fileWithContent: FileModel,
+        paddingValues: PaddingValues
+    ) {
+        val pdfData = fileWithContent.fileContent
+        if (pdfData == null) {
+            Text(
+                modifier = Modifier.padding(paddingValues),
+                text = stringResource(Res.string.no_content),
+            )
+            return
+        }
+
+        val bitmaps = remember { mutableStateListOf<ImageBitmap>() }
+
+        LaunchedEffect(pdfData) {
+            val renderedPages = renderAllPdfPagesToBitmaps(pdfData)
+            bitmaps.addAll(renderedPages)
+        }
+
+        LazyColumn(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
+            items(bitmaps.size) { index ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = MaterialTheme.colorScheme.surface)
+                        .border(
+                            width = 2.dp,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                ) {
+                    Image(
+                        bitmap = bitmaps[index],
+                        contentDescription = "PDF Page ${index + 1}",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = Color.White)
+                    )
+                }
+            }
+        }
+    }
+
 
     @Composable
     private fun txtPreview(

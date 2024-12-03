@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.ui.presentation.camera
+package de.doubleslash.cmpprototype.ui.presentation.screen.camera
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -175,7 +175,10 @@ class CameraScreen : Screen {
 
                                 // save file to local mongo db
                                 viewModel.saveImage(
-                                    name = "img_${Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())}.jpg",
+                                    name = "img_${
+                                        Clock.System.now()
+                                            .toLocalDateTime(TimeZone.currentSystemDefault())
+                                    }.jpg",
                                     extension = "jpg",
                                     path = "",
                                     fileContent = result.byteArray
