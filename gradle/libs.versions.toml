@@ -29,6 +29,7 @@ camerak-version = "0.0.7"
 filekit = "0.8.7"
 realm = "2.3.0"
 datetime = "0.6.1"
+image_saver = "0.0.1"
 
 [libraries]
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
@@ -51,6 +52,7 @@ voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", v
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinCore" }
 
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
@@ -81,8 +83,8 @@ multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", vers
 filekit-compose = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekit" }
 mongodb-realm = { module = "io.realm.kotlin:library-base", version.ref = "realm" }
 
-
 camerak = { module = "io.github.kashif-mehmood-km:camerak", version.ref = "camerak-version" }
+image-saver-plugin = { module = "io.github.kashif-mehmood-km:image_saver_plugin", version.ref = "image_saver" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -11,6 +11,7 @@ import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.loading_text
 import cmpprototype.composeapp.generated.resources.login_failed_text
 import cmpprototype.composeapp.generated.resources.login_success_text
+import de.doubleslash.cmpprototype.common.SessionManager
 import de.doubleslash.cmpprototype.domain.model.auth.LoginModel
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.BottomTabManager
@@ -20,27 +21,44 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalAdaptiveApi::class)
 @Composable
-fun HandleAuthenticationState(authState: RequestCondition<LoginModel>, navigator: Navigator, isConnected: Boolean) {
+fun HandleAuthenticationState(
+    authState: RequestCondition<LoginModel>,
+    navigator: Navigator,
+    isConnected: Boolean
+) {
     when (authState) {
         is RequestCondition.IdleCondition -> {}
         is RequestCondition.LoadingCondition -> {
             AdaptiveCircularProgressIndicator(modifier = Modifier.padding(top = 15.dp))
-            Text(modifier = Modifier.padding(top = 15.dp), text = stringResource(Res.string.loading_text))
+            Text(
+                modifier = Modifier.padding(top = 15.dp),
+                text = stringResource(Res.string.loading_text)
+            )
         }
+
         is RequestCondition.ErrorCondition -> {
-            Text(modifier = Modifier.padding(top = 15.dp), text = stringResource(Res.string.login_failed_text) + ": " + authState.getErrorMessage())
+            Text(
+                modifier = Modifier.padding(top = 15.dp),
+                text = stringResource(Res.string.login_failed_text) + ": " + authState.getErrorMessage()
+            )
         }
+
         is RequestCondition.SuccessCondition -> {
-            Text(modifier = Modifier.padding(top = 15.dp), text = stringResource(Res.string.login_success_text))
+            Text(
+                modifier = Modifier.padding(top = 15.dp),
+                text = stringResource(Res.string.login_success_text)
+            )
 
             // Navigate on success using LaunchedEffect to ensure it only happens once
             LaunchedEffect(Unit) {
+                SessionManager.login()
+
                 if (!isConnected) {
                     // Navigate to DownloadScreen when offline
-                    navigator.push(BottomTabManager(offlineLogin = true))
+                    navigator.push(BottomTabManager(navigateToDownloadScreen = true))
                 } else {
                     // Default navigation to the BottomTabManager (FileScreen by default)
-                    navigator.push(BottomTabManager(offlineLogin = false))
+                    navigator.push(BottomTabManager(navigateToDownloadScreen = false))
                 }
             }
         }

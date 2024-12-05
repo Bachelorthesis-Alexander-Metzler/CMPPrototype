@@ -17,7 +17,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -28,14 +28,15 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
             implementation(libs.security.crypto)
+            implementation(libs.koin.android)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -76,7 +77,7 @@ kotlin {
             implementation(libs.filekit.compose)
 
             implementation(libs.camerak)
-            implementation("io.github.kashif-mehmood-km:image_saver_plugin:0.0.1")
+            implementation(libs.image.saver.plugin)
 
             // api to make the permissions available for modules that depend on this module
             api(libs.moko.permissions)

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
+    <!-- App.kt -->
+    <string name="login_required">Login required</string>
+    <string name="file_saved_please_login">The file has been saved. Please log in to view it.</string>
+
     <!-- top bar title -->
     <string name="login_top_bar_title">Login</string>
     <string name="file_tab_title">Home</string>

@@ -26,12 +26,12 @@ import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 /** Main Tab Screen only for Tab navigation
  * manages bottom tabs */
 class BottomTabManager(
-    private val offlineLogin: Boolean
+    private val navigateToDownloadScreen: Boolean
 ) : Screen {
     @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
     override fun Content() {
-        if (!offlineLogin) {
+        if (!navigateToDownloadScreen) {
             TabNavigator(FileTabScreen()) {
                 Scaffold(
                     bottomBar = {
