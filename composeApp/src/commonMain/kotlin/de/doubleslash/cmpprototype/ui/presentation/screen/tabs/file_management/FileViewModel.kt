@@ -47,12 +47,15 @@ class FileViewModel(
 
     // current state of loading cmis files
     var fetchRemoteFilesState by mutableStateOf<RequestCondition<List<FileModel>>>(RequestCondition.IdleCondition)
-    var fetchRemoteFoldersState by mutableStateOf<RequestCondition<List<FolderModel>>>(RequestCondition.IdleCondition)
+    var fetchRemoteFoldersState by mutableStateOf<RequestCondition<List<FolderModel>>>(
+        RequestCondition.IdleCondition
+    )
 
     fun refreshFilesAndFolders() {
         loadFiles()
         loadFolders()
     }
+
 
     private fun loadFiles() {
         allFiles.clear()
@@ -76,7 +79,8 @@ class FileViewModel(
                     fetchRemoteFilesState = RequestCondition.SuccessCondition(data = remoteObjects)
                 }
 
-                else -> fetchRemoteFilesState = RequestCondition.ErrorCondition(errorMsg = "Error loading remote files")
+                else -> fetchRemoteFilesState =
+                    RequestCondition.ErrorCondition(errorMsg = "Error loading remote files")
             }
         }
         // load local files
@@ -102,10 +106,12 @@ class FileViewModel(
                 is RequestCondition.SuccessCondition -> {
                     val remoteFolders = requestCondition.data
                     allFolders.addAll(remoteFolders)
-                    fetchRemoteFoldersState = RequestCondition.SuccessCondition(data = remoteFolders)
+                    fetchRemoteFoldersState =
+                        RequestCondition.SuccessCondition(data = remoteFolders)
                 }
 
-                else -> fetchRemoteFoldersState = RequestCondition.ErrorCondition(errorMsg = "Error loading remote folders")
+                else -> fetchRemoteFoldersState =
+                    RequestCondition.ErrorCondition(errorMsg = "Error loading remote folders")
             }
         }
     }

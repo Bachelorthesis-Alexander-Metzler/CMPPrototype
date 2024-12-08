@@ -69,4 +69,8 @@
     <string name="storage_permission_denied_always">Speicher Berechtigung permanent abgelehnt. Änderung über die Einstellungen möglich.</string>
     <string name="gallery_permission_denied_always">Gallerie Berechtigung permanent abgelehnt. Änderung über die Einstellungen möglich.</string>
     <string name="camera_permission_denied_always">Kamera Berechtigung permanent abgelehnt. Änderung über die Einstellungen möglich.</string>
+    <string name="warn_dialog_title">Mobiles Datennetz verwenden?</string>
+    <string name="warn_dialog_message">Sie sind aktuell nicht mit einem WLAN verbunden. Dieser Vorgang kann einen hohen mobilen Datenverbrauch verursachen. Möchten Sie trotzdem fortfahren?</string>
+    <string name="warn_dialog_cancel">Abbrechen</string>
+    <string name="warn_dialog_confirm">Trotzdem fortfahren</string>
 </resources>
