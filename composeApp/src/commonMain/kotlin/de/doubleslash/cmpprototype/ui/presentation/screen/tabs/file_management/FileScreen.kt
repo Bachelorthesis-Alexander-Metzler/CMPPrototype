@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,6 +55,11 @@ import cmpprototype.composeapp.generated.resources.permission_denied
 import cmpprototype.composeapp.generated.resources.remote_object
 import cmpprototype.composeapp.generated.resources.storage_permission_denied_always
 import cmpprototype.composeapp.generated.resources.unable_to_load_files
+import cmpprototype.composeapp.generated.resources.warn_dialog_cancel
+import cmpprototype.composeapp.generated.resources.warn_dialog_confirm
+import cmpprototype.composeapp.generated.resources.warn_dialog_message
+import cmpprototype.composeapp.generated.resources.warn_dialog_title
+import com.plusmobileapps.konnectivity.NetworkConnection
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FolderModel
@@ -61,7 +67,7 @@ import de.doubleslash.cmpprototype.ui.presentation.components.FabItem
 import de.doubleslash.cmpprototype.ui.presentation.components.MultiFloatingActionButton
 import de.doubleslash.cmpprototype.ui.presentation.screen.PermissionsViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.camera.CameraScreen
-import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.common.FilePreviewScreen
+import de.doubleslash.cmpprototype.ui.presentation.screen.file_preview.FilePreviewScreen
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.components.CustomTopAppBar
 import dev.icerock.moko.permissions.PermissionState
 import dev.icerock.moko.permissions.compose.BindEffect
@@ -99,13 +105,15 @@ class FileScreen : Screen {
         }
 
         val isConnected by viewModel.isConnected.collectAsState()
+        val networkStatus by viewModel.networkStatus.collectAsState()
         val fileState = viewModel.fetchRemoteFilesState
         val folderState = viewModel.fetchRemoteFoldersState
         var isLoading by remember { mutableStateOf(false) }
 
-        // Dialog
-        var showDialog by remember { mutableStateOf(false) }
-        var dialogMessage by remember { mutableStateOf("") }
+        // Dialogs
+        var showPermissionDialog by remember { mutableStateOf(false) }
+        var permissionDialogMessage by remember { mutableStateOf("") }
+        val showWarnDialog = remember { mutableStateOf(false) }
 
         // Create permissions controller
         val factory = rememberPermissionsControllerFactory()
@@ -125,20 +133,23 @@ class FileScreen : Screen {
         val documentLauncher = createLauncher(viewModel, PickerType.File())
         val imgVidLauncher = createLauncher(viewModel, PickerType.ImageAndVideo)
 
-        if (showDialog) {
-            AdaptiveAlertDialog(
-                onDismissRequest = { showDialog = false },
-                title = { Text(stringResource(Res.string.permission_denied)) },
-                message = { Text(dialogMessage) }
-            ) {
-                cancel(onClick = { showDialog = false }) {
-                    Text(stringResource(Res.string.cancel))
-                }
-                default(onClick = { controller.openAppSettings() }) {
-                    Text(stringResource(Res.string.open_settings))
-                }
-            }
-        }
+        // inform user about denied permissions
+        PermissionAlertDialog(
+            showDialog = showPermissionDialog,
+            title = stringResource(Res.string.permission_denied),
+            message = permissionDialogMessage,
+            onCancelClick = { showPermissionDialog = false },
+            onSettingsClick = { controller.openAppSettings() },
+            onDismissRequest = { showPermissionDialog = false }
+        )
+
+        // warn user about mobile data usage
+        WarnAlertDialog(
+            showDialog = showWarnDialog.value,
+            onConfirmClick = { showWarnDialog.value = false },
+            onCancelClick = { showWarnDialog.value = false },
+            onDismissRequest = { showWarnDialog.value = false }
+        )
 
         Scaffold(
             topBar = CustomTopAppBar(text = stringResource(Res.string.file_tab_title)),
@@ -156,8 +167,8 @@ class FileScreen : Screen {
                                     when (permissionsViewModel.storageState) {
                                         PermissionState.Granted -> documentLauncher.launch()
                                         PermissionState.DeniedAlways -> {
-                                            dialogMessage = storagePermissionDeniedMessage
-                                            showDialog = true
+                                            permissionDialogMessage = storagePermissionDeniedMessage
+                                            showPermissionDialog = true
                                         }
 
                                         else -> permissionsViewModel.provideOrRequestStoragePermission()
@@ -172,8 +183,8 @@ class FileScreen : Screen {
                                     when (permissionsViewModel.galleryState) {
                                         PermissionState.Granted -> imgVidLauncher.launch()
                                         PermissionState.DeniedAlways -> {
-                                            dialogMessage = galleryPermissionDeniedMessage
-                                            showDialog = true
+                                            permissionDialogMessage = galleryPermissionDeniedMessage
+                                            showPermissionDialog = true
                                         }
 
                                         else -> permissionsViewModel.provideOrRequestGalleryPermission()
@@ -188,8 +199,8 @@ class FileScreen : Screen {
                                     when (permissionsViewModel.cameraState) {
                                         PermissionState.Granted -> navigator.push(CameraScreen())
                                         PermissionState.DeniedAlways -> {
-                                            dialogMessage = cameraPermissionDeniedMessage
-                                            showDialog = true
+                                            permissionDialogMessage = cameraPermissionDeniedMessage
+                                            showPermissionDialog = true
                                         }
 
                                         else -> permissionsViewModel.provideOrRequestCameraPermission()
@@ -232,16 +243,20 @@ class FileScreen : Screen {
 
                             // Display files
                             items(allFiles) { file ->
-                                FileItemEntry(file, onClick = {
-                                    // only allow preview for downloaded files
-                                    if (!file.isRemoteFile) {
+                                FileItemEntry(
+                                    file, onClick = {
+                                        // only allow preview for downloaded files
                                         if (!file.isRemoteFile) {
-                                            isLoading = true
-                                            navigator.push(FilePreviewScreen(file))
-                                            isLoading = false
+                                            if (!file.isRemoteFile) {
+                                                isLoading = true
+                                                navigator.push(FilePreviewScreen(file))
+                                                isLoading = false
+                                            }
                                         }
-                                    }
-                                })
+                                    },
+                                    networkStatus = networkStatus,
+                                    showWarnDialog = showWarnDialog
+                                )
                             }
                         }
                     }
@@ -346,7 +361,12 @@ class FileScreen : Screen {
 
     @OptIn(ExperimentalAdaptiveApi::class)
     @Composable
-    private fun FileItemEntry(file: FileModel, onClick: () -> Unit = {}) {
+    private fun FileItemEntry(
+        file: FileModel,
+        onClick: () -> Unit = {},
+        networkStatus: NetworkConnection,
+        showWarnDialog: MutableState<Boolean>
+    ) {
         Row(
             modifier = Modifier
                 .padding(12.dp)
@@ -394,7 +414,13 @@ class FileScreen : Screen {
             if (file.isRemoteFile) {
                 AdaptiveIconButton(
                     onClick = {
-                        // TODO: Action for downloading remote file
+                        // Action for downloading remote file
+                        if (networkStatus == NetworkConnection.CELLULAR) {
+                            // Warn user about mobile data usage
+                            showWarnDialog.value = true
+                        } else {
+                            // Download file
+                        }
                     },
                     content = {
                         Icon(
@@ -407,7 +433,13 @@ class FileScreen : Screen {
             } else {
                 AdaptiveIconButton(
                     onClick = {
-                        // TODO: Action for uploading local file
+                        // Action for uploading remote file
+                        if (networkStatus == NetworkConnection.CELLULAR) {
+                            // Warn user about mobile data usage
+                            showWarnDialog.value = true
+                        } else {
+                            // Upload file
+                        }
                     },
                     content = {
                         Icon(
@@ -421,4 +453,60 @@ class FileScreen : Screen {
         }
         AdaptiveHorizontalDivider()
     }
+
+    @OptIn(ExperimentalAdaptiveApi::class)
+    @Composable
+    fun PermissionAlertDialog(
+        showDialog: Boolean,
+        title: String,
+        message: String,
+        onCancelClick: () -> Unit,
+        onSettingsClick: () -> Unit,
+        onDismissRequest: () -> Unit
+    ) {
+        if (showDialog) {
+            AdaptiveAlertDialog(
+                onDismissRequest = onDismissRequest,
+                title = { Text(title) },
+                message = { Text(message) }
+            ) {
+                cancel(onClick = onCancelClick) {
+                    Text(stringResource(Res.string.cancel))
+                }
+                default(onClick = onSettingsClick) {
+                    Text(stringResource(Res.string.open_settings))
+                }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalAdaptiveApi::class)
+    @Composable
+    fun WarnAlertDialog(
+        showDialog: Boolean,
+        onConfirmClick: () -> Unit,
+        onCancelClick: () -> Unit,
+        onDismissRequest: () -> Unit
+    ) {
+        if (showDialog) {
+            val title = stringResource(Res.string.warn_dialog_title)
+            val message = stringResource(Res.string.warn_dialog_message)
+            val cancelText = stringResource(Res.string.warn_dialog_cancel)
+            val confirmText = stringResource(Res.string.warn_dialog_confirm)
+
+            AdaptiveAlertDialog(
+                onDismissRequest = onDismissRequest,
+                title = { Text(title) },
+                message = { Text(message) }
+            ) {
+                cancel(onClick = onCancelClick) {
+                    Text(cancelText)
+                }
+                default(onClick = onConfirmClick) {
+                    Text(confirmText)
+                }
+            }
+        }
+    }
+
 }

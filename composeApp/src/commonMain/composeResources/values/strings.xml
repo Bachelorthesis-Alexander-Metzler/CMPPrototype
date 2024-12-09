@@ -73,4 +73,8 @@
     <string name="storage_permission_denied_always">Storage permission was permanently denied. Please enable it in settings.</string>
     <string name="gallery_permission_denied_always">Gallery permission was permanently denied. Please enable it in settings.</string>
     <string name="camera_permission_denied_always">Camera permission was permanently denied. Please enable it in settings.</string>
+    <string name="warn_dialog_title">Use mobile data?</string>
+    <string name="warn_dialog_message">You are currently not connected to Wi-Fi. This operation may result in high mobile data usage. Do you still want to continue?</string>
+    <string name="warn_dialog_cancel">Cancel</string>
+    <string name="warn_dialog_confirm">Continue anyway</string>
 </resources>
