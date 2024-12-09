@@ -39,13 +39,22 @@ fun processSharedFiles() {
     sharedFiles?.forEach { file ->
         val fileUrl = file as? NSURL // Safe cast to NSURL
         if (fileUrl != null) {
-            println("Shared file found: ${fileUrl.lastPathComponent}")
-            saveFileToDatabase(fileUrl)
+            val fileName = fileUrl.lastPathComponent
+            val fileExtension = fileName?.substringAfterLast('.', missingDelimiterValue = "")?.lowercase()
+
+            // Ignore .plist files and other unwanted extensions
+            if (fileExtension != "plist") {
+                println("Shared file found: $fileName")
+                saveFileToDatabase(fileUrl)
+            } else {
+                println("Ignoring file with unsupported extension: $fileName")
+            }
         } else {
             println("Invalid file found: $file")
         }
     }
 }
+
 
 @Composable
 @OptIn(ExperimentalForeignApi::class)
