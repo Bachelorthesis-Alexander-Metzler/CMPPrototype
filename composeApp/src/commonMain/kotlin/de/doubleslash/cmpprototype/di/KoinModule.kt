@@ -33,8 +33,8 @@ import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadAllLocalFile
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.LoadLocalFileUseCase
 import de.doubleslash.cmpprototype.domain.use_case.localStorage.SaveLocalFileUseCase
 import de.doubleslash.cmpprototype.ui.presentation.screen.camera.CameraViewModel
+import de.doubleslash.cmpprototype.ui.presentation.screen.file_preview.FilePreviewViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.login.LoginViewModel
-import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.common.FilePreviewViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.download.DownloadViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.file_management.FileViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.settings.SettingsViewModel

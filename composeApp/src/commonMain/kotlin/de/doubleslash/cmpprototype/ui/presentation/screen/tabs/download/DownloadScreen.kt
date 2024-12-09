@@ -28,7 +28,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cmpprototype.composeapp.generated.resources.Res
 import cmpprototype.composeapp.generated.resources.downloads_tab_title
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel
-import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.common.FilePreviewScreen
+import de.doubleslash.cmpprototype.ui.presentation.screen.file_preview.FilePreviewScreen
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.components.CustomTopAppBar
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveHorizontalDivider
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveIconButton

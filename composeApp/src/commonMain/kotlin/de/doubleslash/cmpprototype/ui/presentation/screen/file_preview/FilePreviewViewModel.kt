@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.ui.presentation.screen.tabs.common
+package de.doubleslash.cmpprototype.ui.presentation.screen.file_preview
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import de.doubleslash.cmpprototype.domain.model.file_mgmt.FileModel

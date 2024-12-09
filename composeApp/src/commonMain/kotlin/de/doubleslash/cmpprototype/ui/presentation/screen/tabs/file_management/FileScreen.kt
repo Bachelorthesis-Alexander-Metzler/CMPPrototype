@@ -67,7 +67,7 @@ import de.doubleslash.cmpprototype.ui.presentation.components.FabItem
 import de.doubleslash.cmpprototype.ui.presentation.components.MultiFloatingActionButton
 import de.doubleslash.cmpprototype.ui.presentation.screen.PermissionsViewModel
 import de.doubleslash.cmpprototype.ui.presentation.screen.camera.CameraScreen
-import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.common.FilePreviewScreen
+import de.doubleslash.cmpprototype.ui.presentation.screen.file_preview.FilePreviewScreen
 import de.doubleslash.cmpprototype.ui.presentation.screen.tabs.components.CustomTopAppBar
 import dev.icerock.moko.permissions.PermissionState
 import dev.icerock.moko.permissions.compose.BindEffect
