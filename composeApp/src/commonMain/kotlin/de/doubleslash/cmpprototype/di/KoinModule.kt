@@ -115,8 +115,13 @@ val moduleApplication = module {
     )
 }
 
+private var isKoinStarted = false
+
 fun initKoin() {
-    startKoin {
-        modules(moduleApplication)
+    if (!isKoinStarted) { // Initialisiere Koin nur, wenn es noch nicht gestartet wurde
+        startKoin {
+            modules(moduleApplication) // Dein Modul für die Common Codebase
+        }
+        isKoinStarted = true // Markiere Koin als gestartet
     }
 }
