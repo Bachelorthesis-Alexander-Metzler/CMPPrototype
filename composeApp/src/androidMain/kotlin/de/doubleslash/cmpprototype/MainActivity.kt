@@ -59,7 +59,12 @@ class MainActivity : ComponentActivity() {
      */
     private fun handleIncomingShareIntent(intent: Intent) {
         if (intent.action == Intent.ACTION_SEND && intent.type != null) {
-            val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+            val uri = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+            }
 
             if (uri != null) {
                 processSharedFile(uri)
@@ -79,7 +84,7 @@ class MainActivity : ComponentActivity() {
             val fileContent = inputStream?.readBytes()
             inputStream?.close()
 
-            // Retrieve file metadata (e.g., name)
+            // Retrieve file metadata
             val cursor = contentResolver.query(uri, null, null, null, null)
             if (cursor != null && cursor.moveToFirst()) {
                 val fileNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
