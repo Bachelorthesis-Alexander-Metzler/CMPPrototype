@@ -8,18 +8,16 @@ import de.doubleslash.cmpprototype.data.datasource.local.preferences.Preferences
 import de.doubleslash.cmpprototype.data.datasource.local.preferences.SharedPreferencesImpl
 import de.doubleslash.cmpprototype.data.datasource.local.preferences.provideEncryptedSharedPreferences
 import de.doubleslash.cmpprototype.data.datasource.local.preferences.provideSharedPreferences
-import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApi
-import de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.AuthApiImpl
-import de.doubleslash.cmpprototype.data.datasource.remote.rest.cmis.CMISService
-import de.doubleslash.cmpprototype.data.datasource.remote.rest.cmis.CMISServiceImpl
-import de.doubleslash.cmpprototype.data.repository.auth.AuthRepositoryImpl
-import de.doubleslash.cmpprototype.data.repository.cmis.CMISRepositoryImpl
 import de.doubleslash.cmpprototype.data.repository.deviceApi.NetworkStatusRepositoryImpl
 import de.doubleslash.cmpprototype.data.repository.localStorage.FileStorageRepositoryImpl
-import de.doubleslash.cmpprototype.domain.repository.auth.AuthRepository
-import de.doubleslash.cmpprototype.domain.repository.cmis.CMISRepository
+import de.doubleslash.cmpprototype.data.repository.secureStore.SecureStoreRepositoryImpl
 import de.doubleslash.cmpprototype.domain.repository.deviceApi.NetworkStatusRepository
 import de.doubleslash.cmpprototype.domain.repository.localStorage.FileStorageRepository
+import de.doubleslash.cmpprototype.domain.repository.secureStore.SecureStoreRepository
+import de.doubleslash.cmpprototype.domain.services.rest.auth.AuthService
+import de.doubleslash.cmpprototype.domain.services.rest.auth.AuthServiceImpl
+import de.doubleslash.cmpprototype.domain.services.rest.cmis.CMISService
+import de.doubleslash.cmpprototype.domain.services.rest.cmis.CMISServiceImpl
 import de.doubleslash.cmpprototype.domain.use_case.authenticateUser.AuthenticateUserUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetConnectionStatusUseCase
 import de.doubleslash.cmpprototype.domain.use_case.checkNetworkStatus.GetNetworkStatusUseCase
@@ -42,15 +40,16 @@ import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-// Auth Module: Auth API and Repository
-val authModule = module {
-    single<AuthApi> { AuthApiImpl() }
-    single<AuthRepository> {
-        AuthRepositoryImpl(
-            get(),
-            EncryptedSharedPreferencesImpl(get(named("encrypted_settings")))
-        )
+// Secure Store Module: Encrypted Shared Preferences
+val secureStoreModule = module {
+    single<SecureStoreRepository> {
+        SecureStoreRepositoryImpl(EncryptedSharedPreferencesImpl(get(named("encrypted_settings"))))
     }
+}
+
+// Auth Module: Auth API
+val authModule = module {
+    single<AuthService> { AuthServiceImpl() }
 }
 
 // Network Module: Network Status Repository
@@ -72,12 +71,11 @@ val filePersistenceModule = module {
 
     // cmis file management
     single<CMISService> { CMISServiceImpl() }
-    single<CMISRepository> { CMISRepositoryImpl(get()) }
 }
 
 // Use Case Module: Business Logic
 val useCaseModule = module {
-    single { AuthenticateUserUseCase(get()) }
+    single { AuthenticateUserUseCase(get(), get()) }
     single { GetConnectionStatusUseCase(get()) }
     single { GetNetworkStatusUseCase(get()) }
     single { GetSessionDataUseCase(get()) }
@@ -106,6 +104,7 @@ val viewModelModule = module {
 // Combine all modules
 val moduleApplication = module {
     includes(
+        secureStoreModule,
         authModule,
         networkModule,
         preferencesModule,

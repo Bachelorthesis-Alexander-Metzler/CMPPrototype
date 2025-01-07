@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.data.datasource.remote.rest.cmis.dto
+package de.doubleslash.cmpprototype.domain.services.rest.cmis.dto
 
 import kotlinx.serialization.Serializable
 

@@ -1,13 +1,12 @@
 package de.doubleslash.cmpprototype.domain.use_case.getPreviouslyAuthenticated
 
-import de.doubleslash.cmpprototype.domain.model.auth.LoginModel
-import de.doubleslash.cmpprototype.domain.repository.auth.AuthRepository
+import de.doubleslash.cmpprototype.domain.repository.secureStore.SecureStoreRepository
 
 class GetPreviouslyAuthenticatedUseCase(
-    private val authRepository: AuthRepository
+    private val secureStoreRepository: SecureStoreRepository
 ) {
 
     operator fun invoke(): Boolean {
-        return authRepository.getPreviouslyAuthenticated() ?: false
+        return secureStoreRepository.getPreviouslyAuthenticated() ?: false
     }
 }

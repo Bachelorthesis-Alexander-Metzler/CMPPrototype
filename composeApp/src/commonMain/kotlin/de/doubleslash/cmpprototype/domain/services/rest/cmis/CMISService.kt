@@ -1,7 +1,7 @@
-package de.doubleslash.cmpprototype.data.datasource.remote.rest.cmis
+package de.doubleslash.cmpprototype.domain.services.rest.cmis
 
-import de.doubleslash.cmpprototype.data.datasource.remote.rest.cmis.dto.CMISObjectDTO
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
+import de.doubleslash.cmpprototype.domain.services.rest.cmis.dto.CMISObjectDTO
 
 /**
  * Provides CMIS-based API calls for file operations, including upload and download.

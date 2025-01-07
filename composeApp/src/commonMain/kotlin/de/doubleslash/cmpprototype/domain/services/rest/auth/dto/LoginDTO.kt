@@ -1,4 +1,4 @@
-package de.doubleslash.cmpprototype.data.datasource.remote.rest.auth.dto
+package de.doubleslash.cmpprototype.domain.services.rest.auth.dto
 
 import de.doubleslash.cmpprototype.domain.model.auth.LoginModel
 import kotlinx.serialization.Serializable

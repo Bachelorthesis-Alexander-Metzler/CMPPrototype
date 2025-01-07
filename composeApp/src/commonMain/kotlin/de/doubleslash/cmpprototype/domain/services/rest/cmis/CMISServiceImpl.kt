@@ -1,11 +1,11 @@
-package de.doubleslash.cmpprototype.data.datasource.remote.rest.cmis
+package de.doubleslash.cmpprototype.domain.services.rest.cmis
 
 import de.doubleslash.cmpprototype.common.Constants
 import de.doubleslash.cmpprototype.common.Constants.ACCEPT
 import de.doubleslash.cmpprototype.common.Constants.HEADERS_APPLICATION_TYPE
 import de.doubleslash.cmpprototype.common.Constants.HTTPS_PROTOCOL
-import de.doubleslash.cmpprototype.data.datasource.remote.rest.cmis.dto.CMISObjectDTO
 import de.doubleslash.cmpprototype.domain.model.auth.RequestCondition
+import de.doubleslash.cmpprototype.domain.services.rest.cmis.dto.CMISObjectDTO
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.DefaultRequest
@@ -25,16 +25,18 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 class CMISServiceImpl : CMISService {
     private val httpClient = HttpClient {
         // Configure HTTP client
-        install(ContentNegotiation){
+        install(ContentNegotiation) {
             json(Json {
-                prettyPrint = true // JSON data is printed in a human-readable format with indents and whitespace
-                ignoreUnknownKeys = true // allows the client to handle JSON with extra, unknown fields without failing
+                prettyPrint =
+                    true // JSON data is printed in a human-readable format with indents and whitespace
+                ignoreUnknownKeys =
+                    true // allows the client to handle JSON with extra, unknown fields without failing
             })
         }
-        install(HttpTimeout){
+        install(HttpTimeout) {
             requestTimeoutMillis = 15000 // 15 seconds
         }
-        install(DefaultRequest){
+        install(DefaultRequest) {
             headers {
                 append(ACCEPT, HEADERS_APPLICATION_TYPE)
             }
