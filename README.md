@@ -31,8 +31,8 @@ dynamische UI-Anpassungen.
   Keychain auf iOS) geholt und über REST authentifiziert.
 
 <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
-  <img src="appScreenshots/login_dark_light/android_login_dark_light.png" width="200" />
-  <img src="appScreenshots/login_dark_light/ios_login_dark_night.png" width="200" />
+  <img src="appScreenshots/login_dark_light/android_login_dark_light.png" width="400" />
+  <img src="appScreenshots/login_dark_light/ios_login_dark_night.png" width="400" />
 </div>
 
 
@@ -57,7 +57,7 @@ dynamische UI-Anpassungen.
   ImageButton, ob der Nutzer sich im WLAN oder im mobilen Netz befindet. Falls mobiles Netz genutzt
   wird, wird ein AlertDialog angezeigt, der vor hohem Datenverbrauch warnt.
 
-<img src="appScreenshots/home_tab/home.png" width="200" style="display: block; margin: 0 auto;" />
+<img src="appScreenshots/home_tab/home.png" width="400" style="display: block; margin: 0 auto;" />
 
 
 ---
@@ -69,7 +69,7 @@ dynamische UI-Anpassungen.
 - Dateien können über ein Mülleimer-Symbol gelöscht werden.
 - Dieser Screen kann auch im Offline-Modus verwendet werden.
 
-<img src="appScreenshots/downloads_tab/downloads.png" width="200" style="display: block; margin: 0 auto;" />
+<img src="appScreenshots/downloads_tab/downloads.png" width="400" style="display: block; margin: 0 auto;" />
 
 
 ---
@@ -85,7 +85,7 @@ dynamische UI-Anpassungen.
             - Einstellung, um den Dark Mode manuell zu aktivieren oder zu deaktivieren.
             - Einstellung, um eine Farbe in Hexadezimal einzugeben, um die Primärfarbe der App zu
               ändern.
-<img src="appScreenshots/settings/theme_settings.png" width="200" style="display: block; margin: 0 auto;" />
+<img src="appScreenshots/settings/theme_settings.png" width="400" style="display: block; margin: 0 auto;" />
     2. **Berechtigungen**:
         - Bei Klick öffnet sich der Bildschirm für Berechtigungseinstellungen.
         - Ermöglicht es, direkt zu den App-Einstellungen zu navigieren.
@@ -105,7 +105,7 @@ dynamische UI-Anpassungen.
 - Bei Bildaufnahme wird das Bild direkt in der lokalen DB gespeichert.
 - Keine Videoaufnahme unterstützt.
 
-<img src="appScreenshots/camera_preview/camera_preview.png" width="200" style="display: block; margin: 0 auto;" />
+<img src="appScreenshots/camera_preview/camera_preview.png" width="400" style="display: block; margin: 0 auto;" />
 
 ---
 
@@ -116,7 +116,7 @@ dynamische UI-Anpassungen.
 - Für PDF werden plattformspezifische PDF-Renderer genutzt.
 - PDF-Ansicht ist scrollbar.
 
-<img src="appScreenshots/file_preview/file_preview.png" width="200" style="display: block; margin: 0 auto;" />
+<img src="appScreenshots/file_preview/file_preview.png" width="400" style="display: block; margin: 0 auto;" />
 
 ---
 
@@ -131,7 +131,7 @@ dynamische UI-Anpassungen.
   informiert und erhält die Möglichkeit, direkt in die App-Einstellungen des Geräts zu wechseln, um
   die Berechtigung zu erteilen.
 
-<img src="appScreenshots/permission/permission.png" width="200" style="display: block; margin: 0 auto;" />
+<img src="appScreenshots/permission/permission.png" width="400" style="display: block; margin: 0 auto;" />
 
 ---
 
