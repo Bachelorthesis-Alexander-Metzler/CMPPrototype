@@ -85,13 +85,11 @@ dynamische UI-Anpassungen.
             - Einstellung, um den Dark Mode manuell zu aktivieren oder zu deaktivieren.
             - Einstellung, um eine Farbe in Hexadezimal einzugeben, um die Primärfarbe der App zu
               ändern.
-<img src="appScreenshots/settings/theme_settings.png" width="400" style="display: block; margin: 0 auto;" />
+              <img src="appScreenshots/settings/theme_settings.png" width="400" style="display: block; margin: 0 auto;" />
+              \\
     2. **Berechtigungen**:
         - Bei Klick öffnet sich der Bildschirm für Berechtigungseinstellungen.
         - Ermöglicht es, direkt zu den App-Einstellungen zu navigieren.
-
-
-
 
 ---
 
