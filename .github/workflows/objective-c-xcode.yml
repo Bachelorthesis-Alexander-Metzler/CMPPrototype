@@ -16,23 +16,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Step 2: Set the working directory
-      - name: Change Directory to Xcode Project
-        run: cd iosApp  # Gehe in das Verzeichnis, das die .xcodeproj enthält
+      # Step 2: Debug Repository Structure
+      - name: Debug Repository Structure
+        run: ls -R
+        working-directory: .
 
-      # Step 3: Set Default Scheme
+      # Step 3: Change Directory to Xcode Project
+      - name: Change Directory to Xcode Project
+        run: cd iosApp
+
+      # Step 4: Debug Xcode Project Structure
+      - name: Debug Xcode Project Structure
+        run: ls -R
+        working-directory: iosApp
+
+      # Step 5: Set Default Scheme
       - name: Set Default Scheme
         run: |
+          cd iosApp
           scheme_list=$(xcodebuild -list -json | tr -d "\n")
           default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
           echo $default > default
           echo Using default scheme: $default
 
-      # Step 4: Build and Analyze
+      # Step 6: Build and Analyze
       - name: Build and Analyze
         env:
           scheme: ${{ 'default' }}
         run: |
+          cd iosApp
           if [ $scheme = default ]; then scheme=$(cat default); fi
           file_to_build="iosApp.xcodeproj"
           xcodebuild clean build analyze -scheme "$scheme" -project "$file_to_build" | xcpretty && exit ${PIPESTATUS[0]}
